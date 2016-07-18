@@ -554,6 +554,10 @@ function RenderSVG(idDiv,height,width,tickStart,tickTimesY,tickTimesX,pathString
                       {
                         console.log(iI);
                         console.log(tempOb[jI].value);
+
+
+
+
                         if(spanToolText[count] == undefined)
                         {
                           spanToolText[count] = document.createElementNS("http://www.w3.org/2000/svg","text");
@@ -562,17 +566,40 @@ function RenderSVG(idDiv,height,width,tickStart,tickTimesY,tickTimesX,pathString
                         // {
                           toolBox[count] = document.createElementNS("http://www.w3.org/2000/svg","rect");
                         }
-                        toolBox[count].setAttribute("x",xCoordinate[i][0]+7);
-                        toolBox[count].setAttribute("y",xCoordinate[i][2]-20);
-                        toolBox[count].setAttribute("height",30);
-                        toolBox[count].setAttribute("width",60);
-                        toolBox[count].setAttribute("style","fill:blue;stroke:none;stroke-width:5;opacity:0.3");
+
+                        myVar = setTimeout(function(){
+                          toolBox[count].setAttribute("x",xCoordinate[i][0]);
+                          toolBox[count].setAttribute("y",xCoordinate[i][2]);
+                          toolBox[count].setAttribute("height",20);
+                          toolBox[count].setAttribute("width",35);
+                          //toolBox[count].setAttribute("width",60);
+                          toolBox[count].setAttribute("style","fill:#fed8ca;stroke:brown;stroke-width:1;opacity:0.7");
+                          document.getElementById("svgC"+iI.charAt(5)).appendChild(toolBox[count]);
+
+
+                          spanToolText[count].setAttribute("x",xCoordinate[i][0]+8);
+                          spanToolText[count].setAttribute("y",xCoordinate[i][2]+15);
+                          spanToolText[count].setAttribute("fill","brown");
+                          spanToolText[count].setAttribute("font-size","12px");
+                          spanToolText[count].textContent=tempOb[jI].value;
+                          console.log("abcde"+iI.charAt(5));
+                          //document.getElementById("svgC"+iI.charAt(5)).removeChild(spanToolText);
+                          document.getElementById("svgC"+iI.charAt(5)).appendChild(spanToolText[count]);
+                        }, 2500);
+
+                        toolBox[count].setAttribute("x",xCoordinate[i][0]);
+                        toolBox[count].setAttribute("y",xCoordinate[i][2]);
+                        toolBox[count].setAttribute("height",20);
+                        toolBox[count].setAttribute("width",35);
+                        //toolBox[count].setAttribute("width",60);
+                        toolBox[count].setAttribute("style","fill:#fed8ca;stroke:brown;stroke-width:1;opacity:1");
                         document.getElementById("svgC"+iI.charAt(5)).appendChild(toolBox[count]);
 
 
-                        spanToolText[count].setAttribute("x",xCoordinate[i][0]+20);
-                        spanToolText[count].setAttribute("y",xCoordinate[i][2]);
-                        spanToolText[count].setAttribute("fill","white");
+                        spanToolText[count].setAttribute("x",xCoordinate[i][0]+8);
+                        spanToolText[count].setAttribute("y",xCoordinate[i][2]+15);
+                        spanToolText[count].setAttribute("fill","brown");
+                        spanToolText[count].setAttribute("font-size","12px");
                         spanToolText[count].textContent=tempOb[jI].value;
                         console.log("abcde"+iI.charAt(5));
                         //document.getElementById("svgC"+iI.charAt(5)).removeChild(spanToolText);
