@@ -10,6 +10,7 @@ var coordinateArray=[];
 var coordinateArray2=[];
 var xCoordinate=[];
 var spanToolText=[];
+var toolBox=[];
 function parser(mydata)
 {
       var keys = [];
@@ -556,9 +557,22 @@ function RenderSVG(idDiv,height,width,tickStart,tickTimesY,tickTimesX,pathString
                         if(spanToolText[count] == undefined)
                         {
                           spanToolText[count] = document.createElementNS("http://www.w3.org/2000/svg","text");
+                        // }
+                        // if(toolBox[count] == undefined)
+                        // {
+                          toolBox[count] = document.createElementNS("http://www.w3.org/2000/svg","rect");
                         }
-                        spanToolText[count].setAttribute("x",xCoordinate[i][0]);
-                        spanToolText[count].setAttribute("y",100);
+                        toolBox[count].setAttribute("x",xCoordinate[i][0]+7);
+                        toolBox[count].setAttribute("y",xCoordinate[i][2]-20);
+                        toolBox[count].setAttribute("height",30);
+                        toolBox[count].setAttribute("width",60);
+                        toolBox[count].setAttribute("style","fill:blue;stroke:none;stroke-width:5;opacity:0.3");
+                        document.getElementById("svgC"+iI.charAt(5)).appendChild(toolBox[count]);
+
+
+                        spanToolText[count].setAttribute("x",xCoordinate[i][0]+20);
+                        spanToolText[count].setAttribute("y",xCoordinate[i][2]);
+                        spanToolText[count].setAttribute("fill","white");
                         spanToolText[count].textContent=tempOb[jI].value;
                         console.log("abcde"+iI.charAt(5));
                         //document.getElementById("svgC"+iI.charAt(5)).removeChild(spanToolText);
@@ -669,7 +683,7 @@ function coordinateCalculationXY(x,y,min,max,yAx)//xArray , yArray for one yaxis
     console.log(xOr,yOr);
     coordinateArray2.push([xOr,yOr]);//,x[i],y[i]]);
     //coordinateArray2[i].push(yOr);
-    xCoordinate.push([X[i],xOr]);
+    xCoordinate.push([X[i],xOr,buffer]);
     coordinate=coordinate+(X[i]+","+buffer+" L");
     buffer=0;
   
