@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <!--<script type="text/javascript" src="dataset.json"></script>-->
+    </head>
+    <body onload="">
+
+    </body>
+        <div id="container" align = "center "style="width:600px" >
+            <h2 id="caption" align="center" style="font-family:'Helvetica Neue',Arial">[default]</h2>
+            <h3 id="subcaption" align="center" style="font-family:'Helvetica Neue',Arial">[default]</h3>
+        </div>
+    <link rel="stylesheet" type="text/css" href="cssFile.css" >
+     <script type="text/javascript" src = "library.js"></script>
+        <script type="text/javascript">
+            
+        var mydata ={
+        "chart": {
+
+            "caption":"Comparison of Data",
+            "subcaption":"Axis 1,2,3",
+            width:700,
+            height:300
+        },
+
+    "data": [
+
+            {   
+                time : "21-06" ,
+                yAxis1 : 0.05
+            },
+            {   time : "22-06",
+                yAxis1 : 0.06,
+                yAxis2 : 33, 
+                yAxis3 : 282
+            },
+            {   time : "23-06" ,
+                yAxis1 : 0.09,
+                yAxis2 : 44
+            },
+            {   time:"24-06",
+                yAxis1 : 0.03, 
+                yAxis2 : 55
+            },
+            {   time:"25-06",
+                yAxis3 : 421,
+            },
+            {   time:"26-06",
+                yAxis1 : 0.02, 
+                yAxis2 : 76
+            },
+            {   time:"27-06",
+                yAxis1 : 0.03
+            },
+            {   time:"28-06",
+                yAxis2 : 65, 
+                yAxis3 : 533
+            },
+            {   time:"29-06",
+                yAxis1 : 0.01
+            },
+            {   time:"30-06",
+                yAxis1 : 0.03
+            }
+    ]};
+
+    parser(mydata);
+    
+    
+    </script>
+</html>
