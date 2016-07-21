@@ -1,3 +1,6 @@
+
+
+
 var parsingDataset = function(dataset){  //parser()
     this.optimizedTick=[];
     var obj = dataset.data;
@@ -53,6 +56,14 @@ var parsingDataset = function(dataset){  //parser()
     this.minmax();
     this.rangeOptimizer();
     this.tickGenerator();
+    var count =0;
+    for(var i in this.dataob)
+    {
+          console.log(this.dataob[i],i,count);
+          this.dataRender = new renderGraph(this.dataob[i], i ,this.height, this.width, this.optimizedTick[count++]);  
+    }
+    
+
 };
 
 parsingDataset.prototype.minmax = function(){
@@ -216,11 +227,14 @@ parsingDataset.prototype.tickGenerator = function(){
     }
 
 };
-var renderGraph=function(data,chartHeight,chartWidth,tickob){
+var renderGraph=function(data,i,chartHeight,chartWidth,tickob){
 
       this.dataob = data;
       this.height = chartHeight+70;
       this.width = chartWidth+45;
+      Window.height = this.height
+      Window.width = this.width;
+      this.axisName = i;
       // this.width = this.width+45;
       // this.height = this.height+50;
       // this.xTickTimes = xTickTimes;
@@ -232,27 +246,32 @@ var renderGraph=function(data,chartHeight,chartWidth,tickob){
       var numberOfInterations = this.numberOfGraph;
       this.coordinateCalculation();
       this.pathStringBuilder();
-      for(var i=0;i<numberOfInterations;i++)
-      {
+      // for(var i=0;i<numberOfInterations;i++)
+      // {
           this.currentIteration=i+1;
           this.axisPlot();
-      }  
-      
-
+          
+          // this.drawColumnChart();
+      // }  
 };
+
+
+
 
 renderGraph.prototype.axisPlot=function()
 {
+      var _this = this;
       //console.log(this.tickob[this.currentIteration-1]);
 
 //----declaring svg----    
       
-      var svgCanvas = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+      this.svgCanvas = document.createElementNS("http://www.w3.org/2000/svg", "svg");
       // svgCanvas.setAttributeNS(null,"id","svgC"+count);
-      svgCanvas.setAttribute("class","svgGraph");
-      svgCanvas.setAttributeNS(null,"width",this.width+20 );
-      svgCanvas.setAttributeNS(null,"height",this.height);
-      document.getElementById("container").appendChild(svgCanvas);
+      this.svgCanvas.setAttribute("class","svgGraph");
+      this.svgCanvas.setAttributeNS(null,"width",this.width+20 );
+      this.svgCanvas.setAttributeNS(null,"height",this.height);
+      document.getElementById("container").appendChild(this.svgCanvas);
+
 //----svg created----
 
 //----rendering y-axis----
@@ -263,7 +282,7 @@ renderGraph.prototype.axisPlot=function()
       svgAxisY.setAttributeNS(null,"y2",(this.height-40));
       svgAxisY.setAttribute("class","svgAxis");
       //svgAxisY.setAttributeNS(null,"style","stroke:rgb(0,0,0);stroke-width:0.5");
-      svgCanvas.appendChild(svgAxisY);
+      this.svgCanvas.appendChild(svgAxisY);
 //----y-axis rendered----
 
 //----rendering x-axis----
@@ -273,33 +292,31 @@ renderGraph.prototype.axisPlot=function()
       svgAxisX.setAttributeNS(null,"x1","45");
       svgAxisX.setAttributeNS(null,"x2",(this.width));
       svgAxisX.setAttribute("class","svgAxis");
-      svgCanvas.appendChild(svgAxisX);
+      this.svgCanvas.appendChild(svgAxisX);
 //----x-axis rendered----
 
 //----append chart labels----
       var labelRect = document.createElementNS("http://www.w3.org/2000/svg","rect");
-      labelRect.setAttribute("x",45);
+      labelRect.setAttribute("x",40);
       labelRect.setAttribute("y",0);
-      labelRect.setAttribute("width",this.width-45);
-      labelRect.setAttribute("height",30)
-      svgCanvas.appendChild(labelRect);
+      labelRect.setAttribute("width",this.width-25);
+      labelRect.setAttribute("height",28)
+      this.svgCanvas.appendChild(labelRect);
 
 
 
       var labelY=document.createElementNS("http://www.w3.org/2000/svg", "text");
       labelY.setAttributeNS(null,"x",45+(this.width-45)/2);
-      labelY.setAttributeNS(null,"y",20);
+      labelY.setAttributeNS(null,"y",18);
       labelY.setAttributeNS(null,"text-anchor","middle");
       labelY.setAttributeNS(null,"fill","white");
-      labelY.textContent="Demo Label";
-      // labelY.setAttribute("transform","rotate(270 40,"+(height/2 + 50)+")" );
+      labelY.textContent=""+this.axisName;
       labelY.setAttributeNS(null,"font-family","Verdana");
-      svgCanvas.appendChild(labelY);
-//----chart labels appended----
+      this.svgCanvas.appendChild(labelY); //----chart labels appended----
 
 //----add ticks to axes----
       //----Y-axis----
-      var tickArray = this.tickob[this.currentIteration-1];
+      var tickArray = this.tickob;
       for(var i=0;i<tickArray.length;i++)
       {
           var svgAxisTickY = document.createElementNS("http://www.w3.org/2000/svg", "line");
@@ -309,7 +326,7 @@ renderGraph.prototype.axisPlot=function()
           svgAxisTickY.setAttributeNS(null,"y1",((this.height-40)-div*(i)));
           svgAxisTickY.setAttributeNS(null,"y2",((this.height-40)-div*(i)));
           svgAxisTickY.setAttributeNS(null,"style","stroke:rgb(0,0,0);stroke-width:1.5");
-          svgCanvas.appendChild(svgAxisTickY);
+          this.svgCanvas.appendChild(svgAxisTickY);
 
 
           var svgTickLineY = document.createElementNS("http://www.w3.org/2000/svg", "line");
@@ -318,7 +335,7 @@ renderGraph.prototype.axisPlot=function()
           svgTickLineY.setAttributeNS(null,"y1",((this.height-40)-div*(i)));
           svgTickLineY.setAttributeNS(null,"y2",(this.height-40-div*(i)));
           svgTickLineY.setAttributeNS(null,"style","stroke:rgb(0,0,0);stroke-width:0.3");
-          svgCanvas.appendChild(svgTickLineY);
+          this.svgCanvas.appendChild(svgTickLineY);
 
 
           var TicksY=document.createElementNS("http://www.w3.org/2000/svg", "text");
@@ -329,7 +346,7 @@ renderGraph.prototype.axisPlot=function()
           TicksY.setAttributeNS(null,"dominant-baseline","central");
           TicksY.setAttributeNS(null,"font-family","Verdana");
           TicksY.textContent=""+tickArray[i];
-          svgCanvas.appendChild(TicksY);
+          this.svgCanvas.appendChild(TicksY);
       }
       //----Y-axis----
 
@@ -345,7 +362,7 @@ renderGraph.prototype.axisPlot=function()
           // svgCanvas.appendChild(svgAxisTickX);
 
           var TicksX=document.createElementNS("http://www.w3.org/2000/svg", "text");
-          var div = (this.width-50)/10;
+          var div = (this.width-70)/10;
           TicksX.setAttributeNS(null,"x",45+(div*j));
           TicksX.setAttributeNS(null,"y",this.height-40);
           TicksX.setAttributeNS(null,"fill","black");
@@ -353,36 +370,200 @@ renderGraph.prototype.axisPlot=function()
           TicksX.setAttributeNS(null,"dominant-baseline","text-after-edge");
           TicksX.setAttribute("transform","rotate(90 "+ (45+(div*j)) +","+(this.height-40)+")" );
           TicksX.setAttributeNS(null,"font-family","Verdana");
-          svgCanvas.appendChild(TicksX);
+          this.svgCanvas.appendChild(TicksX);
 
       }
+
+      var hairLine  = document.createElementNS("http://www.w3.org/2000/svg", "line");
+
+      
+
+      // pt = this.svgCanvas.createSVGPoint();
+      
+      
+      // // Get point in global SVG space
+      // function cursorPoint(evt){
+      //   pt.x = evt.clientX; pt.y = evt.clientY;
+      //   dataRender.positionX=pt.x;
+      //   dataRender.positionY=pt.y;
+          
+      //   return pt.matrixTransform(svgCanvas.getScreenCTM().inverse());
+      // }      
+      
+
+// console.log(dataRender.positionX,dataRender.positionY);
+      this.drawHairLine();
+
       //----X-axis----
 //----ticks added to axes----
+      this.drawLineChart();
+      // this.drawColumnChart();
 
-//----rendering line----
+      // var mouseBox = document.createElementNS("http://www.w3.org/2000/svg","rect");
+      // mouseBox.setAttribute("x",45);
+      // mouseBox.setAttribute("y",30);
+      // mouseBox.setAttribute("width",this.width-25);
+      // mouseBox.setAttribute("height",this.height-60);
+      // mouseBox.setAttribute("fill","none");
+      // this.svgCanvas.appendChild(mouseBox);
+      // mouseBox.addEventListener("mousemove",onMouseMove,false);
+      
+      // document.addEventListener('verticalLine',function(evt){
+      //     // console.log(this === document,"abc");
+      //     console.log(event.detail.x+","+event.detail.y);
+          
+      //     hairLine.setAttributeNS(null,"y1",20);
+      //     hairLine.setAttributeNS(null,"y2",Window.height-20);
+      //     hairLine.setAttributeNS(null,"x1",event.detail.x);
+      //     hairLine.setAttributeNS(null,"x2",event.detail.x);
+      //     // var xCheck = evt.detail.x - 8;
+      //     hairLine.setAttribute("class","hairLine");
+      //     _this.svgCanvas.appendChild(hairLine);
 
-      // var svgPath = document.createElementNS("http://www.w3.org/2000/svg","path");
-      // svgPath.setAttributeNS(null,"stroke","#009688");
-      // svgPath.setAttributeNS(null,"fill","none");
-      // svgPath.setAttributeNS(null,"stroke-width","7");
-      // svgPath.setAttributeNS(null,"d",pathString);
-      // svgPath.textContent = "SVG PATH";
-      // //console.log(pathString);
-      // sgvTempo = svgCanvas[count];
-      // svgCanvas.appendChild(svgPath);
+      // },false);
 
 
 };
 
+renderGraph.prototype.drawLineChart=function(){
+// ----rendering line----
+      var _this = this;
+      var svgLine = document.createElementNS("http://www.w3.org/2000/svg","path");
+      svgLine.setAttributeNS(null,"stroke","#000000");
+      svgLine.setAttributeNS(null,"fill","none");
+      svgLine.setAttributeNS(null,"stroke-width","1");
+      svgLine.setAttributeNS(null,"d",this.pathString);
+      // svgPath.textContent = "SVG PATH";
+      //console.log(pathString);
+      // sgvTempo = svgCanvas[count];
+
+      this.svgCanvas.appendChild(svgLine);
+      var hairLine  = document.createElementNS("http://www.w3.org/2000/svg", "line");
+
+      this.svgCanvas.addEventListener("mousemove",onMouseMove);
+      document.addEventListener('verticalLine',function(event){
+          // console.log(this === document,"abc");
+          console.log(event.detail.x+","+event.detail.y);
+          
+          hairLine.setAttributeNS(null,"y1",20);
+          hairLine.setAttributeNS(null,"y2",Window.height-20);
+          hairLine.setAttributeNS(null,"x1",event.detail.x);
+          hairLine.setAttributeNS(null,"x2",event.detail.x);
+          // var xCheck = evt.detail.x - 8;
+          hairLine.setAttribute("class","hairLine");
+          _this.svgCanvas.appendChild(hairLine);
+
+      },false);
+};
+
+
+function onMouseMove(event)
+{
+    // console.log((event.clientX)%Window.width);
+    var event = new CustomEvent(
+            "verticalLine",
+            {
+              detail: {
+                x: (event.clientX)%Window.width,
+                y: event.clientY
+              },
+              bubbles: false,
+              cancelable : false
+            }
+          );
+        document.dispatchEvent(event);
+};
+
+
+renderGraph.prototype.drawColumnChart = function(){
+      var _this = this;
+      var lengthTemp = this.coordinateOb.length;
+      console.log(lengthTemp);
+      this.svgColumn=[];
+      for(var i=0;i<lengthTemp;i++)
+      {
+          this.columnWidth = (this.width-45)/(2*10-1);
+          this.svgColumn[i] = document.createElementNS("http://www.w3.org/2000/svg","rect");
+          this.svgColumn[i].setAttribute("x",(this.coordinateOb[i].x)-this.columnWidth/2);
+          this.svgColumn[i].setAttribute("y",this.coordinateOb[i].y);
+          // this.lowerBound[i] = (this.coordinateOb[i].x)-columnWidth/2;
+          // this.upperBound[i] = (this.coordinateOb[i].x)+columnWidth/2;
+          this.svgColumn[i].setAttribute("width",this.columnWidth+"px");
+          // svgColumn.setAttribute("fill","black");
+          this.svgColumn[i].setAttribute("height",(this.height-40)-(this.coordinateOb[i].y));
+          this.svgColumn[i].setAttribute("style","fill:black;stroke:black;stroke-width:1;opacity:1");
+          
+          this.svgCanvas.appendChild(this.svgColumn[i]);
+
+          this.svgColumn[i].addEventListener("mousemove",onMouseMoveColumn,false);
+          this.svgColumn[i].addEventListener("mouseout",onMouseOutColumn,false);          
+
+          function a(j){
+
+                  document.addEventListener('columnHighlight',function(evt){
+                  // console.log(this === document,"abc");
+                  var lowerBound = Number(_this.svgColumn[j].getAttribute("x"));
+                  var upperBound = lowerBound + _this.columnWidth;
+                  console.log(lowerBound,upperBound);
+                  if(event.detail.x>lowerBound && event.detail.x<upperBound )
+                  {
+                      _this.svgColumn[j].setAttribute("style","fill:red;stroke:black;stroke-width:1;opacity:1");
+                  }
+                  
+              },false);
+
+
+                  document.addEventListener('columnNormal',function(evt){
+                  // console.log(this === document,"abc");
+                  _this.svgColumn[j].setAttribute("style","fill:black;stroke:black;stroke-width:1;opacity:1");
+                  },false);
+          }
+          a(i);
+      }
+};
+
+function onMouseMoveColumn(event)
+{
+    // console.log((event.clientX)%Window.width);
+    var event = new CustomEvent(
+            "columnHighlight",
+            {
+              detail: {
+                x: (event.clientX)%Window.width,
+              },
+              bubbles: true,
+              cancelable : true
+            }
+          );
+        document.dispatchEvent(event);
+};
+
+function onMouseOutColumn(event)
+{
+    // console.log((event.clientX)%Window.width);
+    var event = new CustomEvent(
+            "columnNormal",
+            {
+              detail: {
+                x: (event.clientX)%Window.width,
+              },
+              bubbles: true,
+              cancelable : true
+            }
+          );
+        document.dispatchEvent(event);
+};
+
+
 renderGraph.prototype.coordinateCalculation=function(){
       var count = 0;
-      this.coordinateOb=[];
-      console.log(this.tickob);
+      // this.coordinateOb=[];
+      // console.log(this.tickob);
 
 
       for(var i in this.dataob){
-        var tempObj = this.dataob[i];
-        var tempTickObj = this.tickob[count];
+        var tempObj = this.dataob;
+        var tempTickObj = this.tickob;//[count];
         var bufferCoordinateOb=[];
         for(var j in tempObj){
               var a = tempTickObj[0];
@@ -392,29 +573,24 @@ renderGraph.prototype.coordinateCalculation=function(){
               var y = tempObj[j].value;
               var yCoordinate = d-(((y-a)/(b-a))*(d-c));
               // console.log(tempObj[j].value+"-->"+yCoordinate);
-
-
-
               var bufferX = ((tempObj[j].time+"").substring(0,2))%20;
-              var xCoordinate = Math.floor(45+(((this.width-45)/10)*bufferX));//+(0.1*wh[0]);
-              console.log(tempObj[j].time+"-->"+xCoordinate);
-
-              
+              var xCoordinate = Math.floor(45+(((this.width-60)/10)*bufferX));//+(0.1*wh[0]);
+              // console.log(tempObj[j].time+"-->"+xCoordinate);
               bufferCoordinateOb.push({x:xCoordinate,y:yCoordinate});
-              
         }
         //console.log(bufferCoordinateOb);
-        this.coordinateOb.push(bufferCoordinateOb);
+        this.coordinateOb=(bufferCoordinateOb);
         count++;
       }
 };
 
 renderGraph.prototype.pathStringBuilder = function(){
 
-      this.pathString = [];
-      for(var i in this.coordinateOb)
-      {
-          var bufferArray = this.coordinateOb[i];
+      // this.pathString=;
+      // for(var i in this.coordinateOb)
+      // {
+          var bufferArray = this.coordinateOb;
+          // console.log(bufferArray);
           var coordinate = 'M ';
           for(var j in bufferArray)
           {
@@ -424,9 +600,15 @@ renderGraph.prototype.pathStringBuilder = function(){
 
               // console.log(bufferObject);
           }
-          var keyBuffer = Object.keys(this.dataob)[i];
-          this.pathString.push({key:keyBuffer,path:coordinate});
-          console.log(keyBuffer);
-      }
+          coordinate = coordinate.slice(0,coordinate.length-2);
+          var keyBuffer = Object.keys(this.dataob);
+          this.pathString=coordinate;
+          // console.log(keyBuffer);
+      // }
+
+};
+
+renderGraph.prototype.drawHairLine=function(){
+
 
 };
