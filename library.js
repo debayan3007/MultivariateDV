@@ -447,7 +447,6 @@ renderGraph.prototype.axisPlot=function()
 
       }
 
-      var hairLine  = document.createElementNS("http://www.w3.org/2000/svg", "line");
 
       if(this.chartType == "line")
       {
@@ -474,47 +473,112 @@ renderGraph.prototype.mouseDragSelector = function()
 	this.svgCanvas.addEventListener("mousedown",function(event){
 		flag=1;
 		_this.startX = (event.clientX) % (_this.width+20);
-		_this.startY = (event.clientY);
-		
+		_this.startY = (event.pageY)		
 		_this.dragBox.setAttribute("x",_this.startX);
-			_this.dragBox.setAttribute("y",_this.startY);
+		_this.dragBox.setAttribute("y",_this.startY);
+		_this.svgCanvas.removeChild(_this.hairLine);
+		console.log("startX:"+(_this.startX-10)+"startY:"+(_this.startY-70));
 	},false);
 	this.svgCanvas.addEventListener("mousemove",function(event){
 		if(flag==1)
 		{
 			// console.log("drag   x:"+event.clientX+"    y:"+event.clientY);
-			// console.log("startX:"+_this.startX);
-			// console.log("startY:"+_this.startY);
+			// console.log("startX:"+(_this.startX-10)+"startY:"+(_this.startY-70));
+			_this.svgCanvas.removeChild(_this.hairLine);
 			if(event.clientX > _this.startX && event.clientY > _this.startY){
 				_this.dragBox.setAttribute("x",_this.startX);
-				_this.dragBox.setAttribute("y",(_this.startY-100));
+				_this.dragBox.setAttribute("y",((_this.startY-100)%(_this.height)));
 			}else if(event.clientX > _this.startX && event.clientY < _this.startY){
 				_this.dragBox.setAttribute("x",_this.startX);
-				_this.dragBox.setAttribute("y",(event.clientY-100));
+				_this.dragBox.setAttribute("y",((event.clientY-100)%(_this.height)));
 			}else if(event.clientX < _this.startX && event.clientY > _this.startY){
-				_this.dragBox.setAttribute("y",(_this.startY-100));
-				_this.dragBox.setAttribute("x",event.clientX);	
+				_this.dragBox.setAttribute("y",((_this.startY-100)%(_this.height)));
+				_this.dragBox.setAttribute("x",((event.clientX)%(_this.width+20)));	
 			}else if(event.clientX < _this.startX && event.clientY < _this.startY){
-				_this.dragBox.setAttribute("x",event.clientX);
-				_this.dragBox.setAttribute("y",(event.clientY-100));
+				_this.dragBox.setAttribute("x",((event.clientX)%(_this.width+20)));
+				_this.dragBox.setAttribute("y",((event.clientY-100)%(_this.height)));
 			}
 
 			// _this.dragBox.setAttribute("x",_this.startX);
 			// _this.dragBox.setAttribute("y",_this.startY);
 			_this.dragBox.setAttribute("width",Math.abs(((event.clientX-8)%(_this.width+20)) - _this.startX));
-			_this.dragBox.setAttribute("height",Math.abs(event.clientY - _this.startY));
+			_this.dragBox.setAttribute("height",Math.abs(event.clientY - _this.startY + 100));
 			_this.dragBox.setAttribute("class","selectionBox");
 			_this.svgCanvas.appendChild(_this.dragBox);
+			_this.endPointX = (event.clientX)  % (_this.width+20);
+			_this.endPointY = (event.clientY) %  (_this.height+70);
+
+
+			
 		}
+
 	},false);
+
 	this.svgCanvas.addEventListener("mouseup",function(event){
 		if(flag==1)
 			console.log("click");
 
 		_this.svgCanvas.removeChild(_this.dragBox);
+		_this.svgCanvas.appendChild(_this.hairLine);
+
+
+		// console.log("endpoint:("+(_this.endPointX-10)+","+(_this.endPointY-70)+")");
+		// console.log(_this.coordinateOb);
+		// console.log(_this.startY-70);
+		// console.log(_this.endPointY);
 		flag=0;
 	},false);
+
+	this.svgCanvas.addEventListener("mousemove",function(event){
+		_this.beginX=(_this.startX-10);
+		_this.endX = (_this.endPointX-10);
+		_this.beginY = (_this.startY-70);
+		_this.endY = (_this.endPointY);
+		onSelectBox(_this.beginX,_this.endX,_this.beginY,_this.endY);
+
+	},false);
+
+	document.addEventListener("onSelect",function(event){
+
+		beginX= event.detail.beginX;
+        beginY=event.detail.beginY;
+        endX=event.detail.endX;
+        endY=event.detail.endY;
+        // console.log()
+
+		for(var i in _this.coordinateOb)
+		{
+			var temp = _this.coordinateOb[i];
+			if(temp.x>beginX  && temp.x<endX && temp.y>beginY &&  temp.y<endY)
+			{
+				console.log(temp.x,temp.y);
+				// _this.anchorPoints[i].setAttribute("fill","rgb(243,90,90)");
+				_this.anchorPoints[i].setAttribute("fill","red");
+
+			}
+		}
+
+	},false);
 }
+
+function onSelectBox(beginX,endX,beginY,endY)
+{
+    // console.log((event.clientX)%Window.width);
+    var event = new CustomEvent(
+            "onSelect",
+            {
+              detail: {
+                beginX: beginX,
+                beginY: beginY,
+                endX: endX,
+                endY: endY
+              },
+              bubbles: true,
+              cancelable : true
+            }
+          );
+        document.dispatchEvent(event);
+};
 
 renderGraph.prototype.drawLineChart=function(){
 // ----rendering line----
@@ -546,7 +610,7 @@ renderGraph.prototype.drawLineChart=function(){
               this.toolBox.setAttribute("style","fill:#fed8ca;stroke:brown;stroke-width:1;opacity:0.7");
               
               this.svgCanvas.appendChild(this.anchorPoints[i]);
-              var hairLine  = document.createElementNS("http://www.w3.org/2000/svg", "line");
+              this.hairLine  = document.createElementNS("http://www.w3.org/2000/svg", "line");
               this.svgCanvas.addEventListener("mousemove",onMouseMove);
               this.anchorPoints[i].addEventListener("mousemove",onMouseMove);
               function a(j){
@@ -557,14 +621,14 @@ renderGraph.prototype.drawLineChart=function(){
                         // console.log(temp);
                         var tempX=((event.detail.x)%(_this.width+20))-8;
                         // console.log(_this.width,tempX);
-                        hairLine.setAttributeNS(null,"y1",20);
-                        hairLine.setAttributeNS(null,"y2",Window.height-20);
-                        hairLine.setAttributeNS(null,"x1",tempX);
-                        hairLine.setAttributeNS(null,"x2",tempX);
+                        _this.hairLine.setAttributeNS(null,"y1",20);
+                        _this.hairLine.setAttributeNS(null,"y2",Window.height-20);
+                        _this.hairLine.setAttributeNS(null,"x1",tempX);
+                        _this.hairLine.setAttributeNS(null,"x2",tempX);
                         // var xCheck = evt.detail.x - 8;
-                        hairLine.setAttribute("class","hairLine");
+                        _this.hairLine.setAttribute("class","hairLine");
 
-                        _this.svgCanvas.appendChild(hairLine);
+                        _this.svgCanvas.appendChild(_this.hairLine);
                         var lowerBoundX = Number(_this.anchorPoints[j].getAttribute("cx"));
                         var upperBoundX = Number(_this.anchorPoints[j].getAttribute("cx"))+12;
                         var lowerBoundY = Number(_this.anchorPoints[j].getAttribute("cy"))-6;
@@ -685,7 +749,7 @@ renderGraph.prototype.drawColumnChart = function(){
 
                   document.addEventListener('onNormal',function(evt){
                   // console.log(this === document,"abc");
-                  _this.svgColumn[j].setAttribute("style","fill:black;stroke:black;stroke-width:1;opacity:1");
+	                  _this.svgColumn[j].setAttribute("style","fill:black;stroke:black;stroke-width:1;opacity:1");
                   },false);
           }
           a(i);
@@ -708,6 +772,8 @@ function onMouseMove(event)
           );
         document.dispatchEvent(event);
 };
+
+
 
 function onMouseOut(event)
 {
