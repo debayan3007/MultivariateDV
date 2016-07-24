@@ -8,6 +8,25 @@
 }
 
 .svgGraph .hairLine{
-	stroke:  rgb(10000,0000,0);
-	stroke-width: 2;	
+	stroke:  rgb(243,90,90);
+	stroke-width: 1;	
+}
+
+.svgGraph .line-graph{
+	stroke-width:5;
+	stroke: rgb(31,123,203);
+	fill: none;
+
+}
+
+.svgGraph .selectionBox{
+	fill:none;
+	stroke: rgb(243,90,90);
+}
+
+.labelYtext{
+	fill: rgb(31,123,203);
+	font-family: Verdana;
+	text-anchor: middle;
+	
 }

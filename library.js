@@ -1,15 +1,16 @@
 var parsingDataset = function(dataset){  //parser()
     this.optimizedTick=[];
-    var obj = dataset.data;
+    var objData = dataset.data;
     var objChart = dataset.chart;
     // console.log(objChart);
     var dataob={};
+    var tempDataOb={};
     var height;
     var width;
-
-    for(var i in obj)
+    
+    for(var i in objData)
     {
-       var oBuffer = obj[i];
+       var oBuffer = objData[i];
        var time;
        for(var j in oBuffer) 
        {
@@ -46,8 +47,79 @@ var parsingDataset = function(dataset){  //parser()
        {
           width = objChart[i];
        }
+       else if(i=='chartType')
+       {
+       		this.chartType = objChart[i];
+       }
+       else if(i=='ordering')
+       {
+       		this.ordering = objChart[i];
+       }
        
     }
+
+    var totalValue;
+    var average = [];
+    var count = 0;
+    for(var i in dataob)
+    {
+    	var tempObj = dataob[i];
+    	totalValue=0;
+    	for(var j in tempObj)
+    	{
+    		totalValue+=tempObj[j].value;
+    	}
+    	average.push({key:i,average:(totalValue/j)});
+    		
+    	count++;
+    }
+    this.average=average;
+
+    var temp={};
+    for(var i in average)
+    {
+    	for(var j=i;j<average.length;j++)
+    	{
+    		if(average[i].average>average[j].average && this.ordering=="ascending")
+    		{
+    			temp = average[i];
+    			average[i] = average[j];
+    			average[j] = temp;
+    		}
+    		else if(average[i].average<average[j].average && this.ordering=="descending")
+    		{
+    			temp = average[i];
+    			average[i] = average[j];
+    			average[j] = temp;
+    		}
+    		else  if(this.ordering=="default")
+    			break;
+    	}
+    	// console.log(average[i].key,dataob[average[i].key]);
+    	
+    }
+    // console.log(average);
+    // console.log(tempDataOb);
+    for(var i=0;i<average.length;i++)
+    {
+    	console.log(average[i].key);
+    	console.log(dataob[average[i].key]);
+    	tempDataOb[(average[i].key)]=dataob[average[i].key];
+    }
+    dataob = tempDataOb;
+    this.dataob=dataob;
+    for(var i in dataob)
+    {
+    	console.log(i);
+    }
+
+    // console.log(dataob);
+
+
+    
+
+
+
     this.height = height;
     this.width = width;
     this.minmax();
@@ -57,7 +129,7 @@ var parsingDataset = function(dataset){  //parser()
     for(var i in this.dataob)
     {
           // console.log(this.dataob[i],i,count);
-          this.dataRender = new renderGraph(this.dataob[i], i ,this.height, this.width, this.optimizedTick[count++]);  
+          this.dataRender = new renderGraph(this.dataob[i], i ,this.height, this.width, this.optimizedTick[count++],this.chartType);  
     }
     
 
@@ -103,6 +175,9 @@ parsingDataset.prototype.minmax = function(){
         count++; 
     }
 };
+
+
+
 parsingDataset.prototype.rangeOptimizer = function()
 {
       this.minOptimized=[];
@@ -224,7 +299,7 @@ parsingDataset.prototype.tickGenerator = function(){
     }
 
 };
-var renderGraph=function(data,i,chartHeight,chartWidth,tickob){
+var renderGraph=function(data,i,chartHeight,chartWidth,tickob,chartType){
 
       this.dataob = data;
       this.height = chartHeight+70;
@@ -232,6 +307,7 @@ var renderGraph=function(data,i,chartHeight,chartWidth,tickob){
       Window.height = this.height
       Window.width = this.width;
       this.axisName = i;
+      this.chartType = chartType;
       // this.width = this.width+45;
       // this.height = this.height+50;
       // this.xTickTimes = xTickTimes;
@@ -297,18 +373,18 @@ renderGraph.prototype.axisPlot=function()
       labelRect.setAttribute("x",40);
       labelRect.setAttribute("y",0);
       labelRect.setAttribute("width",this.width-25);
-      labelRect.setAttribute("height",28)
-      this.svgCanvas.appendChild(labelRect);
+      labelRect.setAttribute("height",28);
+      // this.svgCanvas.appendChild(labelRectx);
 
 
 
       var labelY=document.createElementNS("http://www.w3.org/2000/svg", "text");
       labelY.setAttributeNS(null,"x",45+(this.width-45)/2);
-      labelY.setAttributeNS(null,"y",18);
-      labelY.setAttributeNS(null,"text-anchor","middle");
-      labelY.setAttributeNS(null,"fill","white");
+      labelY.setAttributeNS(null,"y",13);
+      labelY.setAttribute("class","labelYtext")
+      // labelY.setAttributeNS(null,"text-anchor","middle");
       labelY.textContent=""+this.axisName;
-      labelY.setAttributeNS(null,"font-family","Verdana");
+      // labelY.setAttributeNS(null,"font-family","Verdana");
       this.svgCanvas.appendChild(labelY); //----chart labels appended----
 
 //----add ticks to axes----
@@ -373,21 +449,81 @@ renderGraph.prototype.axisPlot=function()
 
       var hairLine  = document.createElementNS("http://www.w3.org/2000/svg", "line");
 
+      if(this.chartType == "line")
+      {
+      		this.drawLineChart();	
+      }
+      else if(this.chartType=="column")
+      {
+      		this.drawColumnChart();
+      }
+      else
+      {
+      		alert("no chart type selected");
+      }
 
-      // this.drawLineChart();
-      this.drawColumnChart();
-
-
-
+      this.mouseDragSelector();
+      
 };
+
+renderGraph.prototype.mouseDragSelector = function()
+{
+	var flag;
+	var _this = this;
+	this.dragBox = document.createElementNS("http://www.w3.org/2000/svg","rect");
+	this.svgCanvas.addEventListener("mousedown",function(event){
+		flag=1;
+		_this.startX = (event.clientX) % (_this.width+20);
+		_this.startY = (event.clientY);
+		
+		_this.dragBox.setAttribute("x",_this.startX);
+			_this.dragBox.setAttribute("y",_this.startY);
+	},false);
+	this.svgCanvas.addEventListener("mousemove",function(event){
+		if(flag==1)
+		{
+			// console.log("drag   x:"+event.clientX+"    y:"+event.clientY);
+			// console.log("startX:"+_this.startX);
+			// console.log("startY:"+_this.startY);
+			if(event.clientX > _this.startX && event.clientY > _this.startY){
+				_this.dragBox.setAttribute("x",_this.startX);
+				_this.dragBox.setAttribute("y",(_this.startY-100));
+			}else if(event.clientX > _this.startX && event.clientY < _this.startY){
+				_this.dragBox.setAttribute("x",_this.startX);
+				_this.dragBox.setAttribute("y",(event.clientY-100));
+			}else if(event.clientX < _this.startX && event.clientY > _this.startY){
+				_this.dragBox.setAttribute("y",(_this.startY-100));
+				_this.dragBox.setAttribute("x",event.clientX);	
+			}else if(event.clientX < _this.startX && event.clientY < _this.startY){
+				_this.dragBox.setAttribute("x",event.clientX);
+				_this.dragBox.setAttribute("y",(event.clientY-100));
+			}
+
+			// _this.dragBox.setAttribute("x",_this.startX);
+			// _this.dragBox.setAttribute("y",_this.startY);
+			_this.dragBox.setAttribute("width",Math.abs(((event.clientX-8)%(_this.width+20)) - _this.startX));
+			_this.dragBox.setAttribute("height",Math.abs(event.clientY - _this.startY));
+			_this.dragBox.setAttribute("class","selectionBox");
+			_this.svgCanvas.appendChild(_this.dragBox);
+		}
+	},false);
+	this.svgCanvas.addEventListener("mouseup",function(event){
+		if(flag==1)
+			console.log("click");
+
+		_this.svgCanvas.removeChild(_this.dragBox);
+		flag=0;
+	},false);
+}
 
 renderGraph.prototype.drawLineChart=function(){
 // ----rendering line----
       var _this = this;
       var svgLine = document.createElementNS("http://www.w3.org/2000/svg","path");
-      svgLine.setAttributeNS(null,"stroke","#000000");
+      // svgLine.setAttributeNS(null,"stroke","#000000");
       svgLine.setAttributeNS(null,"fill","none");
-      svgLine.setAttributeNS(null,"stroke-width","1");
+      // svgLine.setAttributeNS(null,"stroke-width","1");
+      svgLine.setAttribute("class","line-graph");
       svgLine.setAttributeNS(null,"d",this.pathString);
       this.svgCanvas.appendChild(svgLine);
 
@@ -444,13 +580,13 @@ renderGraph.prototype.drawLineChart=function(){
                             // console.log(tempY,_this.anchorPoints[j].getAttribute("cy"));
                             // _this.anchorPoints[j].setAttribute("style","fill:white;stroke:#009688;stroke-width:1;opacity:1");
                             _this.anchorPoints[j].setAttribute("fill","black");
-                            console.log(tempX,_this.coordinateOb[j].x,"marker");
+                            // console.log(tempX,_this.coordinateOb[j].x,"marker");
                             _this.toolText.setAttribute("x",upperBoundX+3);
                             _this.toolText.setAttribute("y",lowerBoundY+15);
-                            if(tempX>=(_this.coordinateOb[j].x+8)      &&tempX <= (_this.coordinateOb[j].x+12))
+                            if(tempX>=(_this.coordinateOb[j].x+8) && tempX <= (_this.coordinateOb[j].x+12))
                             {
-                                  console.log("abc");
-                                  console.log(_this.coordinateOb[j].y);
+                                  // console.log("abc");
+                                  // console.log(_this.coordinateOb[j].y);
                                   _this.toolText.textContent=_this.dataob[j].value; 
                             }
 
@@ -481,43 +617,7 @@ renderGraph.prototype.drawLineChart=function(){
           }
       }
 
-
-
-      
-      // document.addEventListener('verticalLine',function(event){
-      //     // console.log(this === document,"abc");
-      //     // console.log((event.detail.x)+","+event.detail.y);
-      //     var tempX=((event.detail.x)%(_this.width+20))-8;
-      //     // console.log(_this.width,tempX);
-      //     hairLine.setAttributeNS(null,"y1",20);
-      //     hairLine.setAttributeNS(null,"y2",Window.height-20);
-      //     hairLine.setAttributeNS(null,"x1",tempX);
-      //     hairLine.setAttributeNS(null,"x2",tempX);
-      //     // var xCheck = evt.detail.x - 8;
-      //     hairLine.setAttribute("class","hairLine");
-
-      //     _this.svgCanvas.appendChild(hairLine);
-
-      // },false);
 };
-
-
-// function onMouseMove(event)
-// {
-//     // console.log((event.clientX)%Window.width);
-//     var event = new CustomEvent(
-//             "verticalLine",
-//             {
-//               detail: {
-//                 x: event.clientX,
-//                 y: event.clientY
-//               },
-//               bubbles: false,
-//               cancelable : false
-//             }
-//           );
-//         document.dispatchEvent(event);
-// };
 
 
 renderGraph.prototype.drawColumnChart = function(){
