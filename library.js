@@ -7,7 +7,6 @@ var parsingDataset = function(dataset){  //parser()
     var tempDataOb={};
     var height;
     var width;
-    var a;
     
     for(var i in objData)
     {
@@ -50,11 +49,11 @@ var parsingDataset = function(dataset){  //parser()
        }
        else if(i=='chartType')
        {
-       		this.chartType = objChart[i];
+          this.chartType = objChart[i];
        }
        else if(i=='ordering')
        {
-       		this.ordering = objChart[i];
+          this.ordering = objChart[i];
        }
        
     }
@@ -64,54 +63,54 @@ var parsingDataset = function(dataset){  //parser()
     var count = 0;
     for(var i in dataob)
     {
-    	var tempObj = dataob[i];
-    	totalValue=0;
-    	for(var j in tempObj)
-    	{
-    		totalValue+=tempObj[j].value;
-    	}
-    	average.push({key:i,average:(totalValue/j)});
-    		
-    	count++;
+      var tempObj = dataob[i];
+      totalValue=0;
+      for(var j in tempObj)
+      {
+        totalValue+=tempObj[j].value;
+      }
+      average.push({key:i,average:(totalValue/j)});
+        
+      count++;
     }
     this.average=average;
 
     var temp={};
     for(var i in average)
     {
-    	for(var j=i;j<average.length;j++)
-    	{
-    		if(average[i].average>average[j].average && this.ordering=="ascending")
-    		{
-    			temp = average[i];
-    			average[i] = average[j];
-    			average[j] = temp;
-    		}
-    		else if(average[i].average<average[j].average && this.ordering=="descending")
-    		{
-    			temp = average[i];
-    			average[i] = average[j];
-    			average[j] = temp;
-    		}
-    		else  if(this.ordering=="default")
-    			break;
-    	}
-    	// console.log(average[i].key,dataob[average[i].key]);
-    	
+      for(var j=i;j<average.length;j++)
+      {
+        if(average[i].average>average[j].average && this.ordering=="ascending")
+        {
+          temp = average[i];
+          average[i] = average[j];
+          average[j] = temp;
+        }
+        else if(average[i].average<average[j].average && this.ordering=="descending")
+        {
+          temp = average[i];
+          average[i] = average[j];
+          average[j] = temp;
+        }
+        else  if(this.ordering=="default")
+          break;
+      }
+      // console.log(average[i].key,dataob[average[i].key]);
+      
     }
     // console.log(average);
     // console.log(tempDataOb);
     for(var i=0;i<average.length;i++)
     {
-    	console.log(average[i].key);
-    	console.log(dataob[average[i].key]);
-    	tempDataOb[(average[i].key)]=dataob[average[i].key];
+      console.log(average[i].key);
+      console.log(dataob[average[i].key]);
+      tempDataOb[(average[i].key)]=dataob[average[i].key];
     }
     dataob = tempDataOb;
     this.dataob=dataob;
     for(var i in dataob)
     {
-    	console.log(i);
+      console.log(i);
     }
 
     // console.log(dataob);
@@ -375,13 +374,14 @@ renderGraph.prototype.axisPlot=function()
       labelRect.setAttribute("y",0);
       labelRect.setAttribute("width",this.width-25);
       labelRect.setAttribute("height",28);
-      // this.svgCanvas.appendChild(labelRectx);
+      labelRect.setAttribute("class","labelRectStyle");
+      this.svgCanvas.appendChild(labelRect);
 
 
 
       var labelY=document.createElementNS("http://www.w3.org/2000/svg", "text");
       labelY.setAttributeNS(null,"x",45+(this.width-45)/2);
-      labelY.setAttributeNS(null,"y",13);
+      labelY.setAttributeNS(null,"y",18);
       labelY.setAttribute("class","labelYtext")
       // labelY.setAttributeNS(null,"text-anchor","middle");
       labelY.textContent=""+this.axisName;
@@ -400,15 +400,22 @@ renderGraph.prototype.axisPlot=function()
           svgAxisTickY.setAttributeNS(null,"y1",((this.height-40)-div*(i)));
           svgAxisTickY.setAttributeNS(null,"y2",((this.height-40)-div*(i)));
           svgAxisTickY.setAttributeNS(null,"style","stroke:rgb(0,0,0);stroke-width:1.5");
+
           this.svgCanvas.appendChild(svgAxisTickY);
 
 
-          var svgTickLineY = document.createElementNS("http://www.w3.org/2000/svg", "line");
-          svgTickLineY.setAttributeNS(null,"x1","45");
-          svgTickLineY.setAttributeNS(null,"x2",this.width);
-          svgTickLineY.setAttributeNS(null,"y1",((this.height-40)-div*(i)));
-          svgTickLineY.setAttributeNS(null,"y2",(this.height-40-div*(i)));
-          svgTickLineY.setAttributeNS(null,"style","stroke:rgb(0,0,0);stroke-width:0.3");
+          var svgTickLineY = document.createElementNS("http://www.w3.org/2000/svg", "rect");
+          svgTickLineY.setAttributeNS(null,"x","45");
+          // svgTickLineY.setAttributeNS(null,"x2",this.width);
+          svgTickLineY.setAttributeNS(null,"y",((this.height-40)-div*(i)));
+          // svgTickLineY.setAttributeNS(null,"y2",(this.height-40-div*(i)));
+          svgTickLineY.setAttributeNS(null,"height",div)
+          svgTickLineY.setAttributeNS(null,"width",this.width-45);
+          // svgTickLineY.setAttributeNS(null,"style","stroke:rgb(0,0,0);stroke-width:0");
+          if(i%2==0 && i!=0)
+            svgTickLineY.setAttributeNS(null,"class","svgTickRectEven");
+          else
+            svgTickLineY.setAttributeNS(null,"class","svgTickRectOdd");
           this.svgCanvas.appendChild(svgTickLineY);
 
 
@@ -451,15 +458,15 @@ renderGraph.prototype.axisPlot=function()
 
       if(this.chartType == "line")
       {
-      		this.drawLineChart();	
+          this.drawLineChart(); 
       }
       else if(this.chartType=="column")
       {
-      		this.drawColumnChart();
+          this.drawColumnChart();
       }
       else
       {
-      		alert("no chart type selected");
+          alert("no chart type selected");
       }
 
       this.mouseDragSelector();
@@ -468,98 +475,116 @@ renderGraph.prototype.axisPlot=function()
 
 renderGraph.prototype.mouseDragSelector = function()
 {
-	var flag;
-	var _this = this;
-	this.dragBox = document.createElementNS("http://www.w3.org/2000/svg","rect");
-	this.svgCanvas.addEventListener("mousedown",function(event){
-		flag=1;
-		_this.startX = (event.clientX) % (_this.width+20);
-		_this.startY = (event.pageY)		
-		_this.dragBox.setAttribute("x",_this.startX);
-		_this.dragBox.setAttribute("y",_this.startY);
-		_this.svgCanvas.removeChild(_this.hairLine);
-		console.log("startX:"+(_this.startX-10)+"startY:"+(_this.startY-70));
-	},false);
-	this.svgCanvas.addEventListener("mousemove",function(event){
-		if(flag==1)
-		{
-			// console.log("drag   x:"+event.clientX+"    y:"+event.clientY);
-			// console.log("startX:"+(_this.startX-10)+"startY:"+(_this.startY-70));
-			_this.svgCanvas.removeChild(_this.hairLine);
-			if(event.clientX > _this.startX && event.clientY > _this.startY){
-				_this.dragBox.setAttribute("x",_this.startX);
-				_this.dragBox.setAttribute("y",((_this.startY-100)%(_this.height)));
-			}else if(event.clientX > _this.startX && event.clientY < _this.startY){
-				_this.dragBox.setAttribute("x",_this.startX);
-				_this.dragBox.setAttribute("y",((event.clientY-100)%(_this.height)));
-			}else if(event.clientX < _this.startX && event.clientY > _this.startY){
-				_this.dragBox.setAttribute("y",((_this.startY-100)%(_this.height)));
-				_this.dragBox.setAttribute("x",((event.clientX)%(_this.width+20)));	
-			}else if(event.clientX < _this.startX && event.clientY < _this.startY){
-				_this.dragBox.setAttribute("x",((event.clientX)%(_this.width+20)));
-				_this.dragBox.setAttribute("y",((event.clientY-100)%(_this.height)));
-			}
+    var flag;
+    var _this = this;
+    this.dragBox = document.createElementNS("http://www.w3.org/2000/svg","rect");
+    this.svgCanvas.addEventListener("mousedown",function(event){
+    flag=1;
+    _this.startX = (event.clientX-10) % (_this.width+20);
+    _this.startY = (event.clientY-70);
+    // _this.dragBox.setAttribute("x",_this.startX);
+    // _this.dragBox.setAttribute("y",_this.startY);
+    if(_this.chartType == "line")
+    {
+        _this.svgCanvas.removeChild(_this.hairLine);
+    }  
+    
+    console.log("startX:"+(_this.startX-10)+"startY:"+(_this.startY-70));
+  },false);
+  this.svgCanvas.addEventListener("mousemove",function(event){
+    if(flag==1)
+    {
+      // console.log("drag   x:"+event.clientX+"    y:"+event.clientY);
+      // console.log("startX:"+(_this.startX-10)+"startY:"+(_this.startY-70));
+      if(_this.chartType == "line")
+      {
+          _this.svgCanvas.removeChild(_this.hairLine);
+      }
+      if(event.clientX > _this.startX && event.clientY > _this.startY){
+        _this.dragBox.setAttribute("x",_this.startX);
+        _this.dragBox.setAttribute("y",((_this.startY-100)%(_this.height)));
+      }else if(event.clientX > _this.startX && event.clientY < _this.startY){
+        _this.dragBox.setAttribute("x",_this.startX);
+        _this.dragBox.setAttribute("y",((event.clientY-100)%(_this.height)));
+      }else if(event.clientX < _this.startX && event.clientY > _this.startY){
+        _this.dragBox.setAttribute("y",((_this.startY-100)%(_this.height)));
+        _this.dragBox.setAttribute("x",((event.clientX)%(_this.width+20))); 
+      }else if(event.clientX < _this.startX && event.clientY < _this.startY){
+        _this.dragBox.setAttribute("x",((event.clientX)%(_this.width+20)));
+        _this.dragBox.setAttribute("y",((event.clientY-100)%(_this.height)));
+      }
 
-			// _this.dragBox.setAttribute("x",_this.startX);
-			// _this.dragBox.setAttribute("y",_this.startY);
-			_this.dragBox.setAttribute("width",Math.abs(((event.clientX-8)%(_this.width+20)) - _this.startX));
-			_this.dragBox.setAttribute("height",Math.abs(event.clientY - _this.startY + 100));
-			_this.dragBox.setAttribute("class","selectionBox");
-			_this.svgCanvas.appendChild(_this.dragBox);
-			_this.endPointX = (event.clientX)  % (_this.width+20);
-			_this.endPointY = (event.clientY) %  (_this.height+70);
-
-
-			
-		}
-
-	},false);
-
-	this.svgCanvas.addEventListener("mouseup",function(event){
-		if(flag==1)
-			console.log("click");
-
-		_this.svgCanvas.removeChild(_this.dragBox);
-		_this.svgCanvas.appendChild(_this.hairLine);
+      // _this.dragBox.setAttribute("x",_this.startX);
+      // _this.dragBox.setAttribute("y",_this.startY);
+      _this.dragBox.setAttribute("width",Math.abs(((event.clientX-8)%(_this.width+20)) - _this.startX));
+      _this.dragBox.setAttribute("height",Math.abs(event.clientY - _this.startY - 30));
+      _this.dragBox.setAttribute("class","selectionBox");
+      _this.svgCanvas.appendChild(_this.dragBox);
+      _this.endPointX = (event.clientX)  % (_this.width+20);
+      _this.endPointY = (event.clientY) %  (_this.height+70);
 
 
-		// console.log("endpoint:("+(_this.endPointX-10)+","+(_this.endPointY-70)+")");
-		// console.log(_this.coordinateOb);
-		// console.log(_this.startY-70);
-		// console.log(_this.endPointY);
-		flag=0;
-	},false);
+      
+    }
 
-	this.svgCanvas.addEventListener("mousemove",function(event){
-		_this.beginX=(_this.startX-10);
-		_this.endX = (_this.endPointX-10);
-		_this.beginY = (_this.startY-70);
-		_this.endY = (_this.endPointY);
-		onSelectBox(_this.beginX,_this.endX,_this.beginY,_this.endY);
+  },false);
 
-	},false);
+  this.svgCanvas.addEventListener("mouseup",function(event){
+    if(flag==1)
+      
 
-	document.addEventListener("onSelect",function(event){
+    _this.svgCanvas.removeChild(_this.dragBox);
+    if(_this.chartType == "line")
+    {
+      _this.svgCanvas.appendChild(_this.hairLine);  
+    }
 
-		beginX= event.detail.beginX;
-        beginY=event.detail.beginY;
-        endX=event.detail.endX;
-        endY=event.detail.endY;
-        // console.log()
 
-		for(var i in _this.coordinateOb)
-		{
-			var temp = _this.coordinateOb[i];
-			if(temp.x>beginX  && temp.x<endX && temp.y>beginY &&  temp.y<endY)
-			{
-				console.log(temp.x,temp.y);
-				// _this.anchorPoints[i].setAttribute("fill","rgb(243,90,90)");
-				_this.anchorPoints[i].setAttribute("fill","red");
+    // console.log("endpoint:("+(_this.endPointX-10)+","+(_this.endPointY-70)+")");
+    // console.log(_this.coordinateOb);
+    // console.log(_this.startY-70);
+    // console.log(_this.endPointY);
+    flag=0;
+  },false);
 
-			}
-		}
+  this.svgCanvas.addEventListener("mousemove",function(event){
+    _this.beginX=(_this.startX-10);
+    _this.endX = (_this.endPointX-10);
+    _this.beginY = (_this.startY-70);
+    _this.endY = (_this.endPointY);
+    onSelectBox(_this.beginX,_this.endX,_this.beginY,_this.endY);
+  },false);
 
-	},false);
+  document.addEventListener("onSelect",function(event){
+
+    beginX= event.detail.beginX;
+    beginY=(event.detail.beginY-20)%(_this.height+70);
+    endX=event.detail.endX;
+    endY=(event.detail.endY-120)%(_this.height+70);
+    // console.log()
+
+    for(var i in _this.coordinateOb)
+    {
+      var temp = _this.coordinateOb[i];
+      if(temp.x>beginX  && temp.x<endX && ((temp.y)%(_this.height+70))>beginY &&  ((temp.y)%(_this.height+70))<endY)
+      {
+        console.log(_this.height);
+        console.log(temp.x,((temp.y+30)%(_this.height+100)));
+        // _this.anchorPoints[i].setAttribute("fill","rgb(243,90,90)");
+          if(_this.chartType == "line")
+          {
+              _this.anchorPoints[i].setAttribute("class","anchorpointHighlight");
+          }  
+          else
+          {
+              
+              _this.svgColumn[i].setAttribute("class","svgColumnHighlight");
+          }
+
+      }
+    }
+
+  },false);
 }
 
 function onSelectBox(beginX,endX,beginY,endY)
@@ -602,10 +627,8 @@ renderGraph.prototype.drawLineChart=function(){
               this.anchorPoints[i].setAttribute("cx",Math.floor(this.coordinateOb[i].x));
               this.anchorPoints[i].setAttribute("cy",Math.floor(this.coordinateOb[i].y));
               // console.log(this.coordinateOb[i].x);
-              this.anchorPoints[i].setAttribute("r","6");
-              this.anchorPoints[i].setAttribute("stroke","#009688");
-              this.anchorPoints[i].setAttribute("stroke-width",1);
-              this.anchorPoints[i].setAttribute("fill","white");
+              this.anchorPoints[i].setAttribute("class","anchorpoint");
+              
               this.toolBox.setAttribute("height",20);
               this.toolBox.setAttribute("width",25);
               this.toolBox.setAttribute("style","fill:#fed8ca;stroke:brown;stroke-width:1;opacity:0.7");
@@ -644,7 +667,8 @@ renderGraph.prototype.drawLineChart=function(){
 
                             // console.log(tempY,_this.anchorPoints[j].getAttribute("cy"));
                             // _this.anchorPoints[j].setAttribute("style","fill:white;stroke:#009688;stroke-width:1;opacity:1");
-                            _this.anchorPoints[j].setAttribute("fill","black");
+                            // _this.anchorPoints[j].setAttribute("fill","black");
+                            _this.anchorPoints[j].setAttribute("class","anchorpointHighlight");
                             // console.log(tempX,_this.coordinateOb[j].x,"marker");
                             _this.toolText.setAttribute("x",upperBoundX+3);
                             _this.toolText.setAttribute("y",lowerBoundY+15);
@@ -669,7 +693,7 @@ renderGraph.prototype.drawLineChart=function(){
                         }
                         else
                         {
-                            _this.anchorPoints[j].setAttribute("fill","white");   
+                            _this.anchorPoints[j].setAttribute("class","anchorpoint");
                         }
                   
                   },false);
@@ -703,7 +727,8 @@ renderGraph.prototype.drawColumnChart = function(){
           this.svgColumn[i].setAttribute("width",this.columnWidth+"px");
           // svgColumn.setAttribute("fill","black");
           this.svgColumn[i].setAttribute("height",(this.height-40)-(this.coordinateOb[i].y));
-          this.svgColumn[i].setAttribute("style","fill:black;stroke:black;stroke-width:1;opacity:1");
+          // this.svgColumn[i].setAttribute("style","fill:black;stroke:black;stroke-width:1;opacity:1");
+          this.svgColumn[i].setAttribute("class","svgColumn");
           
           this.svgCanvas.appendChild(this.svgColumn[i]);
 
@@ -726,7 +751,7 @@ renderGraph.prototype.drawColumnChart = function(){
                   var tempX=((event.detail.x)%(_this.width+20));
                   if(tempX>=lowerBound && tempX<=(upperBound+10) )
                   {
-                      _this.svgColumn[j].setAttribute("style","fill:red;stroke:black;stroke-width:1;opacity:1");
+                      _this.svgColumn[j].setAttribute("class","svgColumnHighlight");
                       _this.toolText.setAttribute("x",upperBound+5);
                       _this.toolBox.setAttribute("x",upperBound+5);
                       _this.toolText.setAttribute("y",(upperBoundY-15));
@@ -750,7 +775,7 @@ renderGraph.prototype.drawColumnChart = function(){
 
                   document.addEventListener('onNormal',function(evt){
                   // console.log(this === document,"abc");
-	                  _this.svgColumn[j].setAttribute("style","fill:black;stroke:black;stroke-width:1;opacity:1");
+                    _this.svgColumn[j].setAttribute("class","svgColumn");
                   },false);
           }
           a(i);

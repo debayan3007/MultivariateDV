@@ -1,32 +1,57 @@
-.svgGraph{
-	
+.svgGraph {} .svgGraph .svgAxis {
+    stroke: rgb(0, 0, 0);
+    stroke-width: 0.5;
 }
-
-.svgGraph .svgAxis {
-	stroke:  rgb(0,0,0);
-	stroke-width: 0.5;
+.svgGraph .hairLine {
+    stroke: rgb(243, 90, 90);
+    stroke-width: 1;
 }
-
-.svgGraph .hairLine{
-	stroke:  rgb(243,90,90);
-	stroke-width: 1;	
+.svgGraph .line-graph {
+    stroke-width: 5;
+    stroke: rgb(31, 123, 203);
+    fill: none;
 }
-
-.svgGraph .line-graph{
-	stroke-width:5;
-	stroke: rgb(31,123,203);
+.selectionBox {
+    fill: none;
+    stroke: rgb(243, 90, 90);
+}
+.labelYtext {
+    fill: rgb(31, 123, 203);
+    font-family: Verdana;
+    text-anchor: middle;
+}
+.svgTickRectEven{
+	fill: #D4DDE4;
+	stroke-width: 0
+}
+.svgTickRectOdd{
 	fill: none;
-
+	stroke-width :0;
+}
+.svgColumn{
+	fill: #1E88E5;
+	/*stroke: ;*/
+}
+.svgColumnHighlight{
+	fill: red;
 }
 
-.svgGraph .selectionBox{
-	fill:none;
-	stroke: rgb(243,90,90);
+.anchorpoint{
+	r:6;
+	stroke: #009688;
+	stroke-width: 1;
+	fill: white
 }
 
-.labelYtext{
-	fill: rgb(31,123,203);
-	font-family: Verdana;
-	text-anchor: middle;
-	
+.anchorpointHighlight{
+	r:8;
+	stroke: red;
+	stroke-width : 2;
+	fill: white
+}
+
+.labelRectStyle{
+	stroke-width:0.5;
+	fill: none;
+	stroke:#1E88E5
 }
