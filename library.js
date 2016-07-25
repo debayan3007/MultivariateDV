@@ -55,6 +55,14 @@ var parsingDataset = function(dataset){  //parser()
        {
           this.ordering = objChart[i];
        }
+       else if(i=='caption')
+       {
+          document.getElementById("caption").innerHTML=objChart[i];
+       }
+       else if(i=='subcaption')
+       {
+          document.getElementById("subcaption").innerHTML=objChart[i];
+       }
        
     }
 
@@ -426,6 +434,7 @@ renderGraph.prototype.axisPlot=function()
           TicksY.setAttributeNS(null,"text-anchor","end");
           TicksY.setAttributeNS(null,"dominant-baseline","central");
           TicksY.setAttributeNS(null,"font-family","Verdana");
+          TicksY.setAttribute("size","10px");
           TicksY.textContent=""+tickArray[i];
           this.svgCanvas.appendChild(TicksY);
       }
@@ -447,6 +456,7 @@ renderGraph.prototype.axisPlot=function()
           TicksX.setAttributeNS(null,"x",45+(div*j));
           TicksX.setAttributeNS(null,"y",this.height-40);
           TicksX.setAttributeNS(null,"fill","black");
+          TicksX.setAttribute("size","10px");
           TicksX.textContent=((20+j)+"-06");
           TicksX.setAttributeNS(null,"dominant-baseline","text-after-edge");
           TicksX.setAttribute("transform","rotate(90 "+ (45+(div*j)) +","+(this.height-40)+")" );
