@@ -7,6 +7,7 @@ var parsingDataset = function(dataset){  //parser()
     var tempDataOb={};
     var height;
     var width;
+    var a;
     
     for(var i in objData)
     {
