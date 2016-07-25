@@ -490,8 +490,8 @@ renderGraph.prototype.mouseDragSelector = function()
     this.dragBox = document.createElementNS("http://www.w3.org/2000/svg","rect");
     this.svgCanvas.addEventListener("mousedown",function(event){
     flag=1;
-    _this.startX = (event.clientX-10) % (_this.width+20);
-    _this.startY = (event.clientY-70);
+    _this.startX = (event.pageX-10) % (_this.width+20);
+    _this.startY = (event.pageY-70);
     // _this.dragBox.setAttribute("x",_this.startX);
     // _this.dragBox.setAttribute("y",_this.startY);
     if(_this.chartType == "line")
@@ -504,34 +504,34 @@ renderGraph.prototype.mouseDragSelector = function()
   this.svgCanvas.addEventListener("mousemove",function(event){
     if(flag==1)
     {
-      // console.log("drag   x:"+event.clientX+"    y:"+event.clientY);
+      // console.log("drag   x:"+event.pageX+"    y:"+event.pageY);
       // console.log("startX:"+(_this.startX-10)+"startY:"+(_this.startY-70));
       if(_this.chartType == "line")
       {
           _this.svgCanvas.removeChild(_this.hairLine);
       }
-      if(event.clientX > _this.startX && event.clientY > _this.startY){
+      if(event.pageX > _this.startX && event.pageY > _this.startY){
         _this.dragBox.setAttribute("x",_this.startX);
         _this.dragBox.setAttribute("y",((_this.startY-100)%(_this.height)));
-      }else if(event.clientX > _this.startX && event.clientY < _this.startY){
+      }else if(event.pageX > _this.startX && event.pageY < _this.startY){
         _this.dragBox.setAttribute("x",_this.startX);
-        _this.dragBox.setAttribute("y",((event.clientY-100)%(_this.height)));
-      }else if(event.clientX < _this.startX && event.clientY > _this.startY){
+        _this.dragBox.setAttribute("y",((event.pageY-100)%(_this.height)));
+      }else if(event.pageX < _this.startX && event.pageY > _this.startY){
         _this.dragBox.setAttribute("y",((_this.startY-100)%(_this.height)));
-        _this.dragBox.setAttribute("x",((event.clientX)%(_this.width+20))); 
-      }else if(event.clientX < _this.startX && event.clientY < _this.startY){
-        _this.dragBox.setAttribute("x",((event.clientX)%(_this.width+20)));
-        _this.dragBox.setAttribute("y",((event.clientY-100)%(_this.height)));
+        _this.dragBox.setAttribute("x",((event.pageX)%(_this.width+20))); 
+      }else if(event.pageX < _this.startX && event.pageY < _this.startY){
+        _this.dragBox.setAttribute("x",((event.pageX)%(_this.width+20)));
+        _this.dragBox.setAttribute("y",((event.pageY-100)%(_this.height)));
       }
 
       // _this.dragBox.setAttribute("x",_this.startX);
       // _this.dragBox.setAttribute("y",_this.startY);
-      _this.dragBox.setAttribute("width",Math.abs(((event.clientX-8)%(_this.width+20)) - _this.startX));
-      _this.dragBox.setAttribute("height",Math.abs(event.clientY - _this.startY - 30));
+      _this.dragBox.setAttribute("width",Math.abs(((event.pageX-8)%(_this.width+20)) - _this.startX));
+      _this.dragBox.setAttribute("height",Math.abs(event.pageY - _this.startY - 30));
       _this.dragBox.setAttribute("class","selectionBox");
       _this.svgCanvas.appendChild(_this.dragBox);
-      _this.endPointX = (event.clientX)  % (_this.width+20);
-      _this.endPointY = (event.clientY) %  (_this.height+70);
+      _this.endPointX = (event.pageX)  % (_this.width+20);
+      _this.endPointY = (event.pageY) %  (_this.height+70);
 
 
       
@@ -599,7 +599,7 @@ renderGraph.prototype.mouseDragSelector = function()
 
 function onSelectBox(beginX,endX,beginY,endY)
 {
-    // console.log((event.clientX)%Window.width);
+    // console.log((event.pageX)%Window.width);
     var event = new CustomEvent(
             "onSelect",
             {
@@ -794,7 +794,7 @@ renderGraph.prototype.drawColumnChart = function(){
 
 function onMouseMove(event)
 {
-    // console.log((event.clientX)%Window.width);
+    // console.log((event.pageX)%Window.width);
     var event = new CustomEvent(
             "onHighlight",
             {
@@ -813,12 +813,12 @@ function onMouseMove(event)
 
 function onMouseOut(event)
 {
-    // console.log((event.clientX)%Window.width);
+    // console.log((event.pageX)%Window.width);
     var event = new CustomEvent(
             "onNormal",
             {
               detail: {
-                x: (event.clientX),
+                x: (event.pageX),
               },
               bubbles: true,
               cancelable : true
