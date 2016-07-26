@@ -682,14 +682,7 @@ renderGraph.prototype.drawLineChart=function(){
                             // console.log(tempX,_this.coordinateOb[j].x,"marker");
                             _this.toolText.setAttribute("x",upperBoundX+3);
                             _this.toolText.setAttribute("y",lowerBoundY+15);
-                            if(tempX>=(_this.coordinateOb[j].x+8) && tempX <= (_this.coordinateOb[j].x+12))
-                            {
-                                  // console.log("abc");
-                                  // console.log(_this.coordinateOb[j].y);
-                                  _this.toolText.textContent=_this.dataob[j].value; 
-                            }
 
-                            
                             _this.toolText.setAttribute("fill","brown");
                             _this.toolText.setAttribute("font-size","15px");
 
@@ -697,12 +690,26 @@ renderGraph.prototype.drawLineChart=function(){
                             _this.toolBox.setAttribute("x",upperBoundX);
                             _this.toolBox.setAttribute("y",lowerBoundY);
 
+                            if(tempX>=(_this.coordinateOb[j].x+8) && tempX <= (_this.coordinateOb[j].x+12))
+                            {
+                                  // console.log("abc");
+                                  // console.log(_this.coordinateOb[j].y);
+                                  _this.toolText.textContent=_this.dataob[j].value; 
+                                  _this.toolText.setAttribute("x",-100)
+                                  _this.toolText.setAttribute("y",-100);
+                                  _this.toolBox.setAttribute("x",-100);
+                                  _this.toolBox.setAttribute("y",-100);
+                            }
+
+                            
+                            
                             _this.svgCanvas.appendChild(_this.toolBox);
                             _this.svgCanvas.appendChild(_this.toolText);
 
                         }
                         else
                         {
+                            // _this.toolText.setAttribute("x",-1);
                             _this.anchorPoints[j].setAttribute("class","anchorpoint");
                         }
                   
