@@ -1,13 +1,19 @@
 var parsingDataset = function(dataset){  //parser()
-    this.optimizedTick=[];
-    var objData = dataset.data;
-    var objChart = dataset.chart;
-    // console.log(objChart);
-    var dataob={};
-    var tempDataOb={};
-    var height;
-    var width;
-    
+    // this.optimizedTick=[];
+    this.dataset = dataset;
+    this.dataob={};
+    this.dataParse();
+    this.chartParse();    
+    this.orderingData();
+    this.minmax();
+    this.rangeOptimizer();
+    this.tickGenerator();
+    this.evokingRender();
+};
+
+parsingDataset.prototype.dataParse = function(){
+
+    var objData = this.dataset.data;
     for(var i in objData)
     {
        var oBuffer = objData[i];
@@ -21,31 +27,35 @@ var parsingDataset = function(dataset){  //parser()
            }
            else
            {
-                if(dataob[j]==undefined)
+                if(this.dataob[j]==undefined)
                 {
-                  dataob[j]=[];
-                  dataob[j].push({time:time,value:oBufferAttribute});
+                  this.dataob[j]=[];
+                  this.dataob[j].push({time:time,value:oBufferAttribute});
                 }
                 else
                 {
-                  dataob[j].push({time:time,value:oBufferAttribute});
+                  this.dataob[j].push({time:time,value:oBufferAttribute});
                 }
            }
        }
     }
-    this.dataob = dataob;
 
+}
+
+parsingDataset.prototype.chartParse = function(){
+
+    var objChart = this.dataset.chart;
     for(var i in objChart)
     {
        // var oBuffer = objChart[i];
        // var oBufferAttribute=oBuffer[j];
        if(i=='height')
        {
-          height = objChart[i];
+          this.height = objChart[i];
        }
        else if(i=='width')
        {
-          width = objChart[i];
+          this.width = objChart[i];
        }
        else if(i=='chartType')
        {
@@ -65,83 +75,60 @@ var parsingDataset = function(dataset){  //parser()
        }
        
     }
+}
 
-    var totalValue;
-    var average = [];
-    var count = 0;
-    for(var i in dataob)
-    {
-      var tempObj = dataob[i];
-      totalValue=0;
-      for(var j in tempObj)
+parsingDataset.prototype.orderingData = function(){
+      var totalValue;
+      var average = [];
+      var count = 0;
+      var tempDataOb={};
+      for(var i in this.dataob)
       {
-        totalValue+=tempObj[j].value;
+        var tempObj = this.dataob[i];
+        totalValue=0;
+        for(var j in tempObj)
+        {
+          totalValue+=tempObj[j].value;
+        }
+        average.push({key:i,average:(totalValue/j)});
+          
+        count++;
       }
-      average.push({key:i,average:(totalValue/j)});
+      this.average=average;
+
+      var temp={};
+      for(var i in average)
+      {
+        for(var j=i;j<average.length;j++)
+        {
+          if(average[i].average>average[j].average && this.ordering=="ascending")
+          {
+            temp = average[i];
+            average[i] = average[j];
+            average[j] = temp;
+          }
+          else if(average[i].average<average[j].average && this.ordering=="descending")
+          {
+            temp = average[i];
+            average[i] = average[j];
+            average[j] = temp;
+          }
+          else  if(this.ordering=="default")
+            break;
+        }
+        // console.log(average[i].key,dataob[average[i].key]);
         
-      count++;
-    }
-    this.average=average;
-
-    var temp={};
-    for(var i in average)
-    {
-      for(var j=i;j<average.length;j++)
-      {
-        if(average[i].average>average[j].average && this.ordering=="ascending")
-        {
-          temp = average[i];
-          average[i] = average[j];
-          average[j] = temp;
-        }
-        else if(average[i].average<average[j].average && this.ordering=="descending")
-        {
-          temp = average[i];
-          average[i] = average[j];
-          average[j] = temp;
-        }
-        else  if(this.ordering=="default")
-          break;
       }
-      // console.log(average[i].key,dataob[average[i].key]);
-      
-    }
-    // console.log(average);
-    // console.log(tempDataOb);
-    for(var i=0;i<average.length;i++)
-    {
-      console.log(average[i].key);
-      console.log(dataob[average[i].key]);
-      tempDataOb[(average[i].key)]=dataob[average[i].key];
-    }
-    dataob = tempDataOb;
-    this.dataob=dataob;
-    for(var i in dataob)
-    {
-      console.log(i);
-    }
-
-    // console.log(dataob);
-
-
-    
-
-
-
-    this.height = height;
-    this.width = width;
-    this.minmax();
-    this.rangeOptimizer();
-    this.tickGenerator();
-    var count =0;
-    for(var i in this.dataob)
-    {
-          // console.log(this.dataob[i],i,count);
-          this.dataRender = new renderGraph(this.dataob[i], i ,this.height, this.width, this.optimizedTick[count++],this.chartType);  
-    }
-    
-
-};
+      // console.log(average);
+      // console.log(tempDataOb);
+      for(var i=0;i<average.length;i++)
+      {
+        // console.log(average[i].key);
+        // console.log(this.dataob[average[i].key]);
+        tempDataOb[(average[i].key)]=this.dataob[average[i].key];
+      }
+      this.dataob=tempDataOb;
+}
 
 parsingDataset.prototype.minmax = function(){
 
@@ -244,8 +231,19 @@ parsingDataset.prototype.rangeOptimizer = function()
       }
 };
 
+parsingDataset.prototype.evokingRender=function(){
+
+    var count =0;
+    for(var i in this.dataob)
+    {
+          this.dataRender = new renderGraph(this.dataob[i], i ,this.height, this.width, this.optimizedTick[count++],this.chartType);  
+    }
+
+}
+
 parsingDataset.prototype.tickGenerator = function(){
 
+    this.optimizedTick = [];
     for(var i=0;i<this.max.length;i++)
     {
 
@@ -316,10 +314,6 @@ var renderGraph=function(data,i,chartHeight,chartWidth,tickob,chartType){
       Window.width = this.width;
       this.axisName = i;
       this.chartType = chartType;
-      // this.width = this.width+45;
-      // this.height = this.height+50;
-      // this.xTickTimes = xTickTimes;
-      // this.yTickTimes = yTickTimes;
       // this.tickob = [];
       this.tickob=tickob;
       this.numberOfGraph = Object.keys(this.dataob).length;
@@ -506,32 +500,34 @@ renderGraph.prototype.mouseDragSelector = function()
     {
       // console.log("drag   x:"+event.pageX+"    y:"+event.pageY);
       // console.log("startX:"+(_this.startX-10)+"startY:"+(_this.startY-70));
+      _this.endPointX = (event.pageX)  % (_this.width+20);
+      _this.endPointY = (event.pageY-50) %  (_this.height+70);
       if(_this.chartType == "line")
       {
           _this.svgCanvas.removeChild(_this.hairLine);
       }
-      if(event.pageX > _this.startX && event.pageY > _this.startY){
+      if(_this.endPointX > _this.startX && _this.endPointY > _this.startY){
         _this.dragBox.setAttribute("x",_this.startX);
-        _this.dragBox.setAttribute("y",((_this.startY-100)%(_this.height)));
-      }else if(event.pageX > _this.startX && event.pageY < _this.startY){
+        _this.dragBox.setAttribute("y",((_this.startY-80)%(_this.height)));
+      }else if(_this.endPointX > _this.startX && _this.endPointY < _this.startY){
         _this.dragBox.setAttribute("x",_this.startX);
-        _this.dragBox.setAttribute("y",((event.pageY-100)%(_this.height)));
-      }else if(event.pageX < _this.startX && event.pageY > _this.startY){
-        _this.dragBox.setAttribute("y",((_this.startY-100)%(_this.height)));
+        _this.dragBox.setAttribute("y",((event.pageY-80)%(_this.height)));
+      }else if(_this.endPointX < _this.startX && _this.endPointY > _this.startY){
+        _this.dragBox.setAttribute("y",((_this.startY-80)%(_this.height)));
         _this.dragBox.setAttribute("x",((event.pageX)%(_this.width+20))); 
-      }else if(event.pageX < _this.startX && event.pageY < _this.startY){
+      }else if(_this.endPointX < _this.startX && _this.endPointY < _this.startY){
         _this.dragBox.setAttribute("x",((event.pageX)%(_this.width+20)));
-        _this.dragBox.setAttribute("y",((event.pageY-100)%(_this.height)));
+        _this.dragBox.setAttribute("y",((event.pageY-80)%(_this.height)));
       }
 
       // _this.dragBox.setAttribute("x",_this.startX);
       // _this.dragBox.setAttribute("y",_this.startY);
+      
       _this.dragBox.setAttribute("width",Math.abs(((event.pageX-8)%(_this.width+20)) - _this.startX));
-      _this.dragBox.setAttribute("height",Math.abs(event.pageY - _this.startY - 30));
+      _this.dragBox.setAttribute("height",Math.abs(_this.endPointY - _this.startY));
       _this.dragBox.setAttribute("class","selectionBox");
       _this.svgCanvas.appendChild(_this.dragBox);
-      _this.endPointX = (event.pageX)  % (_this.width+20);
-      _this.endPointY = (event.pageY) %  (_this.height+70);
+      
 
 
       
