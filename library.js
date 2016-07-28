@@ -1,310 +1,3 @@
-var parsingDataset = function(dataset){  //parser()
-    // this.optimizedTick=[];
-    this.dataset = dataset;
-    this.dataob={};
-    this.dataParse();
-    this.chartParse();    
-    this.orderingData();
-    this.minmax();
-    this.rangeOptimizer();
-    this.tickGenerator();
-    this.evokingRender();
-};
-
-parsingDataset.prototype.dataParse = function(){
-
-    var objData = this.dataset.data;
-    for(var i in objData)
-    {
-       var oBuffer = objData[i];
-       var time;
-       for(var j in oBuffer) 
-       {
-           var oBufferAttribute=oBuffer[j];
-           if(j=='time')
-           {
-                time = oBufferAttribute;
-           }
-           else
-           {
-                if(this.dataob[j]==undefined)
-                {
-                  this.dataob[j]=[];
-                  this.dataob[j].push({time:time,value:oBufferAttribute});
-                }
-                else
-                {
-                  this.dataob[j].push({time:time,value:oBufferAttribute});
-                }
-           }
-       }
-    }
-
-}
-
-parsingDataset.prototype.chartParse = function(){
-
-    var objChart = this.dataset.chart;
-    for(var i in objChart)
-    {
-       // var oBuffer = objChart[i];
-       // var oBufferAttribute=oBuffer[j];
-       if(i=='height')
-       {
-          this.height = objChart[i];
-       }
-       else if(i=='width')
-       {
-          this.width = objChart[i];
-       }
-       else if(i=='chartType')
-       {
-          this.chartType = objChart[i];
-       }
-       else if(i=='ordering')
-       {
-          this.ordering = objChart[i];
-       }
-       else if(i=='caption')
-       {
-          document.getElementById("caption").innerHTML=objChart[i];
-       }
-       else if(i=='subcaption')
-       {
-          document.getElementById("subcaption").innerHTML=objChart[i];
-       }
-       
-    }
-}
-
-parsingDataset.prototype.orderingData = function(){
-      var totalValue;
-      var average = [];
-      var count = 0;
-      var tempDataOb={};
-      for(var i in this.dataob)
-      {
-        var tempObj = this.dataob[i];
-        totalValue=0;
-        for(var j in tempObj)
-        {
-          totalValue+=tempObj[j].value;
-        }
-        average.push({key:i,average:(totalValue/j)});
-          
-        count++;
-      }
-      this.average=average;
-
-      var temp={};
-      for(var i in average)
-      {
-        for(var j=i;j<average.length;j++)
-        {
-          if(average[i].average>average[j].average && this.ordering=="ascending")
-          {
-            temp = average[i];
-            average[i] = average[j];
-            average[j] = temp;
-          }
-          else if(average[i].average<average[j].average && this.ordering=="descending")
-          {
-            temp = average[i];
-            average[i] = average[j];
-            average[j] = temp;
-          }
-          else  if(this.ordering=="default")
-            break;
-        }
-        // console.log(average[i].key,dataob[average[i].key]);
-        
-      }
-      // console.log(average);
-      // console.log(tempDataOb);
-      for(var i=0;i<average.length;i++)
-      {
-        // console.log(average[i].key);
-        // console.log(this.dataob[average[i].key]);
-        tempDataOb[(average[i].key)]=this.dataob[average[i].key];
-      }
-      this.dataob=tempDataOb;
-}
-
-parsingDataset.prototype.minmax = function(){
-
-    var length=Object.keys(this.dataob).length;
-    this.max=Array(length).fill(-1*(1/0));
-    this.min=Array(length).fill(1/0);
-    var count=0;
-    // var date=[];
-    // var value=[];
-    // var minPass;
-    // var maxPass;
-
-    for(var i in this.dataob)
-    {
-        var kx=this.dataob[i];
-        //console.log(i);
-        for(var m in kx)
-        {
-            var value=kx[m].value;
-            var time = kx[m].time;
-            // date.push(time2);
-            //console.log(time);
-            // value.push(value2);
-            //coordinateCalculationX(time2,value2,counter2++);
-            if(value>this.max[count])
-            {
-                this.max[count]=value;
-            }
-            if(value<this.min[count])
-            {
-                this.min[count]=value;
-            } 
-            //coordinateCalculationX(time2,value2);
-            // var objSend=[];objSend[0]=optimizerRange(min[count],max[count]);objSend[1]=(value2);
-            //        coordinateCalculationY(objSend);//,optimizerRange(min[count],max[count]));
-        } 
-        // minPass=min[count];
-        // maxPass=max[count];
-        count++; 
-    }
-};
-
-
-
-parsingDataset.prototype.rangeOptimizer = function()
-{
-      this.minOptimized=[];
-      this.maxOptimized=[];
-      var length = this.min.length;
-      var bufferMin,bufferMax;
-      // var minARRAY=[];
-      // var maxARRAY=[];
-      var bufferArray=[];
-      for(var i=0;i<length;i++)
-      {
-        bufferMin = this.min[i];
-        bufferMax = this.max[i];
-        var opMAX=0,opMIN=0;
-        var noDig=0;
-        var buffer = bufferMax - bufferMin;
-        var diff = bufferMax - bufferMin;
-        var newBeautyN = 0;
-        while(buffer > 0)
-        {
-            buffer = Math.floor(buffer/10);
-            noDig=noDig+1;
-        }
-        var beautyN = 5*Math.pow(10,(noDig-2));
-
-        //=====MIN===== 
-
-        opMIN = beautyN*(Math.floor(bufferMin/beautyN));
-        this.minOptimized.push(opMIN);
-        //minARRAY.push(opMIN);
-        //=============
-        //=====MAX===== 
-
-        if((diff/bufferMax) < 0.1)
-        {
-            noDig = 0;
-            buffer = bufferMin;
-            while(buffer != 0)
-            {   
-                buffer = Math.floor(buffer/10);
-                noDig++;
-            }
-            newBeautyN = 5*Math.pow(10,(noDig-2));
-            if(beautyN<newBeautyN)
-            {
-                beautyN = newBeautyN;
-            }
-        }
-        opMAX = beautyN*(Math.ceil(bufferMax/beautyN));
-
-        
-        this.maxOptimized.push(opMAX);
-        //bufferArray = optimizerTick(opMIN,opMAX);
-        //optimizedTick.push(bufferArray);
-
-      }
-};
-
-parsingDataset.prototype.evokingRender=function(){
-
-    var count =0;
-    for(var i in this.dataob)
-    {
-          this.dataRender = new renderGraph(this.dataob[i], i ,this.height, this.width, this.optimizedTick[count++],this.chartType);  
-    }
-
-}
-
-parsingDataset.prototype.tickGenerator = function(){
-
-    this.optimizedTick = [];
-    for(var i=0;i<this.max.length;i++)
-    {
-
-        //var MINIMUM = this.minOptmimized;// opMin;
-        var bufferMax = this.maxOptimized[i];//opMax;
-        var bufferMin = this.minOptimized[i];//opMin;
-        var counter = 0;
-        var differBuffer = 0;
-        var div = 0;
-        var ticks = [];
-        while(bufferMax>99)
-        {
-            bufferMax = Math.floor(bufferMax/10);
-            counter++;
-        }
-        bufferMin = Math.floor(bufferMin/(Math.pow(10,counter)));
-
-        differBuffer = bufferMax - bufferMin;
-
-        if (differBuffer > 0 && differBuffer<=1) 
-        {
-            div = 0.25*(Math.pow(10,counter));
-        } else if(differBuffer <=3)
-        {
-            div = 0.5*(Math.pow(10,counter));
-        } else if(differBuffer <= 6)
-        {
-            div = 1*(Math.pow(10,counter));
-        }else if(differBuffer <= 12)
-        {
-            div = 2*(Math.pow(10,counter));
-        }else if(differBuffer <= 20)
-        {
-            div = 4*(Math.pow(10,counter));
-        }else if(differBuffer <= 30)
-        {
-            div = 5*(Math.pow(10,counter));
-        }else if(differBuffer <= 40)
-        {
-            div = 7*(Math.pow(10,counter));
-        }else
-        {
-            div = 10*(Math.pow(10,counter));
-        }
-        
-        counter = this.minOptimized[i];
-        ticks.push(counter);
-        while(counter<this.maxOptimized[i])
-        {
-            counter = counter + div;
-            ticks.push(counter);
-        }
-        var len=ticks.length;
-        //noTickG.push(ticks[len-1]-ticks[0] + div);
-        //coordinateCalculationY(ticks);    
-        //console.log(ticks);
-        this.optimizedTick.push(ticks);
-
-    }
-
-};
 var renderGraph=function(data,i,chartHeight,chartWidth,tickob,chartType){
 
       this.dataob = data;
@@ -321,144 +14,16 @@ var renderGraph=function(data,i,chartHeight,chartWidth,tickob,chartType){
       var numberOfInterations = this.numberOfGraph;
       this.coordinateCalculation();
       this.pathStringBuilder();
-      // for(var i=0;i<numberOfInterations;i++)
-      // {
-          this.currentIteration=i+1;
-          this.axisPlot();
-          
-          // this.drawColumnChart();
-      // }  
-};
+      this.svgPlot();
+      this.yAxisPlot();
+      this.xAxisPlot();
+      this.addAxisLabel();
+      this.mouseDragSelector();
 
+      this.renderingTool= new renderTool();
 
-
-
-renderGraph.prototype.axisPlot=function()
-{
-      var _this = this;
-      //console.log(this.tickob[this.currentIteration-1]);
-
-//----declaring svg----    
-      
-      this.svgCanvas = document.createElementNS("http://www.w3.org/2000/svg", "svg");
-      // svgCanvas.setAttributeNS(null,"id","svgC"+count);
-      this.svgCanvas.setAttribute("class","svgGraph");
-      this.svgCanvas.setAttributeNS(null,"width",this.width+20 );
-      this.svgCanvas.setAttributeNS(null,"height",this.height);
-      document.getElementById("container").appendChild(this.svgCanvas);
-
-//----svg created----
-
-//----rendering y-axis----
-      var svgAxisY = document.createElementNS("http://www.w3.org/2000/svg", "line");
-      svgAxisY.setAttributeNS(null,"x1","45");
-      svgAxisY.setAttributeNS(null,"x2","45");
-      svgAxisY.setAttributeNS(null,"y1","30");
-      svgAxisY.setAttributeNS(null,"y2",(this.height-40));
-      svgAxisY.setAttribute("class","svgAxis");
-      //svgAxisY.setAttributeNS(null,"style","stroke:rgb(0,0,0);stroke-width:0.5");
-      this.svgCanvas.appendChild(svgAxisY);
-//----y-axis rendered----
-
-//----rendering x-axis----
-      var svgAxisX = document.createElementNS("http://www.w3.org/2000/svg", "line");
-      svgAxisX.setAttributeNS(null,"y1",(this.height-40));
-      svgAxisX.setAttributeNS(null,"y2",(this.height-40));
-      svgAxisX.setAttributeNS(null,"x1","45");
-      svgAxisX.setAttributeNS(null,"x2",(this.width));
-      svgAxisX.setAttribute("class","svgAxis");
-      this.svgCanvas.appendChild(svgAxisX);
-//----x-axis rendered----
-
-//----append chart labels----
-      var labelRect = document.createElementNS("http://www.w3.org/2000/svg","rect");
-      labelRect.setAttribute("x",40);
-      labelRect.setAttribute("y",0);
-      labelRect.setAttribute("width",this.width-25);
-      labelRect.setAttribute("height",28);
-      labelRect.setAttribute("class","labelRectStyle");
-      this.svgCanvas.appendChild(labelRect);
-
-
-
-      var labelY=document.createElementNS("http://www.w3.org/2000/svg", "text");
-      labelY.setAttributeNS(null,"x",45+(this.width-45)/2);
-      labelY.setAttributeNS(null,"y",18);
-      labelY.setAttribute("class","labelYtext")
-      // labelY.setAttributeNS(null,"text-anchor","middle");
-      labelY.textContent=""+this.axisName;
-      // labelY.setAttributeNS(null,"font-family","Verdana");
-      this.svgCanvas.appendChild(labelY); //----chart labels appended----
-
-//----add ticks to axes----
-      //----Y-axis----
-      var tickArray = this.tickob;
-      for(var i=0;i<tickArray.length;i++)
-      {
-          var svgAxisTickY = document.createElementNS("http://www.w3.org/2000/svg", "line");
-          svgAxisTickY.setAttributeNS(null,"x1","42");
-          svgAxisTickY.setAttributeNS(null,"x2","45");
-          var div = (this.height-70)/(tickArray.length-1);
-          svgAxisTickY.setAttributeNS(null,"y1",((this.height-40)-div*(i)));
-          svgAxisTickY.setAttributeNS(null,"y2",((this.height-40)-div*(i)));
-          svgAxisTickY.setAttributeNS(null,"style","stroke:rgb(0,0,0);stroke-width:1.5");
-
-          this.svgCanvas.appendChild(svgAxisTickY);
-
-
-          var svgTickLineY = document.createElementNS("http://www.w3.org/2000/svg", "rect");
-          svgTickLineY.setAttributeNS(null,"x","45");
-          // svgTickLineY.setAttributeNS(null,"x2",this.width);
-          svgTickLineY.setAttributeNS(null,"y",((this.height-40)-div*(i)));
-          // svgTickLineY.setAttributeNS(null,"y2",(this.height-40-div*(i)));
-          svgTickLineY.setAttributeNS(null,"height",div)
-          svgTickLineY.setAttributeNS(null,"width",this.width-45);
-          // svgTickLineY.setAttributeNS(null,"style","stroke:rgb(0,0,0);stroke-width:0");
-          if(i%2==0 && i!=0)
-            svgTickLineY.setAttributeNS(null,"class","svgTickRectEven");
-          else
-            svgTickLineY.setAttributeNS(null,"class","svgTickRectOdd");
-          this.svgCanvas.appendChild(svgTickLineY);
-
-
-          var TicksY=document.createElementNS("http://www.w3.org/2000/svg", "text");
-          TicksY.setAttributeNS(null,"x",40);
-          TicksY.setAttributeNS(null,"y",((this.height-40)-div*(i)));
-          TicksY.setAttributeNS(null,"fill","black");
-          TicksY.setAttributeNS(null,"text-anchor","end");
-          TicksY.setAttributeNS(null,"dominant-baseline","central");
-          TicksY.setAttributeNS(null,"font-family","Verdana");
-          TicksY.setAttribute("size","10px");
-          TicksY.textContent=""+tickArray[i];
-          this.svgCanvas.appendChild(TicksY);
-      }
-      //----Y-axis----
-
-      //----X-axis----
-      for(var j=0;j<11;j++)
-      {
-          // var svgAxisTickX = document.createElementNS("http://www.w3.org/2000/svg", "line");
-          // svgAxisTickX.setAttributeNS(null,"y1",(height-15));
-          // svgAxisTickX.setAttributeNS(null,"y2",(height-20));
-          // svgAxisTickX.setAttributeNS(null,"x1",100+(div*(j+1)));
-          // svgAxisTickX.setAttributeNS(null,"x2",100+(div*(j+1)));
-          // svgAxisTickX.setAttributeNS(null,"style","stroke:rgb(0,0,0);stroke-width:2");
-          // svgCanvas.appendChild(svgAxisTickX);
-
-          var TicksX=document.createElementNS("http://www.w3.org/2000/svg", "text");
-          var div = (this.width-70)/10;
-          TicksX.setAttributeNS(null,"x",45+(div*j));
-          TicksX.setAttributeNS(null,"y",this.height-40);
-          TicksX.setAttributeNS(null,"fill","black");
-          TicksX.setAttribute("size","10px");
-          TicksX.textContent=((20+j)+"-06");
-          TicksX.setAttributeNS(null,"dominant-baseline","text-after-edge");
-          TicksX.setAttribute("transform","rotate(90 "+ (45+(div*j)) +","+(this.height-40)+")" );
-          TicksX.setAttributeNS(null,"font-family","Verdana");
-          this.svgCanvas.appendChild(TicksX);
-
-      }
-
+      // this.circleDemo = this.renderingTool.drawCircle(this.height/2,this.height/2,this.svgCanvas,"anchorpoint");
+      // this.svgCanvas.appendChild(this.circleDemo);
 
       if(this.chartType == "line")
       {
@@ -473,9 +38,117 @@ renderGraph.prototype.axisPlot=function()
           alert("no chart type selected");
       }
 
-      this.mouseDragSelector();
-      
 };
+
+renderGraph.prototype.svgPlot=function(){
+
+      var renderingTool= new renderTool();
+      this.svgCanvas = renderingTool.drawSVG(this.width+20,this.height,"svgGraph");
+      document.getElementById("container").appendChild(this.svgCanvas);
+}
+
+renderGraph.prototype.yAxisPlot=function()
+{
+      var renderingTool= new renderTool();
+
+      var svgAxisY = renderingTool.drawLine(45,45,30,(this.height-40),"svgAxis");
+      this.svgCanvas.appendChild(svgAxisY);
+
+      var _this = this;
+//----add ticks to axes----
+      //----Y-axis----
+
+      var tickArray = this.tickob;
+      for(var i=0;i<tickArray.length;i++)
+      {
+          var div = (this.height-70)/(tickArray.length-1);
+          var svgAxisTickY = renderingTool.drawLine(42,45,((this.height-40)-div*(i)),((this.height-40)-div*(i)),null)
+          svgAxisTickY.setAttributeNS(null,"style","stroke:rgb(0,0,0);stroke-width:1.5");
+          this.svgCanvas.appendChild(svgAxisTickY);
+
+
+          var svgTickLineY = renderingTool.drawRect(45,((this.height-40)-div*(i)),this.width-45,div,null);
+          // var svgTickLineY = document.createElementNS("http://www.w3.org/2000/svg","rect");
+          // svgTickLineY.setAttributeNS(null,"x","45");
+          // // svgTickLineY.setAttributeNS(null,"x2",this.width);
+          // svgTickLineY.setAttributeNS(null,"y",((this.height-40)-div*(i)));
+          // // svgTickLineY.setAttributeNS(null,"y2",(this.height-40-div*(i)));
+          // svgTickLineY.setAttributeNS(null,"height",div)
+          // svgTickLineY.setAttributeNS(null,"width",this.width-45);
+          svgTickLineY.setAttributeNS(null,"style","stroke:rgb(0,0,0);stroke-width:0");
+          if(i%2==0 && i!=0)
+            svgTickLineY.setAttributeNS(null,"class","svgTickRectEven");
+          else
+            svgTickLineY.setAttributeNS(null,"class","svgTickRectOdd");
+          this.svgCanvas.appendChild(svgTickLineY);
+
+
+          // var TicksY=renderingTool.drawText(40,((this.height-40)-div*(i)),null);
+          var TicksY = document.createElementNS("http://www.w3.org/2000/svg", "text");
+          TicksY.setAttributeNS(null,"x",40);
+          TicksY.setAttributeNS(null,"y",((this.height-40)-div*(i)));
+          TicksY.setAttributeNS(null,"fill","black");
+          TicksY.setAttributeNS(null,"text-anchor","end");
+          TicksY.setAttributeNS(null,"dominant-baseline","central");
+          TicksY.setAttributeNS(null,"font-family","Verdana");
+          TicksY.setAttribute("size","10px");
+          TicksY.textContent=""+tickArray[i];
+          console.log(tickArray[i]);
+          this.svgCanvas.appendChild(TicksY);
+      }
+      //----Y-axis----
+}
+
+renderGraph.prototype.xAxisPlot=function()
+{
+
+      var renderingTool= new renderTool();
+
+      var svgAxisX = renderingTool.drawLine(45,(this.width),(this.height-40),(this.height-40),"svgAxis");
+      this.svgCanvas.appendChild(svgAxisX);
+
+      for(var j=0;j<11;j++)
+      {
+          var div = (this.width-70)/10;
+          var svgAxisTickX = renderingTool.drawLine(25+(div*(j+1)),25+(div*(j+1)),(this.height-37),(this.height-39),null);
+          svgAxisTickX.setAttribute("style","stroke:rgb(0,0,0);stroke-width:2");
+          this.svgCanvas.appendChild(svgAxisTickX);
+
+
+          var TicksX = document.createElementNS("http://www.w3.org/2000/svg", "text");
+          //renderingTool.drawText(47+(div*j),this.height-40,((20+j)+"-06"),null);
+          document.createElementNS("http://www.w3.org/2000/svg", "text");
+          TicksX.setAttributeNS(null,"x",47+(div*j));
+          TicksX.setAttributeNS(null,"y",this.height-40);
+          TicksX.setAttribute("fill","black");
+          TicksX.setAttribute("size","10px");
+          TicksX.textContent=((20+j)+"-06");
+          TicksX.setAttribute("dominant-baseline","text-after-edge");
+          TicksX.setAttribute("transform","rotate(90 "+ (45+(div*j)) +","+(this.height-40)+")" );
+          TicksX.setAttribute("font-family","Verdana");
+          this.svgCanvas.appendChild(TicksX);
+
+      }
+
+}
+
+renderGraph.prototype.addAxisLabel=function()
+{
+
+      var renderingTool= new renderTool();
+
+      var labelRect = renderingTool.drawRect(40,0,this.width-35,28,"labelRectStyle");
+      this.svgCanvas.appendChild(labelRect);
+
+      var labelY=document.createElementNS("http://www.w3.org/2000/svg", "text");
+      labelY.setAttributeNS(null,"x",45+(this.width-45)/2);
+      labelY.setAttributeNS(null,"y",18);
+      labelY.setAttribute("class","labelYtext")
+      // labelY.setAttributeNS(null,"text-anchor","middle");
+      labelY.textContent=""+this.axisName;
+      // labelY.setAttributeNS(null,"font-family","Verdana");
+      this.svgCanvas.appendChild(labelY); //----chart labels appended----
+}
 
 renderGraph.prototype.mouseDragSelector = function()
 {
@@ -527,9 +200,6 @@ renderGraph.prototype.mouseDragSelector = function()
       _this.dragBox.setAttribute("height",Math.abs(_this.endPointY - _this.startY));
       _this.dragBox.setAttribute("class","selectionBox");
       _this.svgCanvas.appendChild(_this.dragBox);
-      
-
-
       
     }
 
@@ -615,25 +285,26 @@ function onSelectBox(beginX,endX,beginY,endY)
 renderGraph.prototype.drawLineChart=function(){
 // ----rendering line----
       var _this = this;
-      var svgLine = document.createElementNS("http://www.w3.org/2000/svg","path");
-      // svgLine.setAttributeNS(null,"stroke","#000000");
-      svgLine.setAttributeNS(null,"fill","none");
-      // svgLine.setAttributeNS(null,"stroke-width","1");
-      svgLine.setAttribute("class","line-graph");
-      svgLine.setAttributeNS(null,"d",this.pathString);
+      var renderingTool= new renderTool();
+
+      var svgLine = renderingTool.drawPath(this.pathString,"line-graph");
       this.svgCanvas.appendChild(svgLine);
 
-      this.anchorPoints= []; 
+      this.anchorPoints=[];
+      this.anchorPoints.fill(renderingTool.drawCircle(-100,-100,"anchorpoint")); 
+
+      // this.anchorPoints[i]=document.createElementNS("http://www.w3.org/2000/svg","circle");
+      // this.anchorPoints[i].setAttribute("class","anchorpoint");
+
       for(var i=0;i<this.coordinateOb.length;i++) {
           if(this.anchorPoints[i]==undefined)     
           {   
               this.toolBox = document.createElementNS("http://www.w3.org/2000/svg","rect");
               this.toolText = document.createElementNS("http://www.w3.org/2000/svg","text");
-              this.anchorPoints[i]=document.createElementNS("http://www.w3.org/2000/svg","circle");
-              this.anchorPoints[i].setAttribute("cx",Math.floor(this.coordinateOb[i].x));
-              this.anchorPoints[i].setAttribute("cy",Math.floor(this.coordinateOb[i].y));
-              // console.log(this.coordinateOb[i].x);
-              this.anchorPoints[i].setAttribute("class","anchorpoint");
+
+
+              this.anchorPoints[i]=renderingTool.drawCircle(Math.floor(this.coordinateOb[i].x),Math.floor(this.coordinateOb[i].y),"anchorpoint");
+              
               
               this.toolBox.setAttribute("height",20);
               this.toolBox.setAttribute("width",25);
@@ -862,9 +533,6 @@ renderGraph.prototype.coordinateCalculation=function(){
 
 renderGraph.prototype.pathStringBuilder = function(){
 
-      // this.pathString=;
-      // for(var i in this.coordinateOb)
-      // {
           var bufferArray = this.coordinateOb;
           // console.log(bufferArray);
           var coordinate = 'M ';
@@ -879,7 +547,5 @@ renderGraph.prototype.pathStringBuilder = function(){
           coordinate = coordinate.slice(0,coordinate.length-2);
           var keyBuffer = Object.keys(this.dataob);
           this.pathString=coordinate;
-          // console.log(keyBuffer);
-      // }
 
 };
