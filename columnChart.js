@@ -60,8 +60,8 @@ columnChart.prototype.drawColumns = function(){
                       _this.toolText.setAttribute("font-size","20px");
                       if(tempX>=(_this.coordinateOb[j].x-6)  &&  tempX <= (_this.coordinateOb[j].x+24))
                       {
-                            console.log("abc");
-                            console.log(_this.coordinateOb[j].y);
+                            // console.log("abc");
+                            // console.log(_this.coordinateOb[j].y);
                             _this.toolText.textContent=_this.dataob[j].value;
                             _this.RenderGraph.appendChild(_this.toolBox);
                             _this.RenderGraph.appendChild(_this.toolText);

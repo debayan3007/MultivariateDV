@@ -37,7 +37,7 @@ var renderGraph=function(data,i,chartHeight,chartWidth,tickob,chartType){
           this.anchorPoints = [];
           this.anchorPoints = this.lineChart.anchorPoints;
           this.hairLine = this.lineChart.hairLine;
-          console.log(this.anchorPoints[0].getAttribute("cx"));
+          // console.log(this.anchorPoints[0].getAttribute("cx"));
       }
       else if(this.chartType=="column")
       {
@@ -93,7 +93,7 @@ renderGraph.prototype.mouseDragSelector = function()
         _this.svgCanvas.removeChild(_this.hairLine);
     }  
     
-    console.log("startX:"+(_this.startX-10)+"startY:"+(_this.startY-70));
+    // console.log("startX:"+(_this.startX-10)+"startY:"+(_this.startY-70));
   },false);
   this.svgCanvas.addEventListener("mousemove",function(event){
     if(flag==1)
@@ -167,8 +167,8 @@ renderGraph.prototype.mouseDragSelector = function()
       var temp = _this.coordinateOb[i];
       if(temp.x>beginX  && temp.x<endX && ((temp.y)%(_this.height+70))>beginY &&  ((temp.y)%(_this.height+70))<endY)
       {
-        console.log(_this.height);
-        console.log(temp.x,((temp.y+30)%(_this.height+100)));
+        // console.log(_this.height);
+        // console.log(temp.x,((temp.y+30)%(_this.height+100)));
         // _this.anchorPoints[i].setAttribute("fill","rgb(243,90,90)");
           if(_this.chartType == "line")
           {
@@ -178,7 +178,7 @@ renderGraph.prototype.mouseDragSelector = function()
           //     _this.svgCanvas.appendChild(bufferPoint);
               // _this.anchorPoints[i].setAttribute("class","anchorpointHighlight");
               _this.anchorPoints[i].style.fill ="red";
-              console.log(_this.anchorPoints[i].getAttribute("class"));
+              // console.log(_this.anchorPoints[i].getAttribute("class"));
           }  
           else
           {

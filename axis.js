@@ -23,7 +23,7 @@ yAxis.prototype.drawAxis=function(){
 
 		var renderingTool= new renderTool();
 		this.svgAxisY = renderingTool.drawLine(45,45,30,(this.height-40),"svgAxis");
-		console.log(typeof this.svgAxisY);
+		// console.log(typeof this.svgAxisY);
 		this.RenderGraphI.appendChild(this.svgAxisY);
 }
 
@@ -69,7 +69,7 @@ yAxis.prototype.drawTicks=function(){
 		this.TicksY.setAttribute("size","10px");
 		this.TicksY.textContent=""+this.tickArray[i];
 		this.RenderGraphI.appendChild(this.TicksY);	
-		console.log(this.tickArray[i]);
+		// console.log(this.tickArray[i]);
 		// this.RenderGraph.svgCanvas.appendChild(TicksY);
 	}
 

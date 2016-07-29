@@ -53,7 +53,7 @@ lineChart.prototype.drawAnchorPoints=function(){//coordinateOb, dataob
                         // var temp = (_this.svgColumn[j].getAttribute("width")).trim(0,_this.svgColumn[j].getAttribute("width").length-5);
                         // console.log(temp);
                         var tempX=((event.detail.x)%(_this.width+20))-8;
-                        console.log(_this.width,tempX);
+                        // console.log(_this.width,tempX);
                         _this.hairLine.setAttributeNS(null,"y1",20);
                         _this.hairLine.setAttributeNS(null,"y2",Window.height-20);
                         _this.hairLine.setAttributeNS(null,"x1",tempX);
