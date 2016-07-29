@@ -14,9 +14,10 @@ var renderGraph=function(data,i,chartHeight,chartWidth,tickob,chartType){
       var numberOfInterations = this.numberOfGraph;
       this.coordinateCalculation();
       this.pathStringBuilder();
-      var svgC = this.svgPlot();
-      this.yaxisDrawDEMO = new yAxis(svgC,this.width,this.height,this.tickob);
-      this.xAxisDrawDEMO = new xAxis(svgC,this.width,this.height);
+      this.svgCanvas = this.svgPlot();
+      this.yaxisDrawDEMO = new yAxis(this.svgCanvas,this.width,this.height,this.tickob);
+      this.xAxisDrawDEMO = new xAxis(this.svgCanvas,this.width,this.height);
+      // this.lineChart = new lineChart();
       // yaxisDrawDEMO.draw();
       // console.log(Object.keys(yaxisDrawDEMO));
       // this.yAxisPlot();
@@ -32,11 +33,15 @@ var renderGraph=function(data,i,chartHeight,chartWidth,tickob,chartType){
 
       if(this.chartType == "line")
       {
-          this.drawLineChart(); 
+          this.lineChart = new lineChart(this.svgCanvas,this.coordinateOb,this.dataob,this.pathString,this.width,this.height);
+          this.anchorPoints = [];
+          this.anchorPoints = this.lineChart.anchorPoints;
+          this.hairLine = this.lineChart.hairLine;
+          console.log(this.anchorPoints[0].getAttribute("cx"));
       }
       else if(this.chartType=="column")
       {
-          this.drawColumnChart();
+          this.columnChart = new columnChart(this.svgCanvas,this.coordinateOb,this.dataob,this.width,this.height);
       }
       else
       {
@@ -158,6 +163,7 @@ renderGraph.prototype.mouseDragSelector = function()
 
     for(var i in _this.coordinateOb)
     {
+      var renderingTool= new renderTool();
       var temp = _this.coordinateOb[i];
       if(temp.x>beginX  && temp.x<endX && ((temp.y)%(_this.height+70))>beginY &&  ((temp.y)%(_this.height+70))<endY)
       {
@@ -166,14 +172,25 @@ renderGraph.prototype.mouseDragSelector = function()
         // _this.anchorPoints[i].setAttribute("fill","rgb(243,90,90)");
           if(_this.chartType == "line")
           {
-              _this.anchorPoints[i].setAttribute("class","anchorpointHighlight");
+          //      var cx = _this.anchorPoints[i].getAttribute("cx");
+          //      var cy = _this.anchorPoints[i].getAttribute("cy");
+          //      var bufferPoint = renderingTool.drawCircle(Number(cx),Number(cy),"anchorpointHighlight");
+          //     _this.svgCanvas.appendChild(bufferPoint);
+              // _this.anchorPoints[i].setAttribute("class","anchorpointHighlight");
+              _this.anchorPoints[i].style.fill ="red";
+              console.log(_this.anchorPoints[i].getAttribute("class"));
           }  
           else
           {
               
               _this.svgColumn[i].setAttribute("class","svgColumnHighlight");
+              
           }
 
+      }
+      else
+      {
+          _this.anchorPoints[i].style.fill ="white";
       }
     }
 
@@ -197,190 +214,6 @@ function onSelectBox(beginX,endX,beginY,endY)
             }
           );
         document.dispatchEvent(event);
-};
-
-renderGraph.prototype.drawLineChart=function(){
-// ----rendering line----
-      var _this = this;
-      var renderingTool= new renderTool();
-
-      var svgLine = renderingTool.drawPath(this.pathString,"line-graph");
-      this.svgCanvas.appendChild(svgLine);
-
-      this.anchorPoints=[];
-      this.anchorPoints.fill(renderingTool.drawCircle(-100,-100,"anchorpoint")); 
-
-      // this.anchorPoints[i]=document.createElementNS("http://www.w3.org/2000/svg","circle");
-      // this.anchorPoints[i].setAttribute("class","anchorpoint");
-
-      for(var i=0;i<this.coordinateOb.length;i++) {
-          if(this.anchorPoints[i]==undefined)     
-          {   
-              this.toolBox = document.createElementNS("http://www.w3.org/2000/svg","rect");
-              this.toolText = document.createElementNS("http://www.w3.org/2000/svg","text");
-
-
-              this.anchorPoints[i]=renderingTool.drawCircle(Math.floor(this.coordinateOb[i].x),Math.floor(this.coordinateOb[i].y),"anchorpoint");
-              
-              
-              this.toolBox.setAttribute("height",20);
-              this.toolBox.setAttribute("width",25);
-              this.toolBox.setAttribute("style","fill:#fed8ca;stroke:brown;stroke-width:1;opacity:0.7");
-              
-              this.svgCanvas.appendChild(this.anchorPoints[i]);
-              this.hairLine  = document.createElementNS("http://www.w3.org/2000/svg", "line");
-              this.svgCanvas.addEventListener("mousemove",onMouseMove);
-              this.anchorPoints[i].addEventListener("mousemove",onMouseMove);
-              function a(j){
-
-                  document.addEventListener('onHighlight',function(event){
-                        // var length
-                        // var temp = (_this.svgColumn[j].getAttribute("width")).trim(0,_this.svgColumn[j].getAttribute("width").length-5);
-                        // console.log(temp);
-                        var tempX=((event.detail.x)%(_this.width+20))-8;
-                        // console.log(_this.width,tempX);
-                        _this.hairLine.setAttributeNS(null,"y1",20);
-                        _this.hairLine.setAttributeNS(null,"y2",Window.height-20);
-                        _this.hairLine.setAttributeNS(null,"x1",tempX);
-                        _this.hairLine.setAttributeNS(null,"x2",tempX);
-                        // var xCheck = evt.detail.x - 8;
-                        _this.hairLine.setAttribute("class","hairLine");
-
-                        _this.svgCanvas.appendChild(_this.hairLine);
-                        var lowerBoundX = Number(_this.anchorPoints[j].getAttribute("cx"));
-                        var upperBoundX = Number(_this.anchorPoints[j].getAttribute("cx"))+12;
-                        var lowerBoundY = Number(_this.anchorPoints[j].getAttribute("cy"))-6;
-                        var upperBoundY = Number(_this.anchorPoints[j].getAttribute("cy"))+6;
-                        // console.log(lowerBound,upperBound);
-                        var tempX=((event.detail.x)%(_this.width+20));
-                        var tempY=(event.detail.y-110);//%(_this.height));
-                        // console.log(tempY,Number(anchorPoints[j].getAttribute("cy")))
-
-                        if(tempX>=lowerBoundX && tempX<=upperBoundX)
-                        {
-
-                            // console.log(tempY,_this.anchorPoints[j].getAttribute("cy"));
-                            // _this.anchorPoints[j].setAttribute("style","fill:white;stroke:#009688;stroke-width:1;opacity:1");
-                            // _this.anchorPoints[j].setAttribute("fill","black");
-                            _this.anchorPoints[j].setAttribute("class","anchorpointHighlight");
-                            // console.log(tempX,_this.coordinateOb[j].x,"marker");
-                            _this.toolText.setAttribute("x",upperBoundX+3);
-                            _this.toolText.setAttribute("y",lowerBoundY+15);
-
-                            _this.toolText.setAttribute("fill","brown");
-                            _this.toolText.setAttribute("font-size","15px");
-
-
-                            _this.toolBox.setAttribute("x",upperBoundX);
-                            _this.toolBox.setAttribute("y",lowerBoundY);
-
-                            if(tempX>=(_this.coordinateOb[j].x+8) && tempX <= (_this.coordinateOb[j].x+12))
-                            {
-                                  // console.log("abc");
-                                  // console.log(_this.coordinateOb[j].y);
-                                  _this.toolText.textContent=_this.dataob[j].value; 
-                                  _this.toolText.setAttribute("x",-100)
-                                  _this.toolText.setAttribute("y",-100);
-                                  _this.toolBox.setAttribute("x",-100);
-                                  _this.toolBox.setAttribute("y",-100);
-                            }
-
-                            
-                            
-                            _this.svgCanvas.appendChild(_this.toolBox);
-                            _this.svgCanvas.appendChild(_this.toolText);
-
-                        }
-                        else
-                        {
-                            // _this.toolText.setAttribute("x",-1);
-                            _this.anchorPoints[j].setAttribute("class","anchorpoint");
-                        }
-                  
-                  },false);
-
-
-                  
-              }
-              a(i);
-              
-          }
-      }
-
-};
-
-
-renderGraph.prototype.drawColumnChart = function(){
-      var _this = this;
-      var lengthTemp = this.coordinateOb.length;
-      // console.log(lengthTemp);
-      this.svgColumn=[];
-      for(var i=0;i<lengthTemp;i++)
-      {
-          this.toolBox = document.createElementNS("http://www.w3.org/2000/svg","rect");
-          this.toolText = document.createElementNS("http://www.w3.org/2000/svg","text");
-          this.columnWidth = (this.width-45)/(2*10-1);
-          this.svgColumn[i] = document.createElementNS("http://www.w3.org/2000/svg","rect");
-          this.svgColumn[i].setAttribute("x",(this.coordinateOb[i].x)-this.columnWidth/2);
-          this.svgColumn[i].setAttribute("y",this.coordinateOb[i].y);
-          // this.lowerBound[i] = (this.coordinateOb[i].x)-columnWidth/2;
-          // this.upperBound[i] = (this.coordinateOb[i].x)+columnWidth/2;
-          this.svgColumn[i].setAttribute("width",this.columnWidth+"px");
-          // svgColumn.setAttribute("fill","black");
-          this.svgColumn[i].setAttribute("height",(this.height-40)-(this.coordinateOb[i].y));
-          // this.svgColumn[i].setAttribute("style","fill:black;stroke:black;stroke-width:1;opacity:1");
-          this.svgColumn[i].setAttribute("class","svgColumn");
-          
-          this.svgCanvas.appendChild(this.svgColumn[i]);
-
-          this.toolBox.setAttribute("height",20);
-          this.toolBox.setAttribute("width",25);
-          this.toolBox.setAttribute("style","fill:#fed8ca;stroke:brown;stroke-width:1;opacity:0.7");
-          this.svgColumn[i].addEventListener("mousemove",onMouseMove);
-          this.svgColumn[i].addEventListener("mouseout",onMouseOut);          
-
-          function a(j){
-
-                  document.addEventListener('onHighlight',function(event){
-                  var lowerBound = Number(_this.svgColumn[j].getAttribute("x"));
-                  var upperBoundY = _this.coordinateOb[j].y+_this.columnWidth;
-                  // var length
-                  // var temp = (_this.svgColumn[j].getAttribute("width")).trim(0,_this.svgColumn[j].getAttribute("width").length-5);
-                  // console.log(temp);
-                  var upperBound = lowerBound + _this.columnWidth;
-                  // console.log(lowerBound,upperBound);
-                  var tempX=((event.detail.x)%(_this.width+20));
-                  if(tempX>=lowerBound && tempX<=(upperBound+10) )
-                  {
-                      _this.svgColumn[j].setAttribute("class","svgColumnHighlight");
-                      _this.toolText.setAttribute("x",upperBound+5);
-                      _this.toolBox.setAttribute("x",upperBound+5);
-                      _this.toolText.setAttribute("y",(upperBoundY-15));
-                      _this.toolBox.setAttribute("y",(upperBoundY-30));
-                      // _this.toolText.setAttribute("fill","brown");
-                      _this.toolText.setAttribute("font-size","20px");
-                      if(tempX>=(_this.coordinateOb[j].x-6)  &&  tempX <= (_this.coordinateOb[j].x+24))
-                      {
-                            console.log("abc");
-                            console.log(_this.coordinateOb[j].y);
-                            _this.toolText.textContent=_this.dataob[j].value;
-                            _this.svgCanvas.appendChild(_this.toolBox);
-                            _this.svgCanvas.appendChild(_this.toolText);
-                            
-                      }
-                    
-                  }
-                  
-              },false);
-
-
-                  document.addEventListener('onNormal',function(evt){
-                  // console.log(this === document,"abc");
-                    _this.svgColumn[j].setAttribute("class","svgColumn");
-                  },false);
-          }
-          a(i);
-      }
 };
 
 function onMouseMove(event)
