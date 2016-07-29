@@ -39,7 +39,6 @@ parsingDataset.prototype.dataParse = function(){
 					 }
 			 }
 		}
-
 }
 
 parsingDataset.prototype.chartParse = function(){
