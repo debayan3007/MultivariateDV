@@ -2,6 +2,7 @@ var parsingDataset = function(dataset){  //parser()
 		// this.optimizedTick=[];
 		this.dataset = dataset;
 		this.dataob={};
+		this.getWindowSize();
 		this.dataParse();
 		this.chartParse();    
 		this.orderingData();
@@ -170,6 +171,14 @@ parsingDataset.prototype.minmax = function(){
 		}
 };
 
+parsingDataset.prototype.getWindowSize = function(){
+   var d= document, root= d.documentElement, body= d.body;
+   this.wid= window.innerWidth || root.clientWidth || body.clientWidth;
+   this.numberOfAxisTick = this.wid/this.width;
+   // hi= window.innerHeight || root.clientHeight || body.clientHeight ;
+   // return [wid,hi]
+}
+
 
 
 parsingDataset.prototype.rangeOptimizer = function()
@@ -226,16 +235,23 @@ parsingDataset.prototype.rangeOptimizer = function()
 				this.maxOptimized.push(opMAX);
 				//bufferArray = optimizerTick(opMIN,opMAX);
 				//optimizedTick.push(bufferArray);
-
 			}
+			this.max = this.maxOptimized;
+			this.min = this.minOptimized;
 };
 
 parsingDataset.prototype.evokingRender=function(){
 
 		var count =0;
+		var length = (this.max).length;
+		console.log("test",Math.floor(this.wid/this.width));
 		for(var i in this.dataob)
 		{
-					this.dataRender = new renderGraph(this.dataob[i], i ,this.height, this.width, this.optimizedTick[count++],this.chartType);
+			console.log(length-count,"mark");
+			if(length-count < Math.floor(this.wid/this.width))
+				this.dataRender = new renderGraph(this.dataob[i], i ,this.height, this.width, this.optimizedTick[count++],this.chartType,1);
+			else
+				this.dataRender = new renderGraph(this.dataob[i], i ,this.height, this.width, this.optimizedTick[count++],this.chartType,0);
 		}
 
 }
@@ -247,8 +263,8 @@ parsingDataset.prototype.tickGenerator = function(){
 		{
 
 				//var MINIMUM = this.minOptmimized;// opMin;
-				var bufferMax = this.maxOptimized[i];//opMax;
-				var bufferMin = this.minOptimized[i];//opMin;
+				var bufferMax = this.max[i];//opMax;
+				var bufferMin = this.min[i];//opMin;
 				var counter = 0;
 				var differBuffer = 0;
 				var div = 0;
@@ -288,9 +304,9 @@ parsingDataset.prototype.tickGenerator = function(){
 						div = 10*(Math.pow(10,counter));
 				}
 				
-				counter = this.minOptimized[i];
+				counter = this.min[i];
 				ticks.push(counter);
-				while(counter<this.maxOptimized[i])
+				while(counter<this.max[i])
 				{
 						counter = counter + div;
 						ticks.push(counter);

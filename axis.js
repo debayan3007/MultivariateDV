@@ -12,6 +12,7 @@ var yAxis = function(RenderGraphI,width,height,tickArray){
 	this.tickArray = tickArray;
 	Axis.call(this,RenderGraphI);
 	// this.drawAxis();
+	this.getWindowSize();
 	this.drawTicks();
 	this.drawAxis();
 	this.draw();
@@ -25,6 +26,13 @@ yAxis.prototype.drawAxis=function(){
 		this.svgAxisY = renderingTool.drawLine(45,45,30,(this.height-40),"svgAxis");
 		// console.log(typeof this.svgAxisY);
 		this.RenderGraphI.appendChild(this.svgAxisY);
+}
+
+yAxis.prototype.getWindowSize = function(){
+	 var d= document, root= d.documentElement, body= d.body;
+	 this.wid= window.innerWidth || root.clientWidth || body.clientWidth;
+	 // hi= window.innerHeight || root.clientHeight || body.clientHeight ;
+	 // return [wid,hi]
 }
 
 
@@ -68,6 +76,9 @@ yAxis.prototype.drawTicks=function(){
 		this.TicksY.setAttributeNS(null,"font-family","Verdana");
 		this.TicksY.setAttribute("size","10px");
 		this.TicksY.textContent=""+this.tickArray[i];
+
+		console.log(Math.floor(this.wid/Window.width));
+
 		this.RenderGraphI.appendChild(this.TicksY);	
 		// console.log(this.tickArray[i]);
 		// this.RenderGraph.svgCanvas.appendChild(TicksY);
@@ -85,8 +96,9 @@ yAxis.prototype.draw=function(){
 
 }
 
-var xAxis =function(RenderGraphI,width,height){
+var xAxis =function(RenderGraphI,width,height,tickBoolean){
 
+		this.tickBoolean = tickBoolean;
 		Axis.call(this,RenderGraphI);
 		this.width = width;
 		this.height = height;
@@ -116,6 +128,8 @@ xAxis.prototype.drawTicks=function()
         svgAxisTickX.setAttribute("style","stroke:rgb(0,0,0);stroke-width:2");
         this.RenderGraphI.appendChild(svgAxisTickX);
 
+
+
         var TicksX = document.createElementNS("http://www.w3.org/2000/svg", "text");
         //renderingTool.drawText(47+(div*j),this.height-40,((20+j)+"-06"),null);
         document.createElementNS("http://www.w3.org/2000/svg", "text");
@@ -127,7 +141,9 @@ xAxis.prototype.drawTicks=function()
         TicksX.setAttribute("dominant-baseline","text-after-edge");
         TicksX.setAttribute("transform","rotate(90 "+ (45+(div*j)) +","+(this.height-40)+")" );
         TicksX.setAttribute("font-family","Verdana");
-        this.RenderGraphI.appendChild(TicksX);
+        console.log(this.tickBoolean);
+        if(this.tickBoolean!= 0)
+	        this.RenderGraphI.appendChild(TicksX);
     }
 
 }

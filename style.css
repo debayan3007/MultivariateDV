@@ -1,4 +1,10 @@
-.svgGraph {} .svgGraph .svgAxis {
+.svgGraph {
+
+		-webkit-user-select : none !important;
+}
+
+
+.svgGraph .svgAxis {
     stroke: rgb(0, 0, 0);
     stroke-width: 0.5;
 }

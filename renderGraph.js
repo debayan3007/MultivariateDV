@@ -1,5 +1,6 @@
-var renderGraph=function(data,i,chartHeight,chartWidth,tickob,chartType){
+var renderGraph=function(data,i,chartHeight,chartWidth,tickob,chartType,tickboolean){
 
+      this.tickboolean = tickboolean;
       this.dataob = data;
       this.height = chartHeight+70;
       this.width = chartWidth+65;
@@ -12,11 +13,13 @@ var renderGraph=function(data,i,chartHeight,chartWidth,tickob,chartType){
       this.numberOfGraph = Object.keys(this.dataob).length;
       this.currentIteration=0;
       var numberOfInterations = this.numberOfGraph;
+      this.getWindowSize();
       this.coordinateCalculation();
       this.pathStringBuilder();
       this.svgCanvas = this.svgPlot();
+      console.log("tickboolean",this.tickboolean);
       this.yaxisDrawDEMO = new yAxis(this.svgCanvas,this.width,this.height,this.tickob);
-      this.xAxisDrawDEMO = new xAxis(this.svgCanvas,this.width,this.height);
+      this.xAxisDrawDEMO = new xAxis(this.svgCanvas,this.width,this.height,this.tickboolean);
       // this.lineChart = new lineChart();
       // yaxisDrawDEMO.draw();
       // console.log(Object.keys(yaxisDrawDEMO));
@@ -42,13 +45,21 @@ var renderGraph=function(data,i,chartHeight,chartWidth,tickob,chartType){
       else if(this.chartType=="column")
       {
           this.columnChart = new columnChart(this.svgCanvas,this.coordinateOb,this.dataob,this.width,this.height);
+          this.svgColumn = [];
+          this.svgColumn = this.columnChart.svgColumn;
       }
       else
       {
           alert("no chart type selected");
       }
-
 };
+
+renderGraph.prototype.getWindowSize = function(){
+   var d= document, root= d.documentElement, body= d.body;
+   this.wid= window.innerWidth || root.clientWidth || body.clientWidth;
+   // hi= window.innerHeight || root.clientHeight || body.clientHeight ;
+   // return [wid,hi]
+}
 
 renderGraph.prototype.svgPlot=function(){
 
@@ -184,13 +195,14 @@ renderGraph.prototype.mouseDragSelector = function()
           {
               
               _this.svgColumn[i].setAttribute("class","svgColumnHighlight");
+              console.log(_this.svgColumn[i].getAttribute("x"));
               
           }
 
       }
       else
       {
-          _this.anchorPoints[i].style.fill ="white";
+          // _this.anchorPoints[i].style.fill ="white";
       }
     }
 
