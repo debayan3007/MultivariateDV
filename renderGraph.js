@@ -7,7 +7,9 @@ var renderGraph=function(data,i,chartHeight,chartWidth,tickob,chartType,tickbool
       Window.height = this.height
       Window.width = this.width;
       this.axisName = i;
-      this.chartType = chartType;
+      
+      this.chartType = chartType.toString() ;
+      
       // this.tickob = [];
       this.tickob=tickob;
       this.numberOfGraph = Object.keys(this.dataob).length;
@@ -33,25 +35,20 @@ var renderGraph=function(data,i,chartHeight,chartWidth,tickob,chartType,tickbool
 
       // this.circleDemo = this.renderingTool.drawCircle(this.height/2,this.height/2,this.svgCanvas,"anchorpoint");
       // this.svgCanvas.appendChild(this.circleDemo);
-
-      if(this.chartType == "line")
+      console.log(typeof chartType, chartType, chartType == 'line');
+      if(chartType.toString() == "line")
       {
           this.lineChart = new lineChart(this.svgCanvas,this.coordinateOb,this.dataob,this.pathString,this.width,this.height);
           this.anchorPoints = [];
           this.anchorPoints = this.lineChart.anchorPoints;
           this.hairLine = this.lineChart.hairLine;
           // console.log(this.anchorPoints[0].getAttribute("cx"));
-      }
-      else if(this.chartType=="column")
-      {
+      }  else {
           this.columnChart = new columnChart(this.svgCanvas,this.coordinateOb,this.dataob,this.width,this.height);
           this.svgColumn = [];
           this.svgColumn = this.columnChart.svgColumn;
       }
-      else
-      {
-          alert("no chart type selected");
-      }
+      
 };
 
 renderGraph.prototype.getWindowSize = function(){
