@@ -5,42 +5,213 @@ var parsingDataset = function(dataset){  //parser()
 		this.getWindowSize();
 		this.dataParse();
 		this.chartParse();    
-		this.orderingData();
+		this.fillUps();
+		// this.orderingData();
 		this.minmax();
-		this.rangeOptimizer();
-		this.tickGenerator();
+		// this.rangeOptimizer();
+		// this.tickGenerator();
+		// this.svgPlot();
 		this.evokingRender();
+		// this.height = (this.dataset.data.length)*50 + 50;//Number(chartHeight)+70;
+  //     	this.width = 100;//Number(chartWidth)+65;
 };
+
+parsingDataset.prototype.svgPlot=function(dataCarr){
+
+      var renderingTool= new renderTool();
+      var height = this.height;
+      console.log("dataCarr",Object.keys(dataCarr));
+      dataCarr = Object.keys(dataCarr).length;
+      console.log("dataCarr length",dataCarr);
+      this.svgCanvas = renderingTool.drawSVG(280,dataCarr*37.5,"svgGraph");
+      document.getElementById("container").appendChild(this.svgCanvas);
+      return this.svgCanvas;
+}
 
 parsingDataset.prototype.dataParse = function(){
 
 		var objData = this.dataset.data;
+		
 		for(var i in objData)
 		{
 			 var oBuffer = objData[i];
-			 var time;
+			 var product_type;
+			 
 			 for(var j in oBuffer) 
 			 {
-					 var oBufferAttribute=oBuffer[j];
-					 if(j=='time')
-					 {
-								time = oBufferAttribute;
-					 }
-					 else
-					 {
-								if(this.dataob[j]==undefined)
-								{
-									this.dataob[j]=[];
-									this.dataob[j].push({time:time,value:oBufferAttribute});
-								}
-								else
-								{
-									this.dataob[j].push({time:time,value:oBufferAttribute});
-								}
-					 }
+			 	var oBufferAttribute;
+			 	if(j != "values")
+			 	{	
+			 		product_type=oBuffer[j];// console.log("Product Type:"+oBuffer[j]);
+			 		this.dataob[product_type] = {};
+			 	}
+			 	else
+			 	{
+					oBufferAttribute=oBuffer[j];
+					var count=0;
+					for(var k in oBufferAttribute)
+					{
+						// console.log(oBufferAttribute[k].zone);
+						var sosTotal = 0;var sopTotal=0;
+						for(var l in oBufferAttribute[k].zoneValues)
+						{
+							oBufferAttribute[k].zoneValues[l].sos = Number(oBufferAttribute[k].zoneValues[l].sos);
+							sosTotal +=Number(oBufferAttribute[k].zoneValues[l].sos);
+							var temp = (oBufferAttribute[k].zoneValues[l].sop);
+							if(Number(oBufferAttribute[k].zoneValues[l].sop) == NaN)
+							{
+
+								temp = temp.replace("(","");
+								temp = temp.replace(")","");
+								temp = Number(temp);
+								oBufferAttribute[k].zoneValues[l].sop = temp;//Number(-temp);
+								// console.log(temp);
+								// sopTotal -= temp;
+							}
+							else
+							{
+								sopTotal += Number(temp);
+								// console.log("profit");
+								oBufferAttribute[k].zoneValues[l].sop = (temp);
+							}
+							
+
+						}
+						oBufferAttribute[k].zoneValues.push({"product":"Total","sos":sosTotal+"","sop":sopTotal+""});
+						// console.log("SoS Total:->"+sosTotal);
+						// console.log("SoP Total:_>"+sopTotal);
+						// console.log("Here:->",Object.keys(productArray));
+
+						this.dataob[product_type][count++]=(oBufferAttribute[k].zoneValues);
+					}
+			 	}
+					 
+			 }
+
+		}
+		this.productArray = {};
+
+		for(var i in objData)
+		{
+			 var oBuffer = objData[i];
+			 var product_type;
+			 
+			 for(var j in oBuffer) 
+			 {
+			 	var oBufferAttribute;
+				var productType;
+			 	if(j != "values")
+			 	{	
+			 		productType=oBuffer[j]
+			 		console.log("Product Type:"+productType);
+			 		this.productArray[productType] = {};
+				}
+			 	else
+			 	{
+					oBufferAttribute=oBuffer[j];
+					
+					for(var k in oBufferAttribute)
+					{
+						
+						console.log(oBufferAttribute[k].zone);
+						var sosTotal = 0;var sopTotal=0;
+
+						for(var l in oBufferAttribute[k].zoneValues)
+						{
+							if(this.productArray[productType][oBufferAttribute[k].zoneValues[l].product] == undefined && oBufferAttribute[k].zoneValues[l].product!="Total")
+							{
+								this.productArray[productType][oBufferAttribute[k].zoneValues[l].product]=1;
+							}
+
+						}
+						this.productArray[productType]["Total"] = 1;
+					}
+					console.log("Here:->",Object.keys(this.productArray[productType]));
+			 	}
+					 
 			 }
 		}
+
+
+
+
+		// console.log(Object.keys(this.productArray));
+		// console.log(objData);
+		// this.dataob = objData;
 }
+
+parsingDataset.prototype.fillUps = function()
+{
+
+	var productTypeArray = (Object.keys(this.productArray));
+	var count = 0;
+	for(var i in this.dataob)
+	{
+		// console.log(this.dataob[i].product_type);
+		var tempDataobObj = this.dataob[i];
+		// console.log(tempDataobObj);
+		
+		var temp = this.productArray[productTypeArray[count++]];
+		temp = temp || {};
+		for(var j in tempDataobObj)
+		{
+			
+			var productArray = (Object.keys(temp));
+			for(var k in tempDataobObj[j])
+			{
+				
+				// console.log(productArray);
+				// console.log(tempDataobObj[j][k].product+"");
+
+				productArray = productArray.filter(function(val) {
+				 return [tempDataobObj[j][k].product+""].indexOf(val) == -1;
+				});
+				
+			}
+			if(productArray.length != 0)
+			{
+				console.log(productArray);
+				for(var q in productArray)
+				{
+					this.dataob[i][j].push({"product":productArray[q]+"","sos":"0","sop":0});
+					// console.log(this.dataob[i][j]);
+				}
+			}
+
+			for(var z in tempDataobObj[j])
+			{
+				console.log("unsorted::",tempDataobObj[j][z]);
+
+			}
+			tempDataobObj[j].sort(function(a, b){
+					if(a.product === "Total"){
+						return 1;
+					}
+					if(b.product === "Total"){
+						return -1;
+					}
+				    return a.product > b.product;
+				});
+			console.log("===============================================");
+
+			for(var z in tempDataobObj[j])
+			{
+				console.log("sorted::",tempDataobObj[j][z]);
+
+			}
+
+
+		}
+
+		
+
+	}
+
+
+
+
+}
+
 
 parsingDataset.prototype.chartParse = function(){
 
@@ -51,11 +222,11 @@ parsingDataset.prototype.chartParse = function(){
 			 // var oBufferAttribute=oBuffer[j];
 			 if(i=='height')
 			 {
-					this.height = objChart[i];
+					this.height = Number(objChart[i]);
 			 }
 			 else if(i=='width')
 			 {
-					this.width = objChart[i];
+					this.width = Number(objChart[i]);
 			 }
 			 else if(i=='chartType')
 			 {
@@ -67,11 +238,11 @@ parsingDataset.prototype.chartParse = function(){
 			 }
 			 else if(i=='caption')
 			 {
-					document.getElementById("caption").innerHTML=objChart[i];
+					// document.getElementById("caption").innerHTML=objChart[i];
 			 }
 			 else if(i=='subcaption')
 			 {
-					document.getElementById("subcaption").innerHTML=objChart[i];
+					// document.getElementById("subcaption").innerHTML=objChart[i];
 			 }
 			 
 		}
@@ -147,19 +318,19 @@ parsingDataset.prototype.minmax = function(){
 				//console.log(i);
 				for(var m in kx)
 				{
-						var value=kx[m].value;
-						var time = kx[m].time;
+						var sos=kx[m].sos;
+						// var time = kx[m].time;
 						// date.push(time2);
 						//console.log(time);
 						// value.push(value2);
 						//coordinateCalculationX(time2,value2,counter2++);
-						if(value>this.max[count])
+						if(sos>this.max[count])
 						{
-								this.max[count]=value;
+								this.max[count]=sos;
 						}
-						if(value<this.min[count])
+						if(sos<this.min[count])
 						{
-								this.min[count]=value;
+								this.min[count]=sos;
 						} 
 						//coordinateCalculationX(time2,value2);
 						// var objSend=[];objSend[0]=optimizerRange(min[count],max[count]);objSend[1]=(value2);
@@ -167,8 +338,10 @@ parsingDataset.prototype.minmax = function(){
 				} 
 				// minPass=min[count];
 				// maxPass=max[count];
+
 				count++; 
 		}
+		// console.log(this.max);
 };
 
 parsingDataset.prototype.getWindowSize = function(){
@@ -245,13 +418,26 @@ parsingDataset.prototype.evokingRender=function(){
 		var count =0;
 		var length = (this.max).length;
 		// console.log("test",Math.floor(this.wid/this.width));
+		this.optimizedTick =[];
 		for(var i in this.dataob)
 		{
-			// console.log(length-count,"mark");
-			if(length-count < Math.floor(this.wid/this.width))
-				this.dataRender = new renderGraph(this.dataob[i], i ,this.height, this.width, this.optimizedTick[count++],this.chartType,1);
-			else
-				this.dataRender = new renderGraph(this.dataob[i], i ,this.height, this.width, this.optimizedTick[count++],this.chartType,0);
+
+			// this.productArray[this.productArray.length] = ""
+			console.log("productArray:>"+Object.keys(this.productArray[i]));
+			var renderingTool = new renderTool();
+			var svgCanvas = this.svgPlot(this.productArray[i]);
+			this.crosschartTable = new crossChartTable(svgCanvas,i,Object.keys(this.productArray[i]));
+			for(var j in this.dataob[i])
+			{
+				// this.optimizedTick[count+1] ={};
+				// console.log(length-count,"mark");
+				// if(length-count < Math.floor(this.wid/this.width))
+				this.dataRender = new renderGraph(this.dataob[i][j], i ,this.height, this.width, this.optimizedTick[count++],this.chartType,1,null,this.productArray[i]);
+				// else
+					// this.dataRender = new renderGraph(this.dataob[i], i ,this.height, this.width, this.optimizedTick[count++],this.chartType,0);
+			}
+			var br = document.createElement('br');
+			document.getElementById("container").appendChild(br);
 		}
 
 }

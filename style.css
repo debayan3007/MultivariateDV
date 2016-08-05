@@ -44,8 +44,8 @@
 
 .anchorpoint{
 	r:6;
-	stroke: #009688;
-	stroke-width: 1;
+	stroke: rgb(31, 123, 203);
+	stroke-width: 3;
 	fill: white
 }
 

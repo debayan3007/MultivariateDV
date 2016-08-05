@@ -7,11 +7,13 @@ var Axis =  function(RenderGraphI){
 var yAxis = function(RenderGraphI,width,height,tickArray){
 
 	// console.log(Object.keys(RenderGraphI));
+
 	this.width = width;
 	this.height = height;
-	this.tickArray = tickArray;
+	// console.log(tickArray);
+	this.tickArray = tickArray;//["0K","20k","40K","60K","80K"];
 	Axis.call(this,RenderGraphI);
-	// this.drawAxis();
+	this.drawAxis();
 	this.getWindowSize();
 	this.drawTicks();
 	this.drawAxis();
@@ -42,14 +44,13 @@ yAxis.prototype.drawTicks=function(){
 
 
 		this.div = (this.height-70)/(this.tickArray.length-1);//height,tickArray,
-
-	for(var i=0;i<this.tickArray.length;i++)
+	for(var i=0;i<=this.tickArray.length;i++)
 	{
 		var svgAxisTickY = renderingTool.drawLine(42,45,((this.height-40)-this.div*(i)),((this.height-40)-this.div*(i)),null);//height,
 		svgAxisTickY.setAttributeNS(null,"style","stroke:rgb(0,0,0);stroke-width:1.5");//
 		// this.RenderGraph.svgCanvas.appendChild(svgAxisTickY);//
 
-		this.svgTickLineY = renderingTool.drawRect(45,((this.height-40)-this.div*(i)),this.width-45,this.div,null);
+		this.svgTickLineY = renderingTool.drawRect(45,((this.height-40)-this.div*(i)),0,0,null);
 		// var svgTickLineY = document.createElementNS("http://www.w3.org/2000/svg","rect");
 		// svgTickLineY.setAttributeNS(null,"x","45");
 		// // svgTickLineY.setAttributeNS(null,"x2",this.width);
@@ -69,15 +70,15 @@ yAxis.prototype.drawTicks=function(){
 		// var TicksY=renderingTool.drawText(40,((this.height-40)-div*(i)),null);
 		this.TicksY = document.createElementNS("http://www.w3.org/2000/svg", "text");
 		this.TicksY.setAttributeNS(null,"x",40);
-		this.TicksY.setAttributeNS(null,"y",((this.height-40)-this.div*(i)));
+		this.TicksY.setAttributeNS(null,"y",(40+this.div*(i)));
 		this.TicksY.setAttributeNS(null,"fill","black");
 		this.TicksY.setAttributeNS(null,"text-anchor","end");
 		this.TicksY.setAttributeNS(null,"dominant-baseline","central");
 		this.TicksY.setAttributeNS(null,"font-family","Verdana");
 		this.TicksY.setAttribute("size","10px");
-		this.TicksY.textContent=""+this.tickArray[i];
+		this.TicksY.textContent=this.tickArray[i];
 
-		console.log(Math.floor(this.wid/Window.width));
+		// console.log(Math.floor(this.wid/Window.width));
 
 		this.RenderGraphI.appendChild(this.TicksY);	
 		// console.log(this.tickArray[i]);
@@ -96,9 +97,11 @@ yAxis.prototype.draw=function(){
 
 }
 
-var xAxis =function(RenderGraphI,width,height,tickBoolean){
+var xAxis =function(RenderGraphI,width,height,dataob,tickBoolean){
 
-		this.tickBoolean = tickBoolean;
+		// this.tickArray2 = ["0k",""20k"","40k","60k"];
+		this.tickBoolean = 1;
+		this.dataob = dataob;
 		Axis.call(this,RenderGraphI);
 		this.width = width;
 		this.height = height;
@@ -120,10 +123,10 @@ xAxis.prototype.drawTicks=function()
 {
 
 	var renderingTool= new renderTool();
-	for(var j=0;j<11;j++)
+	for(var j=0;j<this.dataob.length;j++)
     {
 
-        var div = (this.width-70)/10;
+        var div = (this.width-70)/this.dataob.length;
         var svgAxisTickX = renderingTool.drawLine(25+(div*(j+1)),25+(div*(j+1)),(this.height-37),(this.height-39),null);
         svgAxisTickX.setAttribute("style","stroke:rgb(0,0,0);stroke-width:2");
         this.RenderGraphI.appendChild(svgAxisTickX);
@@ -137,11 +140,11 @@ xAxis.prototype.drawTicks=function()
         TicksX.setAttributeNS(null,"y",this.height-40);
         TicksX.setAttribute("fill","black");
         TicksX.setAttribute("size","10px");
-        TicksX.textContent=((20+j)+"-06");
+        // TicksX.textContent=(j*20)+"k";
         TicksX.setAttribute("dominant-baseline","text-after-edge");
         TicksX.setAttribute("transform","rotate(90 "+ (45+(div*j)) +","+(this.height-40)+")" );
         TicksX.setAttribute("font-family","Verdana");
-        console.log(this.tickBoolean);
+        // console.log(this.tickBoolean);
         if(this.tickBoolean!= 0)
 	        this.RenderGraphI.appendChild(TicksX);
     }

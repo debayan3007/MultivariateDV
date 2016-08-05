@@ -10,9 +10,18 @@ renderTool.prototype.drawSVG = function(width,height,className){
 	SVG.setAttribute("class",className);
 	SVG.setAttribute("width",width);
 	SVG.setAttribute("height",height);
+	// SVG.setAttribute()
+	SVG.setAttribute("style","position:relative");
+	// SVG.setAttribute("style",)
 	// container.appendChild(SVG);
 	return SVG;
 
+}
+
+renderTool.prototype.drawGroup = function () {
+	var group = document.createElementNS(this.svgLink,"g");
+	group.setAttribute("fill",none);
+	return group;
 }
 
 renderTool.prototype.drawLine = function(x1,x2,y1,y2,className){
@@ -23,6 +32,7 @@ renderTool.prototype.drawLine = function(x1,x2,y1,y2,className){
 	svgLine.setAttribute("y1",y1);
 	svgLine.setAttribute("y2",y2);
 	svgLine.setAttribute("class",className);
+	
 	// container.appendChild(svgLine);
 	return svgLine;
 }
@@ -58,13 +68,13 @@ renderTool.prototype.drawPath = function(d,className){
 	// container.appendChild(svgPath);
 	return svgPath;
 }
-renderTool.prototype.drawText = function(x,y,className){
+renderTool.prototype.drawText = function(x,y,content,className){
 
 	var svgText = document.createElementNS(this.drawText,"text");
-	svgText.setAttribute("x",100);
-	svgText.setAttribute("y",100);
+	svgText.setAttribute("x",x);
+	svgText.setAttribute("y",y);
 	svgText.setAttribute("class",className);
-	// svgText.textContent = content;
+	svgText.textContent = content;
 	// svgText.textContent=""+content;
 	return svgText;
 }

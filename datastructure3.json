@@ -1,0 +1,335 @@
+var mydata = {
+                
+            "chart": {
+                caption: "Comparison of Data",
+                subcaption: "Axis 1,2,3",
+                chartType: "line", //line,column
+                ordering: "default" //default,ascending,descending
+            },
+            "data": [
+
+                {
+                    product_type: "coffee",
+                    region: "central",
+                    product: "Amaretto",
+                    sop:"5105",
+                    sos:"14011"
+                },
+                {
+                    product_type: "coffee",
+                    region: "central",
+                    product: "Columbian",
+                    sop:"8528",
+                    sos:"28913"
+                },
+                {
+                    product_type: "coffee",
+                    region: "central",
+                    product: "Decaf Irish Cream",
+                    sop: "9632",
+                    sos: "26155"
+                },
+
+
+                {
+                    product_type: "coffee",
+                    region: "east",
+                    product: "Amaretto",
+                    sop:"1009",
+                    sos:"2993"
+                },
+                {
+                    product_type: "coffee",
+                    region: "east",
+                    product: "Columbian",
+                    sop:"27253",
+                    sos:"47386"
+                },
+                {
+                    product_type: "coffee",
+                    region: "east",
+                    product: "Decaf Irish Cream",
+                    sop: "2727",
+                    sos: "6261"
+                },
+
+
+                {
+                    product_type: "coffee",
+                    region: "south",
+                    product: "Columbian",
+                    sop:"8767",
+                    sos:"21664"
+                },
+                {
+                    product_type: "coffee",
+                    region: "south",
+                    product: "Decaf Irish Cream",
+                    sop: "2933",
+                    sos: "11592"
+                },
+
+
+                {
+                    product_type: "coffee",
+                    region: "west",
+                    product: "Amaretto",
+                    sop:"(1225)",
+                    sos:"9265"
+                },
+                {
+                    product_type: "coffee",
+                    region: "west",
+                    product: "Columbian",
+                    sop:"11253",
+                    sos:"30357"
+                },
+                {
+                    product_type: "coffee",
+                    region: "west",
+                    product: "Decaf Irish Cream",
+                    sop: "(1305)",
+                    sos: "18235"
+                },
+
+
+                {
+                    product_type: "expresso",
+                    region: "central",
+                    product: "Caffe Mocha",
+                    sop:"14640",
+                    sos:"35218"
+                },
+                {
+                    product_type: "expresso",
+                    region: "central",
+                    product: "Decaf Expresso",
+                    sop:"8860",
+                    sos:"24485"
+                },
+
+                
+                {
+                    product_type: "expresso",
+                    region: "east",
+                    product: "Caffe Mocha",
+                    sop:"(6230)",
+                    sos:"16646"
+                },
+                {
+                    product_type: "expresso",
+                    region: "east",
+                    product: "Decaf Expresso",
+                    sop:"2410",
+                    sos:"7722"
+                },
+                {
+                    product_type: "expresso",
+                    region: "east",
+                    product: "Regular Expresso",
+                    sop: "10062",
+                    sos: "24036"
+                },
+
+
+                {
+                    product_type: "expresso",
+                    region: "south",
+                    product: "Caffe Latte",
+                    sop: "3872",
+                    sos: "15442"
+                },
+                {
+                    product_type: "expresso",
+                    region: "south",
+                    product: "Caffe Mocha",
+                    sop:"5201",
+                    sos:"14163"
+                },
+                {
+                    product_type: "expresso",
+                    region: "south",
+                    product: "Decaf Expresso",
+                    sop:"5930",
+                    sos:"15384"
+                },
+
+
+                {
+                    product_type: "expresso",
+                    region: "west",
+                    product: "Caffe Latte",
+                    sop: "7502",
+                    sos: "20458"
+                },
+                {
+                    product_type: "expresso",
+                    region: "west",
+                    product: "Caffe Mocha",
+                    sop:"4064",
+                    sos:"18876"
+                },
+                {
+                    product_type: "expresso",
+                    region: "west",
+                    product: "Decaf Expresso",
+                    sop:"12302",
+                    sos:"30578"
+                },
+
+
+                {
+                    product_type: "herbal tea",
+                    region: "central",
+                    product: "Chamomile",
+                    sop: "14436",
+                    sos: "36570"
+                },
+                {
+                    product_type: "herbal tea",
+                    region: "central",
+                    product: "Lemon",
+                    sop:"6251",
+                    sos:"21978"
+                },
+                {
+                    product_type: "herbal tea",
+                    region: "central",
+                    product: "Mint",
+                    sop:"4069",
+                    sos:"9337"
+                },
+
+
+                {
+                    product_type: "herbal tea",
+                    region: "east",
+                    product: "Chamomile",
+                    sop: "765",
+                    sos: "2194"
+                },
+                {
+                    product_type: "herbal tea",
+                    region: "east",
+                    product: "Lemon",
+                    sop:"7901",
+                    sos:"27176"
+                },
+                {
+                    product_type: "herbal tea",
+                    region: "east",
+                    product: "Mint",
+                    sop:"(2242)",
+                    sos:"11992"
+                },
+
+
+                {
+                    product_type: "herbal tea",
+                    region: "south",
+                    product: "Chamomile",
+                    sop: "3180",
+                    sos: "11186"
+                },
+                {
+                    product_type: "herbal tea",
+                    region: "south",
+                    product: "Lemon",
+                    sop:"2593",
+                    sos:"14497"
+                },
+
+
+                {
+                    product_type: "herbal tea",
+                    region: "west",
+                    product: "Chamomile",
+                    sop: "8852",
+                    sos: "25632"
+                },
+                {
+                    product_type: "herbal tea",
+                    region: "west",
+                    product: "Lemon",
+                    sop:"13120",
+                    sos:"32274"
+                },
+                {
+                    product_type: "herbal tea",
+                    region: "west",
+                    product: "Mint",
+                    sop:"4330",
+                    sos:"14380"
+                },
+                
+
+                {
+                    product_type: "tea",
+                    region: "central",
+                    product: "Darjeeling",
+                    sop: "10772",
+                    sos: "30289"
+                },
+                {
+                    product_type: "tea",
+                    region: "central",
+                    product: "Earl Grey",
+                    sop:"10331",
+                    sos:"32881"
+                },
+                {
+                    product_type: "tea",
+                    region: "central",
+                    product: "Green Tea",
+                    sop:"1227",
+                    sos:"5211"
+                },
+
+
+                {
+                    product_type: "tea",
+                    region: "east",
+                    product: "Darjeeling",
+                    sop: "6497",
+                    sos: "14096"
+                },
+                {
+                    product_type: "tea",
+                    region: "east",
+                    product: "Earl Grey",
+                    sop:"3405",
+                    sos:"6505"
+                },
+                {
+                    product_type: "tea",
+                    region: "east",
+                    product: "Green Tea",
+                    sop:"5654",
+                    sos:"11571"
+                },
+
+
+                {
+                    product_type: "tea",
+                    region: "west",
+                    product: "Darjeeling",
+                    sop: "11780",
+                    sos: "28769"
+                },
+                {
+                    product_type: "tea",
+                    region: "west",
+                    product: "Earl Grey",
+                    sop:"10425",
+                    sos:"27387"
+                },
+                {
+                    product_type: "tea",
+                    region: "west",
+                    product: "Green Tea",
+                    sop:"(7107)",
+                    sos:"16063"
+                },
+
+             ]
+        };

@@ -1,0 +1,144 @@
+var mydata = {
+                
+            "chart": {
+                caption: "Comparison of Data",
+                subcaption: "Axis 1,2,3",
+                chartType: "crosschart", //line,column,crosschart
+                ordering: "default" //default,ascending,descending
+            },
+            "data": [{
+                product_type: "Coffee",
+                values    :[
+                    {
+                        zone:"central",
+                        zoneValues: [
+                            {product: "Amaretto",sop: "5105", sos: "14011"},
+                            {product: "Columbian",sop: "8528", sos: "28913"},
+                            {product: "Decaf Irish Cream",sop: "9632", sos: "26155"}    
+                        ]
+                    },
+                    {
+                        zone:"east",
+                        zoneValues: [
+                            {product: "Amaretto",sop: "1009", sos: "2993"},
+                            {product: "Columbian",sop: "27253", sos: "47386"},    
+                            {product: "Decaf Irish Cream",sop: "2727", sos: "6261"}
+                        ]
+                    },
+                    {
+                        zone:"south",
+                        zoneValues: [
+                            {product: "Columbian",sop: "8767", sos: "21664"},    
+                            {product: "Decaf Irish Cream",sop: "2933", sos: "11592"}
+                        ]    
+                    },
+                    {
+                        zone:"west",
+                        zoneValues: [
+                            {product: "Amaretto",sop: "(1225)", sos: "9265"},
+                            {product: "Columbian",sop: "11253", sos: "30357"},
+                            {product: "Decaf Irish Cream",sop: "(1305)", sos: "18235"}
+                        ]
+                    }
+                        
+                ]
+            },{
+                product_type: "Expresso",
+                values:[
+                    {
+                        zone:"central",
+                        zoneValues: [
+                            {product: "Caffe Mocha",sop: "14640", sos: "35218"},
+                            {product: "Decaf Expresso",sop: "8860", sos: "24485"}    
+                        ]
+                    },
+                    {
+                        zone:"east",
+                        zoneValues: [
+                            {product: "Caffe Mocha",sop: "(6230)", sos: "16646"},
+                            {product: "Decaf Expresso",sop: "2410", sos: "7722"},
+                            {product: "Regular Expresso",sop: "10062", sos: "24036"}    
+                        ]
+                    },
+                    {
+                        zone:"south",
+                        zoneValues: [
+                            {product: "Caffe Latte",sop: "3872", sos: "15442"},
+                            {product: "Caffe Mocha",sop: "5201", sos: "14163"},
+                            {product: "Decaf Expresso",sop: "5930", sos: "15384"}
+                        ]
+                    },
+                    {
+                        zone:"west",
+                        zoneValues: [
+                            {product: "Caffe Latte",sop: "7502", sos: "20458"},
+                            {product: "Caffe Mocha",sop: "4064", sos: "18876"},
+                            {product: "Decaf Expresso",sop: "12302", sos: "30578"}
+                        ]
+                    }   
+                        
+                ],
+            },{
+                product_type: "Herbal Tea",
+                values: [
+                    {
+                        zone : "central",
+                        zoneValues: [
+                            {product: "Chamomile",sop: "14434", sos: "36570"},
+                            {product: "Lemon",sop: "6251", sos: "21978"},
+                            {product: "Mint",sop: "4069", sos: "9337"}    
+                        ]
+                    },
+                    {
+                        zone : "east",
+                        zoneValues : [
+                            {product: "Chamomile",sop: "765", sos: "2194"},
+                            {product: "Mint",sop: "(2242)", sos: "11992"}
+                        ]
+                    },
+                    {
+                        zone : "south",
+                        zoneValues : [
+                            {product: "Chamomile",sop: "3180", sos: "11186"},
+                            {product: "Lemon",sop: "2593", sos: "14497"}    
+                        ]
+                    },
+                    {
+                        zone : "west",
+                        zoneValues : [
+                            {product: "Chamomile",sop: "8852", sos: "25632"},
+                            {product: "Lemon",sop: "13120", sos: "32274"},
+                            {product: "Mint",sop: "4330", sos: "14380"}
+                        ]
+                    }
+                ]
+            },{
+                product_type: "Tea",
+                values: [
+                    {
+                        zone : "central",
+                        zoneValues: [
+                            {product: "Darjeeling",sop: "10772", sos: "30289"},
+                            {product: "Earl Grey",sop: "10331", sos: "21978"},
+                            {product: "Green Tea",sop: "1227", sos: "5211"}
+                        ]
+                    },
+                    {
+                        zone : "east",
+                        zoneValues : [
+                            {product: "Darjeeling",sop: "6497", sos: "14096"},
+                            {product: "Earl Grey",sop: "3405", sos: "6505"},
+                            {product: "Green Tea",sop: "5654", sos: "11571"}
+                        ]
+                    },
+                    {
+                        zone : "west",
+                        zoneValues : [
+                            {product: "Darjeeling",sop: "11780", sos: "28769"},
+                            {product: "Earl Grey",sop: "10425", sos: "27387"},
+                            {product: "Green Tea",sop: "(7109)", sos: "16063"}
+                        ]
+                    }
+                ]
+            } ]
+        };

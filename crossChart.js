@@ -1,5 +1,6 @@
-var columnChart = function(RenderGraph,coordinateOb,dataob,width,height){
+var crossChart = function(RenderGraph,coordinateOb,dataob,width,height,productSeq){
 
+    this.productSeq = productSeq; 
     this.RenderGraph = RenderGraph;
     this.coordinateOb = coordinateOb;
     this.dataob = dataob;
@@ -9,7 +10,7 @@ var columnChart = function(RenderGraph,coordinateOb,dataob,width,height){
     
 }
 
-columnChart.prototype.drawColumns = function(){
+crossChart.prototype.drawColumns = function(){
       var _this = this;
       var lengthTemp = this.coordinateOb.length;
       // console.log(lengthTemp);
@@ -20,21 +21,24 @@ columnChart.prototype.drawColumns = function(){
           this.toolText = document.createElementNS("http://www.w3.org/2000/svg","text");
           this.columnWidth = (this.width-45)/(2*10-1);
           this.svgColumn[i] = document.createElementNS("http://www.w3.org/2000/svg","rect");
-          this.svgColumn[i].setAttribute("x",(this.coordinateOb[i].x)-this.columnWidth/2);
-          this.svgColumn[i].setAttribute("y",this.coordinateOb[i].y);
+          this.svgColumn[i].setAttribute("x",50);//(this.coordinateOb[i].x)-this.columnWidth/2);
+          this.svgColumn[i].setAttribute("y",(this.coordinateOb[i].y-60)*0.7);
           // this.lowerBound[i] = (this.coordinateOb[i].x)-columnWidth/2;
           // this.upperBound[i] = (this.coordinateOb[i].x)+columnWidth/2;
-          this.svgColumn[i].setAttribute("width",this.columnWidth+"px");
+          this.svgColumn[i].setAttribute("height","20px");
           // svgColumn.setAttribute("fill","black");
-          this.svgColumn[i].setAttribute("height",(this.height-40)-(this.coordinateOb[i].y));
+          this.svgColumn[i].setAttribute("width",(this.coordinateOb[i].x*1.8));
           // this.svgColumn[i].setAttribute("style","fill:black;stroke:black;stroke-width:1;opacity:1");
           this.svgColumn[i].setAttribute("class","svgColumn");
+          
           this.RenderGraph.appendChild(this.svgColumn[i]);
+
           this.toolBox.setAttribute("height",20);
           this.toolBox.setAttribute("width",25);
           this.toolBox.setAttribute("style","fill:#fed8ca;stroke:brown;stroke-width:1;opacity:0.7");
           this.svgColumn[i].addEventListener("mousemove",onMouseMove);
-          this.svgColumn[i].addEventListener("mouseout",onMouseOut);
+          this.svgColumn[i].addEventListener("mouseout",onMouseOut);          
+
           function a(j){
 
                   document.addEventListener('onHighlight',function(event){
@@ -59,9 +63,13 @@ columnChart.prototype.drawColumns = function(){
                       {
                             // console.log("abc");
                             // console.log(_this.coordinateOb[j].y);
-                            _this.toolText.textContent=_this.dataob[j].value;
-                            _this.RenderGraph.appendChild(_this.toolBox);
-                            _this.RenderGraph.appendChild(_this.toolText);
+                            // if(_this.productSeq[j] != _this.dataob[j].product)
+                            // {
+                                // console.log(_this.dataob[j].value);
+                                _this.toolText.textContent=_this.dataob[j].value;
+                                _this.RenderGraph.appendChild(_this.toolBox);
+                                _this.RenderGraph.appendChild(_this.toolText);
+                            // }
                             
                       }
                     
