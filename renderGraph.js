@@ -20,12 +20,13 @@ var renderGraph=function(data,i,chartHeight,chartWidth,tickob,chartType,tickbool
       this.pathStringBuilder();
       this.svgCanvas = this.svgPlot();
       console.log("tickboolean",this.tickboolean);
-      this.yaxisDrawDEMO = new yAxis(this.svgCanvas,this.width,this.height,this.tickob);
-      this.xAxisDrawDEMO = new xAxis(this.svgCanvas,this.width,this.height,this.tickboolean);
+      // this.yaxisDrawDEMO = new yAxis(this.svgCanvas,this.width,this.height,this.tickob);
+      // this.xAxisDrawDEMO = new xAxis(this.svgCanvas,this.width,this.height,this.tickboolean);
       // this.lineChart = new lineChart();
       // yaxisDrawDEMO.draw();
       // console.log(Object.keys(yaxisDrawDEMO));
       // this.yAxisPlot();
+      this.yaxisDraw = new Axis(this.svgCanvas,this.width,this.height,this.tickob,this.tickBoolean,'y');
       document.getElementById("container").appendChild(this.svgCanvas);
       // this.xAxisPlot();
       this.addAxisLabel();
