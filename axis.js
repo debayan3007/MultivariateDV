@@ -1,13 +1,13 @@
-var Axis =  function(RenderGraphI,width,height,tickArray,tickBoolean,axisBoolean){
+var Axis =  function(ObjectInput){
 
-	this.RenderGraphI = RenderGraphI;
-	this.width = width;
-	this.height = height;
-	this.tickArray = tickArray;
-	this.tickBoolean = tickBoolean;
-	this.axisBoolean = axisBoolean;
+	this.RenderGraphI = ObjectInput.RenderGraphI;
+	this.width = ObjectInput.width;
+	this.height = ObjectInput.height;
+	this.tickArray = ObjectInput.tickArray || ["a","b","c","d","e"];	
+	this.tickBoolean = ObjectInput.tickBoolean;
+	this.axisBoolean = ObjectInput.axisBoolean;
 	this.getWindowSize();
-	this.drawAxis();
+	this.RenderGraphI.appendChild(this.drawAxis());
 	this.drawTicks();
 }
 
@@ -23,7 +23,8 @@ Axis.prototype.drawAxis = function(){
 		this.svgAxis = renderingTool.drawLine(45,(this.width),(this.height-40),(this.height-40),"svgAxis");
 	}
 
-	this.RenderGraphI.appendChild(this.svgAxis);
+	// this.RenderGraphI.appendChild(this.svgAxis);
+	return this.svgAxis;
 }
 
 Axis.prototype.drawTicks = function(){
@@ -58,7 +59,7 @@ Axis.prototype.drawTicks = function(){
 		}
 	}else if(this.axisBoolean == 'x'){
 
-		var div = (this.width-70)/10;
+		var div = (this.width-70)/(this.tickArray.length-1);
 		for(var j=0;j<this.tickArray.length;j++)
 	    {
 	        var svgAxisTickX = renderingTool.drawLine(25+(div*(j+1)),25+(div*(j+1)),(this.height-37),(this.height-39),null);

@@ -1,4 +1,4 @@
-var renderGraph=function(data,i,chartHeight,chartWidth,tickob,chartType,tickboolean){
+var renderGraph=function(data,i,chartHeight,chartWidth,tickobY,tickobX,chartType,tickboolean){
 
       this.tickboolean = tickboolean;
       this.dataob = data;
@@ -7,11 +7,9 @@ var renderGraph=function(data,i,chartHeight,chartWidth,tickob,chartType,tickbool
       Window.height = this.height
       Window.width = this.width;
       this.axisName = i;
-      
       this.chartType = chartType.toString() ;
-      
-      // this.tickob = [];
-      this.tickob=tickob;
+      this.tickobY=tickobY;
+      this.tickobX=tickobX || ["test","test","test","test","test","test","test","test"];
       this.numberOfGraph = Object.keys(this.dataob).length;
       this.currentIteration=0;
       var numberOfInterations = this.numberOfGraph;
@@ -20,13 +18,13 @@ var renderGraph=function(data,i,chartHeight,chartWidth,tickob,chartType,tickbool
       this.pathStringBuilder();
       this.svgCanvas = this.svgPlot();
       console.log("tickboolean",this.tickboolean);
-      // this.yaxisDrawDEMO = new yAxis(this.svgCanvas,this.width,this.height,this.tickob);
-      // this.xAxisDrawDEMO = new xAxis(this.svgCanvas,this.width,this.height,this.tickboolean);
-      // this.lineChart = new lineChart();
-      // yaxisDrawDEMO.draw();
-      // console.log(Object.keys(yaxisDrawDEMO));
-      // this.yAxisPlot();
-      this.yaxisDraw = new Axis(this.svgCanvas,this.width,this.height,this.tickob,this.tickBoolean,'y');
+      var ObjectSend={"RenderGraphI":this.svgCanvas,"width":this.width,"height":this.height,"tickArray":this.tickobY,"tickBoolean":this.tickBoolean,"axisBoolean":'y'};
+
+      this.yaxisDraw = new Axis(ObjectSend);
+      ObjectSend.tickArray = this.tickobX;
+      ObjectSend.tickBoolean = this.tickBoolean;
+      ObjectSend.axisBoolean = 'x';
+      this.xaxisDraw = new Axis(ObjectSend);
       document.getElementById("container").appendChild(this.svgCanvas);
       // this.xAxisPlot();
       this.addAxisLabel();
@@ -265,16 +263,16 @@ function onMouseOut(event)
 renderGraph.prototype.coordinateCalculation=function(){
       var count = 0;
       // this.coordinateOb=[];
-      // console.log(this.tickob);
+      // console.log(this.tickobY);
 
 
       for(var i in this.dataob){
         var tempObj = this.dataob;
-        var tempTickObj = this.tickob;//[count];
+        var temptickobYj = this.tickobY;//[count];
         var bufferCoordinateOb=[];
         for(var j in tempObj){
-              var a = tempTickObj[0];
-              var b = tempTickObj[tempTickObj.length-1];
+              var a = temptickobYj[0];
+              var b = temptickobYj[temptickobYj.length-1];
               var c = 30;
               var d = this.height-40;
               var y = tempObj[j].value;
