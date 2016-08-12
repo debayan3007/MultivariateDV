@@ -77,6 +77,10 @@ var renderGraph = function (RenderObject) {
 	} else if (this.chartType.toString() == "crosstab") {
 		this.svgCanvas = this.svgPlot(this.width, this.height);
 		document.getElementById("container").appendChild(this.svgCanvas);
+
+		//RenderGraph, coordinateOb, dataob, width, height, productSeq, maxP, minP, colorRange, colorRangeLoss
+		//(this.svgCanvas,this.coordinateOb,this.dataob,this.width,this.height,this.productSeq,this.maxP,this.minP,this.colorRange,this.colorRangeLoss)
+		this.crossChart = new crossChart(this.svgCanvas, this.coordinateOb, this.dataob, this.width, this.height, this.productSeq, this.maxP, this.minP, this.colorRange, this.colorRangeLoss);
 	}
 };
 
