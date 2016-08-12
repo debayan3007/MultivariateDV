@@ -18,16 +18,36 @@ var parsingDataset = function (dataset) { //parser()
 		this.jsonData = this.dataCruncherCrosstab(this.jsonData);
 		this.dataParseCrosstab(this.jsonData);
 		this.fillUps();
+		this.evokingRender();
 	}
 	console.log(this.jsonData, this.jsonData.length);
 
 };
 
+parsingDataset.prototype.svgPlot = function (dataCarr) {
+
+	var renderingTool = new renderTool();
+	var height = this.height;
+	console.log("dataCarr", Object.keys(dataCarr));
+	dataCarr = Object.keys(dataCarr).length;
+	console.log("dataCarr length", dataCarr);
+	this.svgCanvas = renderingTool.drawSVG(280, dataCarr * 37.5, "svgGraph");
+	document.getElementById("container").appendChild(this.svgCanvas);
+	return this.svgCanvas;
+}
+
+
 parsingDataset.prototype.dataCruncherCrosstab = function (dataset) {
 
 	var categories = [],
 		subcategories = [],
-		zones = [];
+		zones = [],
+		maxProfit = -Infinity,
+		minProfit = Infinity,
+		maxSales = -Infinity,
+		minSales = Infinity,
+		bufferProfit,
+		bufferSales;
 	for (var i in dataset) {
 		if (categories.indexOf(dataset[i].category) == -1) {
 			{
@@ -60,18 +80,27 @@ parsingDataset.prototype.dataCruncherCrosstab = function (dataset) {
 		for (var j in jsonData) {
 			for (var k in jsonData[j].values) {
 				if (jsonData[j].category == dataset[i].category && jsonData[j].values[k].zone == dataset[i].zone) {
-					console.log(Number((dataset[i].sop.replace("(", "")).replace(")", "")));
+					// console.log(Number((dataset[i].sop.replace("(", "")).replace(")", "")));
+					bufferSales = Number(dataset[i].sos);
+					bufferProfit = dataset[i].sop;
+					bufferProfit = (dataset[i].sop[0] == "(") ? Number(bufferProfit.replace("(", "").replace(")", "")) * -1 : Number(bufferProfit);
+					if (bufferProfit > maxProfit) maxProfit = bufferProfit;
+					if (bufferProfit < minProfit) minProfit = bufferProfit;
+					if (bufferProfit > maxSales) maxSales = bufferSales;
+					if (bufferProfit < minSales) minSales = bufferSales;
+					// subcategories.push()
 					jsonData[j].values[k].zoneValues.push({
 						"product": dataset[i].subcategory,
-						"sos": Number(dataset[i].sos),
-						"sop": Number((dataset[i].sop.replace("(", "")).replace(")", ""))
+						"sos": bufferSales,
+						"sop": bufferProfit
 					});
 
 				}
 			}
 		}
 	}
-
+	this.ticks = tickGenerator(0, maxSales, true, true);
+	this.categories = categories;
 
 	// console.log("categories:-", categories);
 	// console.log("subcategories:-", subcategories);
@@ -386,18 +415,152 @@ parsingDataset.prototype.getWindowSize = function () {
 }
 
 parsingDataset.prototype.evokingRender = function () {
-
 	var count = 0;
-	var length = (this.max).length;
-	console.log("test", Math.floor(this.wid / this.width));
-	for (var i in this.dataob) {
-		console.log(length - count, "mark");
-		if (length - count < Math.floor(this.wid / this.width))
-			this.dataRender = new renderGraph(this.dataob[i], i, this.height, this.width, this.optimizedTick[count++], null, this.chartType, 1);
-		else
-			this.dataRender = new renderGraph(this.dataob[i], i, this.height, this.width, this.optimizedTick[count++], null, this.chartType, 0);
+	if (this.chartType == "line" || this.chartType == "column") {
+
+		var length = (this.max).length;
+		console.log("test", Math.floor(this.wid / this.width));
+		for (var i in this.dataob) {
+			console.log(length - count, "mark");
+			if (length - count < Math.floor(this.wid / this.width))
+				this.dataRender = new renderGraph(this.dataob[i], i, this.height, this.width, this.optimizedTick[count++], null, this.chartType, 1);
+			else
+				this.dataRender = new renderGraph(this.dataob[i], i, this.height, this.width, this.optimizedTick[count++], null, this.chartType, 0);
+		}
+	} else if (this.chartType == "crosstab") {
+		// var length = (this.max).length;
+
+		// console.log("test",Math.floor(this.wid/this.width));
+		this.optimizedTick = [];
+		this.header();
+
+		for (var i in this.dataob) {
+
+			// this.productArray[this.productArray.length] = ""
+			console.log("productArray:>" + Object.keys(this.productArray[i]));
+			var renderingTool = new renderTool();
+			var svgCanvas = this.svgPlot(this.productArray[i]);
+			// this.crosschartTable = new crossChartTable(svgCanvas, i, Object.keys(this.productArray[i]), this.maxP, this.minP);
+			for (var j in this.dataob[i]) {
+				// this.optimizedTick[count+1] ={};
+				// console.log(length-count,"mark");
+				// if(length-count < Math.floor(this.wid/this.width))
+				// this.dataRender = new renderGraph(this.dataob[i][j], i, this.height, this.width, this.optimizedTick[count++], this.chartType, 1, null, this.productArray[i], this.colorRange, this.colorRangeLoss);
+				// else
+				// this.dataRender = new renderGraph(this.dataob[i], i ,this.height, this.width, this.optimizedTick[count++],this.chartType,0);
+			}
+			var br = document.createElement('br');
+			document.getElementById("container").appendChild(br);
+		}
+
+		this.footer()
 	}
 
+}
+
+parsingDataset.prototype.footer = function () {
+
+	var renderingTool = new renderTool();
+	var footerSVG = renderingTool.drawSVG(null, 70, "svgGraph");
+	document.getElementById("container").appendChild(footerSVG);
+	var textType = document.createElementNS("http://www.w3.org/2000/svg", "text");
+	textType.setAttribute("x", 50);
+	textType.setAttribute("y", 15);
+	textType.setAttribute("fill", "black");
+	textType.setAttribute("font-family", "Verdana");
+	textType.setAttribute("size", "23px");
+	// textType.textContent = "Product Type";
+	footerSVG.appendChild(textType);
+
+
+
+	var textProduct = document.createElementNS("http://www.w3.org/2000/svg", "text");
+	textProduct.setAttribute("x", 150);
+	textProduct.setAttribute("fill", "black");
+	textProduct.setAttribute("font-family", "Verdana");
+	textProduct.setAttribute("size", "23px");
+	textProduct.setAttribute("y", 30);
+	// textProduct.textContent = "Product";
+	footerSVG.appendChild(textProduct);
+	var zoneX = 330;
+	var xTicks = 330;
+	for (var i in this.zones) {
+
+		for (var j = 0; j < 5; j++) {
+			var textProduct =
+				document.createElementNS("http://www.w3.org/2000/svg", "text");
+			textProduct.setAttribute("x", (xTicks + 30));
+			xTicks += 40;
+			textProduct.setAttribute("fill", "black");
+			textProduct.setAttribute("font-family", "Verdana");
+			// textProduct.setAttribute("size","px");
+			textProduct.setAttribute("y", 50);
+			textProduct.setAttribute("transform", "rotate(90 " + xTicks + "," + 13 + ")");
+			textProduct.textContent = this.ticks[j];
+			footerSVG.appendChild(textProduct);
+
+		}
+
+		xTicks += 19;
+		var textZones = document.createElementNS("http://www.w3.org/2000/svg", "text");
+		textZones.setAttribute("x", zoneX);
+		zoneX += 220;
+		textZones.setAttribute("fill", "black");
+		textZones.setAttribute("font-family", "Verdana");
+		textZones.setAttribute("size", "23px");
+		textZones.setAttribute("y", 70);
+		textZones.textContent = "Sum of Sales";
+		footerSVG.appendChild(textZones);
+
+
+	}
+
+
+
+	var br = document.createElement('br');
+	document.getElementById("container").appendChild(br);
+
+}
+
+parsingDataset.prototype.header = function () {
+
+	var renderingTool = new renderTool();
+	var headerSVG = renderingTool.drawSVG(null, 35, "svgGraph");
+	document.getElementById("container").appendChild(headerSVG);
+	var textType = document.createElementNS("http://www.w3.org/2000/svg", "text");
+	textType.setAttribute("x", 50);
+	textType.setAttribute("y", 15);
+	textType.setAttribute("fill", "black");
+	textType.setAttribute("font-family", "Verdana");
+	textType.setAttribute("size", "23px");
+	textType.textContent = "Product Type";
+	headerSVG.appendChild(textType);
+
+	var textProduct = document.createElementNS("http://www.w3.org/2000/svg", "text");
+	textProduct.setAttribute("x", 150);
+	textProduct.setAttribute("fill", "black");
+	textProduct.setAttribute("font-family", "Verdana");
+	textProduct.setAttribute("size", "23px");
+	textProduct.setAttribute("y", 15);
+	textProduct.textContent = "Product";
+	headerSVG.appendChild(textProduct);
+	var zoneX = 330;
+	for (var i in this.zones) {
+		var textZones = document.createElementNS("http://www.w3.org/2000/svg", "text");
+		textZones.setAttribute("x", zoneX);
+		zoneX += 220;
+		textZones.setAttribute("fill", "black");
+		textZones.setAttribute("font-family", "Verdana");
+		textZones.setAttribute("size", "23px");
+		textZones.setAttribute("y", 15);
+		textZones.textContent = "" + this.zones[i];
+		headerSVG.appendChild(textZones);
+	}
+
+
+
+	var br = document.createElement('br');
+	document.getElementById("container").appendChild(br);
 }
 
 parsingDataset.prototype.tickMaker = function () {

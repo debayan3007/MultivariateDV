@@ -38,7 +38,7 @@ function rangeBeautifier(num1, num2) {
 	return [opMIN, opMAX];
 }
 
-function tickGenerator(num1, num2, smart) {
+function tickGenerator(num1, num2, smart, shrink) {
 
 	if (smart === true) {
 		num1 = rangeBeautifier(num1, num2)[0];
@@ -81,10 +81,19 @@ function tickGenerator(num1, num2, smart) {
 		div = 10 * (Math.pow(10, counter));
 	}
 	counter = num1;
-	ticks.push(counter);
+	if (shrink == true) {
+		ticks.push((counter / 1000) + "K");
+	} else {
+		ticks.push(counter)
+	}
+
 	while (counter < num2) {
 		counter = counter + div;
-		ticks.push(counter);
+		if (shrink == true) {
+			ticks.push((counter / 1000) + "K");
+		} else {
+			ticks.push(counter)
+		}
 	}
 	// var len=ticks.length;
 	return ticks;

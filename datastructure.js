@@ -5,7 +5,7 @@ var mydata = {
 		"subcaption": "Axis 1,2,3",
 		"width": 300,
 		"height": 300,
-		"chartType": "crosstab", //line,column,crosstab
+		"chartType": "line", //line,column,crosstab
 		"ordering": "ascending" //default,ascending,descending
 	},
 	"data": [{
@@ -96,7 +96,7 @@ var mydata = {
 		}, {
 			"category": "coffee",
 			"zone": "central",
-		"subcategory": "Columbian",
+			"subcategory": "Columbian",
 			"sop": "8528",
 			"sos": "28913"
 		}, {
