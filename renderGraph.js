@@ -1,22 +1,25 @@
-var renderGraph = function (data, i, chartHeight, chartWidth, tickobY, tickobX, chartType, tickboolean) {
+var renderGraph = function (RenderObject) {
 
-	this.tickboolean = tickboolean;
-	this.dataob = data;
-	this.height = chartHeight + 70;
-	this.width = chartWidth + 65;
+
+	this.tickboolean = RenderObject.tickboolean;
+	this.dataob = RenderObject.dataObject;
+	this.height = RenderObject.height + 70;
+	this.width = RenderObject.width + 65;
 	Window.height = this.height
 	Window.width = this.width;
-	this.axisName = i;
-	this.chartType = chartType.toString();
-	this.tickobY = tickobY;
-	this.tickobX = tickobX || ["test", "test", "test", "test", "test", "test", "test", "test"];
+	this.axisName = RenderObject.axisName;
+	this.chartType = (RenderObject.chart).toString();
+
+	// this.chartType = chartType;
+	this.tickobY = RenderObject.ticks || [];
+	this.tickobX = RenderObject.tickobX || ["test", "test", "test", "test", "test", "test", "test", "test"];
 	this.numberOfGraph = Object.keys(this.dataob).length;
 	this.currentIteration = 0;
 	var numberOfInterations = this.numberOfGraph;
 	this.getWindowSize();
 	this.coordinateCalculation();
 	this.pathStringBuilder();
-	this.svgCanvas = this.svgPlot();
+
 	console.log("tickboolean", this.tickboolean);
 	var ObjectSend = {
 		"RenderGraphI": this.svgCanvas,
@@ -27,33 +30,45 @@ var renderGraph = function (data, i, chartHeight, chartWidth, tickobY, tickobX, 
 		"axisBoolean": 'y'
 	};
 
-	this.yaxisDraw = new Axis(ObjectSend);
-	ObjectSend.tickArray = this.tickobX;
-	ObjectSend.tickBoolean = this.tickBoolean;
-	ObjectSend.axisBoolean = 'x';
-	this.xaxisDraw = new Axis(ObjectSend);
-	document.getElementById("container").appendChild(this.svgCanvas);
 	// this.xAxisPlot();
-	this.addAxisLabel();
-	this.mouseDragSelector();
-
 	this.renderingTool = new renderTool();
 
 	// this.circleDemo = this.renderingTool.drawCircle(this.height/2,this.height/2,this.svgCanvas,"anchorpoint");
 	// this.svgCanvas.appendChild(this.circleDemo);
-	console.log(typeof chartType, chartType, chartType == 'line');
-	if (chartType.toString() == "line") {
+	// console.log(typeof chartType, chartType, chartType == 'line');
+	if (this.chartType.toString() == "line") {
+		this.svgCanvas = this.svgPlot(this.width, this.height);
+		document.getElementById("container").appendChild(this.svgCanvas);
+		this.addAxisLabel();
+		this.mouseDragSelector();
+		this.yaxisDraw = new Axis(ObjectSend);
+		ObjectSend.tickArray = this.tickobX;
+		ObjectSend.tickBoolean = this.tickBoolean;
+		ObjectSend.axisBoolean = 'x';
+		this.xaxisDraw = new Axis(ObjectSend);
 		this.lineChart = new lineChart(this.svgCanvas, this.coordinateOb, this.dataob, this.pathString, this.width, this.height);
 		this.anchorPoints = [];
 		this.anchorPoints = this.lineChart.anchorPoints;
 		this.hairLine = this.lineChart.hairLine;
-		// console.log(this.anchorPoints[0].getAttribute("cx"));
-	} else {
+		console.log(this.anchorPoints[0].getAttribute("cx"));
+
+	} else if (this.chartType.toString() == "column") {
+		this.svgCanvas = this.svgPlot(this.width, this.height);
+		document.getElementById("container").appendChild(this.svgCanvas);
+		this.addAxisLabel();
+		this.mouseDragSelector();
+		this.yaxisDraw = new Axis(ObjectSend);
+		ObjectSend.tickArray = this.tickobX;
+		ObjectSend.tickBoolean = this.tickBoolean;
+		ObjectSend.axisBoolean = 'x';
+		this.xaxisDraw = new Axis(ObjectSend);
 		this.columnChart = new columnChart(this.svgCanvas, this.coordinateOb, this.dataob, this.width, this.height);
 		this.svgColumn = [];
 		this.svgColumn = this.columnChart.svgColumn;
+	} else if (this.chartType.toString() == "crosstab") {
+		this.svgCanvas = this.svgPlot(this.width, this.height);
+		document.getElementById("container").appendChild(this.svgCanvas);
 	}
-
 };
 
 renderGraph.prototype.getWindowSize = function () {
@@ -65,10 +80,10 @@ renderGraph.prototype.getWindowSize = function () {
 	// return [wid,hi]
 }
 
-renderGraph.prototype.svgPlot = function () {
+renderGraph.prototype.svgPlot = function (width, height) {
 
 	var renderingTool = new renderTool();
-	this.svgCanvas = renderingTool.drawSVG(this.width + 20, this.height, "svgGraph");
+	this.svgCanvas = renderingTool.drawSVG(width + 20, height, "svgGraph");
 	// document.getElementById("container").appendChild(this.svgCanvas);
 	return this.svgCanvas;
 }

@@ -88,7 +88,7 @@ parsingDataset.prototype.dataCruncherCrosstab = function (dataset) {
 					if (bufferProfit < minProfit) minProfit = bufferProfit;
 					if (bufferProfit > maxSales) maxSales = bufferSales;
 					if (bufferProfit < minSales) minSales = bufferSales;
-					// subcategories.push()
+					subcategories.push(dataset[i].subcategory);
 					jsonData[j].values[k].zoneValues.push({
 						"product": dataset[i].subcategory,
 						"sos": bufferSales,
@@ -415,39 +415,50 @@ parsingDataset.prototype.getWindowSize = function () {
 }
 
 parsingDataset.prototype.evokingRender = function () {
-	var count = 0;
+	var count = 0,
+		length,
+		RenderObject = {};
 	if (this.chartType == "line" || this.chartType == "column") {
 
-		var length = (this.max).length;
+		length = (this.max).length;
 		console.log("test", Math.floor(this.wid / this.width));
 		for (var i in this.dataob) {
 			console.log(length - count, "mark");
-			if (length - count < Math.floor(this.wid / this.width))
-				this.dataRender = new renderGraph(this.dataob[i], i, this.height, this.width, this.optimizedTick[count++], null, this.chartType, 1);
-			else
-				this.dataRender = new renderGraph(this.dataob[i], i, this.height, this.width, this.optimizedTick[count++], null, this.chartType, 0);
+			RenderObject.axisName = 1;
+			RenderObject.dataObject = this.dataob[i];
+			RenderObject.height = this.height;
+			RenderObject.width = this.width;
+			RenderObject.ticks = this.optimizedTick[count++];
+			RenderObject.chart = this.chartType;
+
+			if (length - count < Math.floor(this.wid / this.width)) {
+				RenderObject.tickboolean = 1;
+			} else {
+				RenderObject.tickboolean = 0;
+			}
+			this.dataRender = new renderGraph(RenderObject);
 		}
 	} else if (this.chartType == "crosstab") {
 		// var length = (this.max).length;
 
 		// console.log("test",Math.floor(this.wid/this.width));
 		this.optimizedTick = [];
-		this.header();
 
 		for (var i in this.dataob) {
-
+			RenderObject.dataObject = this.dataob[i];
+			RenderObject.height = 37.5 * Object.keys(this.productArray[i]);
+			RenderObject.width = 280;
+			RenderObject.ticks = this.optimizedTick[count++];
+			RenderObject.chart = this.chartType;
 			// this.productArray[this.productArray.length] = ""
 			console.log("productArray:>" + Object.keys(this.productArray[i]));
 			var renderingTool = new renderTool();
 			var svgCanvas = this.svgPlot(this.productArray[i]);
-			// this.crosschartTable = new crossChartTable(svgCanvas, i, Object.keys(this.productArray[i]), this.maxP, this.minP);
+			this.crosschartTable = new crossChartTable(svgCanvas, i, Object.keys(this.productArray[i]), this.maxP, this.minP);
 			for (var j in this.dataob[i]) {
-				// this.optimizedTick[count+1] ={};
-				// console.log(length-count,"mark");
-				// if(length-count < Math.floor(this.wid/this.width))
-				// this.dataRender = new renderGraph(this.dataob[i][j], i, this.height, this.width, this.optimizedTick[count++], this.chartType, 1, null, this.productArray[i], this.colorRange, this.colorRangeLoss);
-				// else
-				// this.dataRender = new renderGraph(this.dataob[i], i ,this.height, this.width, this.optimizedTick[count++],this.chartType,0);
+				this.optimizedTick[count + 1] = {};
+				console.log(length - count, "mark");
+				this.dataRender = new renderGraph(RenderObject);
 			}
 			var br = document.createElement('br');
 			document.getElementById("container").appendChild(br);
