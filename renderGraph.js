@@ -21,14 +21,7 @@ var renderGraph = function (RenderObject) {
 	this.pathStringBuilder();
 
 	console.log("tickboolean", this.tickboolean);
-	var ObjectSend = {
-		"RenderGraphI": this.svgCanvas,
-		"width": this.width,
-		"height": this.height,
-		"tickArray": this.tickobY,
-		"tickBoolean": this.tickBoolean,
-		"axisBoolean": 'y'
-	};
+
 
 	// this.xAxisPlot();
 	this.renderingTool = new renderTool();
@@ -39,6 +32,14 @@ var renderGraph = function (RenderObject) {
 	if (this.chartType.toString() == "line") {
 		this.svgCanvas = this.svgPlot(this.width, this.height);
 		document.getElementById("container").appendChild(this.svgCanvas);
+		var ObjectSend = {
+			"RenderGraphI": this.svgCanvas,
+			"width": this.width,
+			"height": this.height,
+			"tickArray": this.tickobY,
+			"tickBoolean": this.tickBoolean,
+			"axisBoolean": 'y'
+		};
 		this.addAxisLabel();
 		this.mouseDragSelector();
 		this.yaxisDraw = new Axis(ObjectSend);
@@ -55,6 +56,14 @@ var renderGraph = function (RenderObject) {
 	} else if (this.chartType.toString() == "column") {
 		this.svgCanvas = this.svgPlot(this.width, this.height);
 		document.getElementById("container").appendChild(this.svgCanvas);
+		var ObjectSend = {
+			"RenderGraphI": this.svgCanvas,
+			"width": this.width,
+			"height": this.height,
+			"tickArray": this.tickobY,
+			"tickBoolean": this.tickBoolean,
+			"axisBoolean": 'y'
+		};
 		this.addAxisLabel();
 		this.mouseDragSelector();
 		this.yaxisDraw = new Axis(ObjectSend);
