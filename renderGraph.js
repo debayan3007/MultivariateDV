@@ -5,8 +5,8 @@ var renderGraph = function (RenderObject) {
 	this.dataob = RenderObject.dataObject;
 	this.height = RenderObject.height + 70;
 	this.width = RenderObject.width + 65;
-	Window.height = this.height
-	Window.width = this.width;
+	// Window.height = this.height
+	// Window.width = this.width;
 	this.axisName = RenderObject.axisName;
 	this.chartType = (RenderObject.chart).toString();
 
@@ -20,7 +20,6 @@ var renderGraph = function (RenderObject) {
 	this.coordinateCalculation();
 	this.pathStringBuilder();
 
-	console.log("tickboolean", this.tickboolean);
 
 
 	// this.xAxisPlot();
@@ -51,7 +50,6 @@ var renderGraph = function (RenderObject) {
 		this.anchorPoints = [];
 		this.anchorPoints = this.lineChart.anchorPoints;
 		this.hairLine = this.lineChart.hairLine;
-		console.log(this.anchorPoints[0].getAttribute("cx"));
 
 	} else if (this.chartType.toString() == "column") {
 		this.svgCanvas = this.svgPlot(this.width, this.height);
@@ -77,10 +75,10 @@ var renderGraph = function (RenderObject) {
 	} else if (this.chartType.toString() == "crosstab") {
 		this.svgCanvas = this.svgPlot(this.width, this.height);
 		document.getElementById("container").appendChild(this.svgCanvas);
-
+		// this.coordinateCalculationCrosstab();
 		//RenderGraph, coordinateOb, dataob, width, height, productSeq, maxP, minP, colorRange, colorRangeLoss
 		//(this.svgCanvas,this.coordinateOb,this.dataob,this.width,this.height,this.productSeq,this.maxP,this.minP,this.colorRange,this.colorRangeLoss)
-		this.crossChart = new crossChart(this.svgCanvas, this.coordinateOb, this.dataob, this.width, this.height, this.productSeq, this.maxP, this.minP, this.colorRange, this.colorRangeLoss);
+		// this.crossChart = new crossChart(this.svgCanvas, this.coordinateOb, this.dataob, this.width, this.height, this.productSeq, this.maxP, this.minP, this.colorRange, this.colorRangeLoss);
 	}
 };
 
@@ -216,7 +214,6 @@ renderGraph.prototype.mouseDragSelector = function () {
 				} else {
 
 					_this.svgColumn[i].setAttribute("class", "svgColumnHighlight");
-					console.log(_this.svgColumn[i].getAttribute("x"));
 
 				}
 
@@ -280,34 +277,41 @@ function onMouseOut(event) {
 renderGraph.prototype.coordinateCalculation = function () {
 	var count = 0;
 	// this.coordinateOb=[];
-	// console.log(this.tickobY);
+	console.log("TICKS:::",this.tickobY);
 
 
 	for (var i in this.dataob) {
 		var tempObj = this.dataob;
 		var temptickobYj = this.tickobY; //[count];
-		var bufferCoordinateOb = [];
+		var bufferCoordinateOb = []; var count =0;
 		for (var j in tempObj) {
+			count++;
 			var a = temptickobYj[0];
 			var b = temptickobYj[temptickobYj.length - 1];
 			var c = 30;
 			var d = this.height - 40;
-			var y = tempObj[j].value;
+			var y = tempObj[j].value || tempObj[j].sos;
 			var yCoordinate = d - (((y - a) / (b - a)) * (d - c));
 			// console.log(tempObj[j].value+"-->"+yCoordinate);
 			var bufferX = ((tempObj[j].time + "").substring(0, 2)) % 20;
+			console.log(count);
 			var xCoordinate = Math.floor(45 + (((this.width - 60) / 10) * bufferX)); //+(0.1*wh[0]);
 			// console.log(tempObj[j].time+"-->"+xCoordinate);
 			bufferCoordinateOb.push({
 				x: xCoordinate,
 				y: yCoordinate
 			});
+			
 		}
 		//console.log(bufferCoordinateOb);
 		this.coordinateOb = (bufferCoordinateOb);
 		count++;
 	}
 };
+
+renderGraph.prototype.coordinateCalculationCrosstab = function(){
+	console.log("DATAOB CHECK::",this.dataob);
+}
 
 renderGraph.prototype.pathStringBuilder = function () {
 

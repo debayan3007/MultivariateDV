@@ -448,7 +448,7 @@ parsingDataset.prototype.evokingRender = function () {
 			RenderObject.dataObject = this.dataob[i];
 			RenderObject.height = 37.5 * Object.keys(this.productArray[i]);
 			RenderObject.width = 280;
-			RenderObject.ticks = this.optimizedTick[count++];
+			RenderObject.ticks = this.ticks;
 			RenderObject.chart = this.chartType;
 			// this.productArray[this.productArray.length] = ""
 			console.log("productArray:>" + Object.keys(this.productArray[i]));
