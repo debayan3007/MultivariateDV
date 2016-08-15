@@ -5,7 +5,7 @@ var mydata = {
 		"subcaption": "Axis 1,2,3",
 		"width": 300,
 		"height": 300,
-		"chartType": "line", //line,column,crosstab
+		"chartType": "crosstab", //line,column,crosstab
 		"ordering": "default" //default,ascending,descending
 	},
 	"data": [{

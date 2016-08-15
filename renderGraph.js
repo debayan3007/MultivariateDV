@@ -1,6 +1,6 @@
 var renderGraph = function (RenderObject) {
 
-
+	var CrossChartObject = {};
 	this.tickboolean = RenderObject.tickboolean;
 	this.dataob = RenderObject.dataObject;
 	this.height = RenderObject.height + 70;
@@ -9,7 +9,7 @@ var renderGraph = function (RenderObject) {
 	// Window.width = this.width;
 	this.axisName = RenderObject.axisName;
 	this.chartType = (RenderObject.chart).toString();
-
+	console.log("RENDEROBJECT:: ",RenderObject);
 	// this.chartType = chartType;
 	this.tickobY = RenderObject.ticks || [];
 	this.tickobX = RenderObject.tickobX || ["test", "test", "test", "test", "test", "test", "test", "test"];
@@ -23,7 +23,7 @@ var renderGraph = function (RenderObject) {
 
 
 	// this.xAxisPlot();
-	this.renderingTool = new renderTool();
+	var renderingTool = new renderTool();
 
 	// this.circleDemo = this.renderingTool.drawCircle(this.height/2,this.height/2,this.svgCanvas,"anchorpoint");
 	// this.svgCanvas.appendChild(this.circleDemo);
@@ -75,6 +75,17 @@ var renderGraph = function (RenderObject) {
 	} else if (this.chartType.toString() == "crosstab") {
 		this.svgCanvas = this.svgPlot(this.width, this.height);
 		document.getElementById("container").appendChild(this.svgCanvas);
+		console.log("dataob",this.dataob);
+		CrossChartObject.svg = this.svgCanvas;
+		CrossChartObject.dataob = this.dataob;
+		CrossChartObject.width = this.width;
+		CrossChartObject.height = this.height;
+		CrossChartObject.ticks = RenderObject.pureTicks;
+		console.log("pure ticks:",RenderObject.pureTicks);
+		this.crossChart = new crossChart(CrossChartObject);
+		//(RenderGraph, coordinateOb, dataob, width, height, productSeq, maxP, minP, colorRange, colorRangeLoss)
+
+
 		// this.coordinateCalculationCrosstab();
 		//RenderGraph, coordinateOb, dataob, width, height, productSeq, maxP, minP, colorRange, colorRangeLoss
 		//(this.svgCanvas,this.coordinateOb,this.dataob,this.width,this.height,this.productSeq,this.maxP,this.minP,this.colorRange,this.colorRangeLoss)

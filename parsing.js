@@ -100,6 +100,8 @@ parsingDataset.prototype.dataCruncherCrosstab = function (dataset) {
 		}
 	}
 	this.ticks = tickGenerator(0, maxSales, true, true);
+	this.pureTicks = tickGenerator(0,maxSales,true);
+	// console.log("PURE TICKS:::",this.pureTicks);
 	this.categories = categories;
 
 	// console.log("categories:-", categories);
@@ -450,6 +452,8 @@ parsingDataset.prototype.evokingRender = function () {
 			RenderObject.width = 280;
 			RenderObject.ticks = this.ticks;
 			RenderObject.chart = this.chartType;
+			RenderObject.pureTicks = this.pureTicks;
+			console.log("PURE TICKS:::",this.pureTicks);
 			// this.productArray[this.productArray.length] = ""
 			console.log("productArray:>" + Object.keys(this.productArray[i]));
 			var renderingTool = new renderTool();
