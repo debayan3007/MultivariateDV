@@ -6,7 +6,12 @@ var parsingDataset = function (dataset) { //parser()
 	this.dataob = {};
 	this.getWindowSize();
 	this.chartParse();
-	if (this.forcefulCrosstab == "true") {
+	if (this.forcefulCrosstab == true) {
+		console.log("mark");
+		this.jsonData = this.detect(this.jsonData, "category");
+		this.jsonData = this.detect(this.jsonData, "zone");
+		console.log(this.dataCruncherForceful(this.jsonData));
+		//minmax,tickgenerate,render line/column
 
 	} else if (this.chartType == "line" || this.chartType == "column") {
 		this.jsonData = this.detect(this.jsonData, "time");
@@ -17,7 +22,7 @@ var parsingDataset = function (dataset) { //parser()
 		this.evokingRender();
 	} else if (this.chartType == "crosstab") {
 		this.jsonData = this.detect(this.jsonData, "category");
-		// this.jsonData = this.detect(this.jsonData, "subcategory");
+		this.jsonData = this.detect(this.jsonData, "subcategory");
 		this.jsonData = this.dataCruncherCrosstab(this.jsonData);
 		this.dataParseCrosstab(this.jsonData);
 		this.fillUps();
@@ -40,6 +45,53 @@ parsingDataset.prototype.svgPlot = function (dataCarr) {
 	return this.svgCanvas;
 }
 
+parsingDataset.prototype.dataCruncherForceful = function (dataset) {
+	var zones = [],
+		categories = [],
+		zonesObject = [],
+		categoriesObject = [],
+		buffersop,
+		buffersos;
+	for (var i in dataset) {
+		buffersos = dataset[i].sos;
+		if (dataset[i].sop.charAt(0) == "(") {
+			buffersop = dataset[i].sop.replace("(", "");
+			buffersop = dataset[i].sos.replace(")", "");
+			buffersop = +buffersop;
+			buffersop *= -1;
+		} else {
+			buffersop = +dataset[i].sop;
+		}
+
+
+		if (zones.indexOf(dataset[i].zone) == -1) {
+			zones.push(dataset[i].zone);
+
+			zonesObject.push({
+				"zone": dataset[i].zone,
+				"sosSum": +buffersos,
+				"sopSum": +buffersop
+			});
+		} else {
+			zonesObject[zones.indexOf(dataset[i].zone)].sosSum += +buffersos;
+			zonesObject[zones.indexOf(dataset[i].zone)].sopSum += buffersop;
+		}
+
+		if (categories.indexOf(dataset[i].category) == -1) {
+			categories.push(dataset[i].category);
+
+			categoriesObject.push({
+				"category": dataset[i].category,
+				"sosSum": +buffersos,
+				"sopSum": +buffersop
+			});
+		} else {
+			categoriesObject[categories.indexOf(dataset[i].category)].sosSum += +buffersos;
+			categoriesObject[categories.indexOf(dataset[i].category)].sopSum += buffersop;
+		}
+	}
+	return [zonesObject, categoriesObject];
+}
 
 parsingDataset.prototype.dataCruncherCrosstab = function (dataset) {
 
@@ -327,7 +379,7 @@ parsingDataset.prototype.chartParse = function () {
 			this.colorStart = objChart[i];
 		} else if (i == "colorEnd") {
 			this.colorEnd = objChart[i];
-		} else if (i == "forceMappingOfLineAndColumnOfCrosstabObjects") {
+		} else if (i == "forceMapping") {
 			this.forcefulCrosstab = objChart[i];
 		}
 
@@ -402,6 +454,8 @@ parsingDataset.prototype.minmax = function () {
 		count++;
 	}
 };
+
+
 
 parsingDataset.prototype.getWindowSize = function () {
 	var d = document,
