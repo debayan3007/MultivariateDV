@@ -254,36 +254,6 @@ parsingDataset.prototype.fillUps = function () {
 	}
 }
 
-/*parsingDataset.prototype.evokingRenderCrosstab = function () {
-
-	var count = 0;
-	// var length = (this.max).length;
-
-	// console.log("test",Math.floor(this.wid/this.width));
-	this.optimizedTick = [];
-	this.header();
-
-	for (var i in this.dataob) {
-
-		// this.productArray[this.productArray.length] = ""
-		console.log("productArray:>" + Object.keys(this.productArray[i]));
-		var renderingTool = new renderTool();
-		var svgCanvas = this.svgPlot(this.productArray[i]);
-		this.crosschartTable = new crossChartTable(svgCanvas, i, Object.keys(this.productArray[i]), this.maxP, this.minP);
-		for (var j in this.dataob[i]) {
-			// this.optimizedTick[count+1] ={};
-			// console.log(length-count,"mark");
-			// if(length-count < Math.floor(this.wid/this.width))
-			this.dataRender = new renderGraph(this.dataob[i][j], i, this.height, this.width, this.optimizedTick[count++], this.chartType, 1, null, this.productArray[i], this.colorRange, this.colorRangeLoss);
-			// else
-			// this.dataRender = new renderGraph(this.dataob[i], i ,this.height, this.width, this.optimizedTick[count++],this.chartType,0);
-		}
-		var br = document.createElement('br');
-		document.getElementById("container").appendChild(br);
-	}
-
-	this.footer();
-}*/
 
 
 parsingDataset.prototype.dataParseLineColumn = function (jsonData) {
@@ -325,7 +295,9 @@ parsingDataset.prototype.detect = function (objDatalet, checkerAttribute) {
 
 parsingDataset.prototype.chartParse = function () {
 
-	var objChart = this.dataset.chart;
+	var objChart = this.dataset.chart,
+		caption,
+		subcaption;
 	for (var i in objChart) {
 		// var oBuffer = objChart[i];
 		// var oBufferAttribute=oBuffer[j];
@@ -337,17 +309,22 @@ parsingDataset.prototype.chartParse = function () {
 			this.chartType = objChart[i];
 		} else if (i == 'ordering') {
 			this.ordering = objChart[i];
-		} else if (i == 'caption' && this.chartType != "crosstab") {
-			// document.getElementById("caption").innerHTML = objChart[i];
-		} else if (i == 'subcaption' && this.chartType != "crosstab") {
-			// document.getElementById("subcaption").innerHTML = objChart[i];
+		} else if (i == 'caption') {
+			caption = objChart[i];
+		} else if (i == 'subcaption') {
+			subcaption = objChart[i];
 		} else if (i == "colorStart") {
 			this.colorStart = objChart[i];
 		} else if (i == "colorEnd") {
 			this.colorEnd = objChart[i];
 		}
+	}
+	if (this.chartType !== "crosstab") {
+		document.getElementById("caption").innerHTML = caption;
+		document.getElementById("subcaption").innerHTML = subcaption;
 
 	}
+
 }
 
 parsingDataset.prototype.orderingData = function () {
@@ -452,7 +429,6 @@ parsingDataset.prototype.evokingRender = function () {
 		this.optimizedTick = [];
 		this.header();
 		for (var i in this.dataob) {
-
 			RenderObject.maxProfit = this.maxProfit;
 			RenderObject.minProfit = this.minProfit;
 			RenderObject.colorStart = this.colorStart;
@@ -467,6 +443,7 @@ parsingDataset.prototype.evokingRender = function () {
 			var renderingTool = new renderTool();
 			var svgCanvas = this.svgPlot(this.productArray[i]);
 			RenderObject.height = svgCanvas.getAttribute("height");
+			attachBoundary(svgCanvas, true, true, true, true);
 			this.crosschartTable = new crossChartTable(svgCanvas, i, Object.keys(this.productArray[i]), this.maxP, this.minP);
 			for (var j in this.dataob[i]) {
 				RenderObject.dataObject = this.dataob[i][j];
@@ -569,11 +546,11 @@ parsingDataset.prototype.header = function () {
 	textProduct.setAttribute("y", 15);
 	textProduct.textContent = "Product";
 	headerSVG.appendChild(textProduct);
-	var zoneX = 330;
+	var zoneX = 300;
 	for (var i in this.zones) {
 		var textZones = document.createElementNS("http://www.w3.org/2000/svg", "text");
 		textZones.setAttribute("x", zoneX);
-		zoneX += 220;
+		zoneX += 230;
 		textZones.setAttribute("fill", "black");
 		textZones.setAttribute("font-family", "Verdana");
 		textZones.setAttribute("size", "23px");

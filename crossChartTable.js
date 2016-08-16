@@ -27,7 +27,7 @@ crossChartTable.prototype.drawColumns = function () {
 	var yCarry = 15;
 	for (var i = 0; i < this.productSeq.length; i++) {
 		var textProduct = document.createElementNS("http://www.w3.org/2000/svg", "text");
-		textProduct.setAttribute("x", 130);
+		textProduct.setAttribute("x", 150);
 		textProduct.setAttribute("fill", "black");
 		textProduct.setAttribute("font-family", "Verdana");
 		textProduct.setAttribute("size", "20px");

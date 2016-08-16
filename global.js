@@ -114,9 +114,9 @@ function colorBars(clr1, clr2, minProfit, maxProfit, valueToEvaluate) {
 		color2 = clr2.substring(1, clr2.length);
 		ratio = valueToEvaluate / maxProfit;
 	} else {
-		color1 = "FF0000";
-		color2 = "770000";
-		ratio = valueToEvaluate / maxProfit * -1;
+		color2 = "FFAAAA";
+		color1 = "FF5555";
+		ratio = valueToEvaluate / minProfit;
 	}
 
 
@@ -131,4 +131,23 @@ function colorBars(clr1, clr2, minProfit, maxProfit, valueToEvaluate) {
 
 	colorOfBar = hex(r) + hex(g) + hex(b);
 	return "#" + colorOfBar;
+}
+
+function attachBoundary(target, top, down, left, right) {
+	var renderingTool = new renderTool(),
+		X = target.getAttribute("width"),
+		Y = target.getAttribute("height");
+
+	if (top === true) {
+		target.appendChild(renderingTool.drawLine(0, X, 0, 0, "svgAxis"));
+	}
+	if (down === true) {
+		target.appendChild(renderingTool.drawLine(0, X, Y, Y, "svgAxis"));
+	}
+	if (left === true) {
+		target.appendChild(renderingTool.drawLine(0, 0, 0, Y, "svgAxis"));
+	}
+	if (right === true) {
+		target.appendChild(renderingTool.drawLine(X, X, 0, Y, "svgAxis"));
+	}
 }
