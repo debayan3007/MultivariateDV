@@ -26,7 +26,7 @@ crossChart.prototype.drawColumns = function () {
 	var columns;
 	for (var i = 0; i < lengthTemp; i++) {
 
-		columns = renderingTool.drawRect(20, this.coordinateOb[i].x, this.coordinateOb[i].y, 15, "svgColumn");
+		columns = renderingTool.drawRect(0, this.coordinateOb[i].x, this.coordinateOb[i].y, 15, "svgColumn");
 		columns.setAttribute("style", "fill:" + this.coordinateOb[i].color);
 
 		this.RenderGraph.appendChild(columns);
@@ -48,7 +48,7 @@ crossChart.prototype.coordinateCalculationCrossTab = function () {
 		var y = this.dataob[j].sos;
 		var yCoordinate = (((y - a) / (b - a)) * (d - c));
 		var xCoordinate;
-		xCoordinate = Number(j) * 37;
+		xCoordinate = 15 + Number(j) * 34;
 		bufferCoordinateOb.push({
 			x: xCoordinate,
 			y: yCoordinate,

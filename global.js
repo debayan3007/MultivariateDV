@@ -114,8 +114,8 @@ function colorBars(clr1, clr2, minProfit, maxProfit, valueToEvaluate) {
 		color2 = clr2.substring(1, clr2.length);
 		ratio = valueToEvaluate / maxProfit;
 	} else {
-		color2 = "FFAAAA";
-		color1 = "FF5555";
+		color2 = "FF7777";
+		color1 = "FF2222";
 		ratio = valueToEvaluate / minProfit;
 	}
 

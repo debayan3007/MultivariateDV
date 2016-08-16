@@ -485,7 +485,7 @@ parsingDataset.prototype.footer = function () {
 	// textProduct.textContent = "Product";
 	footerSVG.appendChild(textProduct);
 	var zoneX = 330;
-	var xTicks = 295;
+	var xTicks = 277;
 	for (var i in this.zones) {
 
 		for (var j = 0; j < 5; j++) {

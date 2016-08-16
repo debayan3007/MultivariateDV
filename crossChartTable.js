@@ -16,7 +16,7 @@ crossChartTable.prototype.drawColumns = function () {
 
 	var textType = document.createElementNS("http://www.w3.org/2000/svg", "text");
 	textType.setAttribute("x", 50);
-	textType.setAttribute("y", 15);
+	textType.setAttribute("y", 25);
 	textType.setAttribute("fill", "black");
 	textType.setAttribute("font-family", "Verdana");
 	textType.setAttribute("size", "20px");
@@ -24,7 +24,7 @@ crossChartTable.prototype.drawColumns = function () {
 	this.RenderGraph.appendChild(textType);
 
 
-	var yCarry = 15;
+	var yCarry = 25;
 	for (var i = 0; i < this.productSeq.length; i++) {
 		var textProduct = document.createElementNS("http://www.w3.org/2000/svg", "text");
 		textProduct.setAttribute("x", 150);
