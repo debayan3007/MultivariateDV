@@ -6,7 +6,9 @@ var parsingDataset = function (dataset) { //parser()
 	this.dataob = {};
 	this.getWindowSize();
 	this.chartParse();
-	if (this.chartType == "line" || this.chartType == "column") {
+	if (this.forcefulCrosstab == "true") {
+
+	} else if (this.chartType == "line" || this.chartType == "column") {
 		this.jsonData = this.detect(this.jsonData, "time");
 		this.dataParseLineColumn(this.jsonData);
 		this.orderingData();
@@ -15,11 +17,13 @@ var parsingDataset = function (dataset) { //parser()
 		this.evokingRender();
 	} else if (this.chartType == "crosstab") {
 		this.jsonData = this.detect(this.jsonData, "category");
+		// this.jsonData = this.detect(this.jsonData, "subcategory");
 		this.jsonData = this.dataCruncherCrosstab(this.jsonData);
 		this.dataParseCrosstab(this.jsonData);
 		this.fillUps();
 		this.evokingRender();
 	}
+
 	console.log(this.jsonData, this.jsonData.length);
 
 };
@@ -323,7 +327,10 @@ parsingDataset.prototype.chartParse = function () {
 			this.colorStart = objChart[i];
 		} else if (i == "colorEnd") {
 			this.colorEnd = objChart[i];
+		} else if (i == "forceMappingOfLineAndColumnOfCrosstabObjects") {
+			this.forcefulCrosstab = objChart[i];
 		}
+
 	}
 	if (this.chartType !== "crosstab") {
 		document.getElementById("caption").innerHTML = caption;

@@ -5,8 +5,8 @@ var mydata = {
 		"subcaption": "Axis 1,2,3",
 		"width": 250,
 		"height": 350,
-		"chartType": "line", //line,column,crosstab
-		"forceMappingOfLineAndColumnOfCrosstabObjects": "true",
+		"chartType": "crosstab", //line,column,crosstab
+		// "forceMappingOfLineAndColumnOfCrosstabObjects": "true",
 		"colorStart": "#0033FF",
 		"colorEnd": "#00AAFF",
 		"ordering": "default" //default,ascending,descending
