@@ -97,5 +97,38 @@ function tickGenerator(num1, num2, smart, shrink) {
 	}
 	// var len=ticks.length;
 	return ticks;
+}
 
+function colorBars(clr1, clr2, minProfit, maxProfit, valueToEvaluate) {
+
+	var color1,
+		color2,
+		ratio,
+		r,
+		g,
+		v,
+		colorOfBar;
+
+	if (valueToEvaluate > 0) {
+		color1 = clr1.substring(1, clr1.length);
+		color2 = clr2.substring(1, clr2.length);
+		ratio = valueToEvaluate / maxProfit;
+	} else {
+		color1 = "FF0000";
+		color2 = "770000";
+		ratio = valueToEvaluate / maxProfit * -1;
+	}
+
+
+	var hex = function (x) {
+		x = x.toString(16);
+		return (x.length == 1) ? '0' + x : x;
+	};
+
+	r = Math.ceil(parseInt(color1.substring(0, 2), 16) * ratio + parseInt(color2.substring(0, 2), 16) * (1 - ratio));
+	g = Math.ceil(parseInt(color1.substring(2, 4), 16) * ratio + parseInt(color2.substring(2, 4), 16) * (1 - ratio));
+	b = Math.ceil(parseInt(color1.substring(4, 6), 16) * ratio + parseInt(color2.substring(4, 6), 16) * (1 - ratio));
+
+	colorOfBar = hex(r) + hex(g) + hex(b);
+	return "#" + colorOfBar;
 }

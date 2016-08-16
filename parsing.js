@@ -100,10 +100,11 @@ parsingDataset.prototype.dataCruncherCrosstab = function (dataset) {
 		}
 	}
 	this.ticks = tickGenerator(0, maxSales, true, true);
-	this.pureTicks = tickGenerator(0,maxSales,true);
+	this.pureTicks = tickGenerator(0, maxSales, true);
 	// console.log("PURE TICKS:::",this.pureTicks);
 	this.categories = categories;
-
+	this.minProfit = minProfit;
+	this.maxProfit = maxProfit;
 	// console.log("categories:-", categories);
 	// console.log("subcategories:-", subcategories);
 	// console.log("zones:-", zones);
@@ -336,10 +337,14 @@ parsingDataset.prototype.chartParse = function () {
 			this.chartType = objChart[i];
 		} else if (i == 'ordering') {
 			this.ordering = objChart[i];
-		} else if (i == 'caption') {
-			document.getElementById("caption").innerHTML = objChart[i];
-		} else if (i == 'subcaption') {
-			document.getElementById("subcaption").innerHTML = objChart[i];
+		} else if (i == 'caption' && this.chartType != "crosstab") {
+			// document.getElementById("caption").innerHTML = objChart[i];
+		} else if (i == 'subcaption' && this.chartType != "crosstab") {
+			// document.getElementById("subcaption").innerHTML = objChart[i];
+		} else if (i == "colorStart") {
+			this.colorStart = objChart[i];
+		} else if (i == "colorEnd") {
+			this.colorEnd = objChart[i];
 		}
 
 	}
@@ -445,21 +450,26 @@ parsingDataset.prototype.evokingRender = function () {
 
 		// console.log("test",Math.floor(this.wid/this.width));
 		this.optimizedTick = [];
-
+		this.header();
 		for (var i in this.dataob) {
-			RenderObject.dataObject = this.dataob[i];
-			RenderObject.height = 37.5 * Object.keys(this.productArray[i]);
+
+			RenderObject.maxProfit = this.maxProfit;
+			RenderObject.minProfit = this.minProfit;
+			RenderObject.colorStart = this.colorStart;
+			RenderObject.colorEnd = this.colorEnd;
 			RenderObject.width = 280;
 			RenderObject.ticks = this.ticks;
 			RenderObject.chart = this.chartType;
 			RenderObject.pureTicks = this.pureTicks;
-			console.log("PURE TICKS:::",this.pureTicks);
+			console.log("PURE TICKS:::", this.pureTicks);
 			// this.productArray[this.productArray.length] = ""
 			console.log("productArray:>" + Object.keys(this.productArray[i]));
 			var renderingTool = new renderTool();
 			var svgCanvas = this.svgPlot(this.productArray[i]);
+			RenderObject.height = svgCanvas.getAttribute("height");
 			this.crosschartTable = new crossChartTable(svgCanvas, i, Object.keys(this.productArray[i]), this.maxP, this.minP);
 			for (var j in this.dataob[i]) {
+				RenderObject.dataObject = this.dataob[i][j];
 				this.optimizedTick[count + 1] = {};
 				console.log(length - count, "mark");
 				this.dataRender = new renderGraph(RenderObject);
@@ -498,14 +508,14 @@ parsingDataset.prototype.footer = function () {
 	// textProduct.textContent = "Product";
 	footerSVG.appendChild(textProduct);
 	var zoneX = 330;
-	var xTicks = 330;
+	var xTicks = 295;
 	for (var i in this.zones) {
 
 		for (var j = 0; j < 5; j++) {
 			var textProduct =
 				document.createElementNS("http://www.w3.org/2000/svg", "text");
 			textProduct.setAttribute("x", (xTicks + 30));
-			xTicks += 40;
+			xTicks += 42;
 			textProduct.setAttribute("fill", "black");
 			textProduct.setAttribute("font-family", "Verdana");
 			// textProduct.setAttribute("size","px");

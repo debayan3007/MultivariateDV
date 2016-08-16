@@ -3,9 +3,11 @@ var mydata = {
 	"chart": {
 		"caption": "Comparison of Data",
 		"subcaption": "Axis 1,2,3",
-		"width": 300,
-		"height": 300,
+		"width": 250,
+		"height": 350,
 		"chartType": "crosstab", //line,column,crosstab
+		"colorStart": "#00FFDD",
+		"colorEnd": "#005566",
 		"ordering": "default" //default,ascending,descending
 	},
 	"data": [{

@@ -3,13 +3,13 @@ var renderGraph = function (RenderObject) {
 	var CrossChartObject = {};
 	this.tickboolean = RenderObject.tickboolean;
 	this.dataob = RenderObject.dataObject;
-	this.height = RenderObject.height + 70;
-	this.width = RenderObject.width + 65;
+	this.height = RenderObject.height;
+	this.width = RenderObject.width + 80;
 	// Window.height = this.height
 	// Window.width = this.width;
 	this.axisName = RenderObject.axisName;
 	this.chartType = (RenderObject.chart).toString();
-	console.log("RENDEROBJECT:: ",RenderObject);
+	console.log("RENDEROBJECT:: ", RenderObject);
 	// this.chartType = chartType;
 	this.tickobY = RenderObject.ticks || [];
 	this.tickobX = RenderObject.tickobX || ["test", "test", "test", "test", "test", "test", "test", "test"];
@@ -73,15 +73,19 @@ var renderGraph = function (RenderObject) {
 		this.svgColumn = [];
 		this.svgColumn = this.columnChart.svgColumn;
 	} else if (this.chartType.toString() == "crosstab") {
-		this.svgCanvas = this.svgPlot(this.width, this.height);
+		this.svgCanvas = this.svgPlot(this.width - 150, this.height);
 		document.getElementById("container").appendChild(this.svgCanvas);
-		console.log("dataob",this.dataob);
+		console.log("dataob", this.dataob);
 		CrossChartObject.svg = this.svgCanvas;
+		CrossChartObject.colorStart = RenderObject.colorStart;
+		CrossChartObject.colorEnd = RenderObject.colorEnd;
 		CrossChartObject.dataob = this.dataob;
-		CrossChartObject.width = this.width;
+		CrossChartObject.minProfit = RenderObject.minProfit;
+		CrossChartObject.maxProfit = RenderObject.maxProfit;
+		CrossChartObject.width = this.width - 85;
 		CrossChartObject.height = this.height;
 		CrossChartObject.ticks = RenderObject.pureTicks;
-		console.log("pure ticks:",RenderObject.pureTicks);
+		console.log("pure ticks:", RenderObject.pureTicks);
 		this.crossChart = new crossChart(CrossChartObject);
 		//(RenderGraph, coordinateOb, dataob, width, height, productSeq, maxP, minP, colorRange, colorRangeLoss)
 
@@ -288,13 +292,14 @@ function onMouseOut(event) {
 renderGraph.prototype.coordinateCalculation = function () {
 	var count = 0;
 	// this.coordinateOb=[];
-	console.log("TICKS:::",this.tickobY);
+	console.log("TICKS:::", this.tickobY);
 
 
 	for (var i in this.dataob) {
 		var tempObj = this.dataob;
 		var temptickobYj = this.tickobY; //[count];
-		var bufferCoordinateOb = []; var count =0;
+		var bufferCoordinateOb = [];
+		var count = 0;
 		for (var j in tempObj) {
 			count++;
 			var a = temptickobYj[0];
@@ -312,7 +317,7 @@ renderGraph.prototype.coordinateCalculation = function () {
 				x: xCoordinate,
 				y: yCoordinate
 			});
-			
+
 		}
 		//console.log(bufferCoordinateOb);
 		this.coordinateOb = (bufferCoordinateOb);
@@ -320,8 +325,8 @@ renderGraph.prototype.coordinateCalculation = function () {
 	}
 };
 
-renderGraph.prototype.coordinateCalculationCrosstab = function(){
-	console.log("DATAOB CHECK::",this.dataob);
+renderGraph.prototype.coordinateCalculationCrosstab = function () {
+	console.log("DATAOB CHECK::", this.dataob);
 }
 
 renderGraph.prototype.pathStringBuilder = function () {
