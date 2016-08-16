@@ -12,7 +12,7 @@ var renderGraph = function (RenderObject) {
 	console.log("RENDEROBJECT:: ", RenderObject);
 	// this.chartType = chartType;
 	this.tickobY = RenderObject.ticks || [];
-	this.tickobX = RenderObject.tickobX || ["test", "test", "test", "test", "test", "test", "test", "test"];
+	this.tickobX = RenderObject.ticksXaxis || ["test", "test", "test", "test", "test", "test", "test", "test"];
 	this.numberOfGraph = Object.keys(this.dataob).length;
 	this.currentIteration = 0;
 	var numberOfInterations = this.numberOfGraph;
@@ -45,6 +45,7 @@ var renderGraph = function (RenderObject) {
 		ObjectSend.tickArray = this.tickobX;
 		ObjectSend.tickBoolean = this.tickBoolean;
 		ObjectSend.axisBoolean = 'x';
+		ObjectSend.tickOffset = 10;
 		this.xaxisDraw = new Axis(ObjectSend);
 		this.lineChart = new lineChart(this.svgCanvas, this.coordinateOb, this.dataob, this.pathString, this.width, this.height);
 		this.anchorPoints = [];

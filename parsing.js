@@ -258,7 +258,8 @@ parsingDataset.prototype.fillUps = function () {
 
 parsingDataset.prototype.dataParseLineColumn = function (jsonData) {
 
-	var objData = jsonData;
+	var objData = jsonData,
+		ticksXaxis = [];
 	for (var i in objData) {
 		var oBuffer = objData[i];
 		var time;
@@ -266,6 +267,10 @@ parsingDataset.prototype.dataParseLineColumn = function (jsonData) {
 			var oBufferAttribute = oBuffer[j];
 			if (j == 'time') {
 				time = oBufferAttribute;
+				if (ticksXaxis.indexOf(time) == -1) {
+					ticksXaxis.push(time);
+				}
+
 			} else {
 				if (this.dataob[j] == undefined) {
 					this.dataob[j] = [];
@@ -282,6 +287,7 @@ parsingDataset.prototype.dataParseLineColumn = function (jsonData) {
 			}
 		}
 	}
+	this.ticksXaxis = ticksXaxis
 }
 parsingDataset.prototype.detect = function (objDatalet, checkerAttribute) {
 	var bufferObj = [];
@@ -408,11 +414,12 @@ parsingDataset.prototype.evokingRender = function () {
 		console.log("test", Math.floor(this.wid / this.width));
 		for (var i in this.dataob) {
 			console.log(length - count, "mark");
-			RenderObject.axisName = 1;
+			RenderObject.axisName = i;
 			RenderObject.dataObject = this.dataob[i];
 			RenderObject.height = this.height;
 			RenderObject.width = this.width;
 			RenderObject.ticks = this.optimizedTick[count++];
+			RenderObject.ticksXaxis = this.ticksXaxis;
 			RenderObject.chart = this.chartType;
 
 			if (length - count < Math.floor(this.wid / this.width)) {
@@ -471,7 +478,6 @@ parsingDataset.prototype.footer = function () {
 	textType.setAttribute("fill", "black");
 	textType.setAttribute("font-family", "Verdana");
 	textType.setAttribute("size", "23px");
-	// textType.textContent = "Product Type";
 	footerSVG.appendChild(textType);
 
 
@@ -482,7 +488,6 @@ parsingDataset.prototype.footer = function () {
 	textProduct.setAttribute("font-family", "Verdana");
 	textProduct.setAttribute("size", "23px");
 	textProduct.setAttribute("y", 30);
-	// textProduct.textContent = "Product";
 	footerSVG.appendChild(textProduct);
 	var zoneX = 330;
 	var xTicks = 277;
