@@ -6,7 +6,7 @@ var mydata = {
 		"width": 250,
 		"height": 350,
 		"chartType": "crosstab", //line,column,crosstab
-		"forceMapping": true,
+		"forceMapping": false,
 		"colorStart": "#0033FF",
 		"colorEnd": "#00AAFF",
 		"ordering": "default" //default,ascending,descending
