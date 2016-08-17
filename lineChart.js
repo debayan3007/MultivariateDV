@@ -55,7 +55,7 @@ lineChart.prototype.drawAnchorPoints = function () { //coordinateOb, dataob
 					var tempX = ((event.detail.x) % (_this.width + 20)) - 8;
 					// console.log(_this.width,tempX);
 					_this.hairLine.setAttributeNS(null, "y1", 30);
-					_this.hairLine.setAttributeNS(null, "y2", this.height - 40);
+					_this.hairLine.setAttributeNS(null, "y2", _this.height - 40);
 					_this.hairLine.setAttributeNS(null, "x1", tempX);
 					_this.hairLine.setAttributeNS(null, "x2", tempX);
 					// var xCheck = evt.detail.x - 8;
