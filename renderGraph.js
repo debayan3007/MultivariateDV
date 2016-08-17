@@ -5,6 +5,7 @@ var renderGraph = function (RenderObject) {
 	this.dataob = RenderObject.dataObject;
 	this.height = RenderObject.height;
 	this.width = RenderObject.width + 80;
+	this.tag = RenderObject.tag || "value";
 	// Window.height = this.height
 	// Window.width = this.width;
 	this.axisName = RenderObject.axisName;
@@ -47,7 +48,7 @@ var renderGraph = function (RenderObject) {
 		ObjectSend.axisBoolean = 'x';
 		ObjectSend.tickOffset = 10;
 		this.xaxisDraw = new Axis(ObjectSend);
-		this.lineChart = new lineChart(this.svgCanvas, this.coordinateOb, this.dataob, this.pathString, this.width, this.height);
+		this.lineChart = new lineChart(this.svgCanvas, this.coordinateOb, this.dataob, this.pathString, this.width, this.height, this.tag);
 		this.anchorPoints = [];
 		this.anchorPoints = this.lineChart.anchorPoints;
 		this.hairLine = this.lineChart.hairLine;
@@ -70,7 +71,7 @@ var renderGraph = function (RenderObject) {
 		ObjectSend.tickBoolean = this.tickBoolean;
 		ObjectSend.axisBoolean = 'x';
 		this.xaxisDraw = new Axis(ObjectSend);
-		this.columnChart = new columnChart(this.svgCanvas, this.coordinateOb, this.dataob, this.width, this.height);
+		this.columnChart = new columnChart(this.svgCanvas, this.coordinateOb, this.dataob, this.width, this.height, this.tag);
 		this.svgColumn = [];
 		this.svgColumn = this.columnChart.svgColumn;
 	} else if (this.chartType.toString() == "crosstab") {
@@ -301,18 +302,20 @@ renderGraph.prototype.coordinateCalculation = function () {
 		var temptickobYj = this.tickobY; //[count];
 		var bufferCoordinateOb = [];
 		var count = 0;
+		// var xCoordinate = 40;
 		for (var j in tempObj) {
 			count++;
 			var a = temptickobYj[0];
 			var b = temptickobYj[temptickobYj.length - 1];
 			var c = 30;
 			var d = this.height - 40;
-			var y = tempObj[j].value || tempObj[j].sos;
+			var y = tempObj[j][this.tag];
 			var yCoordinate = d - (((y - a) / (b - a)) * (d - c));
 			// console.log(tempObj[j].value+"-->"+yCoordinate);
 			var bufferX = ((tempObj[j].time + "").substring(0, 2)) % 20;
-			console.log(count);
 			var xCoordinate = Math.floor(45 + (((this.width - 60) / 10) * bufferX)); //+(0.1*wh[0]);
+
+			// xCoordinate += 50;
 			// console.log(tempObj[j].time+"-->"+xCoordinate);
 			bufferCoordinateOb.push({
 				x: xCoordinate,

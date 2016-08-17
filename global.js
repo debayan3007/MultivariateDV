@@ -152,14 +152,14 @@ function attachBoundary(target, top, down, left, right) {
 	}
 }
 
-function minmax(dateset, tag) {
+function minmax(dataset, tag) {
 
-	var length = Object.keys(dateset).length;
+	// var length = Object.keys(dataset).length;
 	var max = -Infinity;
 	var min = Infinity;
 	var compare;
 	for (var i in dataset) {
-		compare = dataset[i][tag];
+		compare = dataset[i][tag + ""];
 		if (compare > max)
 			max = compare;
 		if (compare < min)

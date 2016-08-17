@@ -7,11 +7,50 @@ var parsingDataset = function (dataset) { //parser()
 	this.getWindowSize();
 	this.chartParse();
 	if (this.forcefulCrosstab == true) {
-		console.log("mark");
+		this.dataCruncherCrosstab(this.detect(this.jsonData, "category"));
+		var numericPlots = ["sosSum", "sopSum"];
+		console.log("mark::", this.zones);
 		this.jsonData = this.detect(this.jsonData, "category");
 		this.jsonData = this.detect(this.jsonData, "zone");
-		console.log(this.dataCruncherForceful(this.jsonData));
-		//minmax,tickgenerate,render line/column
+		this.jsonData = this.dataCruncherForceful(this.jsonData);
+		var minSOP = minmax(this.jsonData[0], "sopSum").min;
+		var maxSOP = minmax(this.jsonData[0], "sopSum").max;
+		this.ticks = (tickGenerator(minSOP, maxSOP, true, false));
+		var ticksXBuffer = [this.categories, this.zones];
+
+
+		/*RenderObject.axisName = i;
+			RenderObject.dataObject = this.dataob[i];
+			RenderObject.height = this.height;
+			RenderObject.width = this.width;
+			RenderObject.ticks = this.optimizedTick[count++];
+			RenderObject.ticksXaxis = this.ticksXaxis;
+			RenderObject.chart = this.chartType;
+
+			if (length - count < Math.floor(this.wid / this.width)) {
+				RenderObject.tickboolean = 1;
+			} else {
+				RenderObject.tickboolean = 0;
+			}
+			this.dataRender = new renderGraph(RenderObject);*/
+		var RenderObject = {};
+
+		for (var i in this.jsonData) {
+			RenderObject.dataObject = this.jsonData[i];
+			RenderObject.height = this.height;
+			RenderObject.width = this.width;
+			RenderObject.ticksXaxis = ticksXBuffer[i];
+			for (var j in numericPlots) {
+				RenderObject.tag = numericPlots[j];
+				var min = minmax(this.jsonData[0], numericPlots[j]).min;
+				var max = minmax(this.jsonData[0], numericPlots[j]).max;
+				RenderObject.ticks = (tickGenerator(min, max, true, true));
+				RenderObject.pureTicks = (tickGenerator(min, max, true, false));
+				RenderObject.chart = this.chartType;
+				this.dataRender = new renderGraph(RenderObject);
+			}
+
+		}
 
 	} else if (this.chartType == "line" || this.chartType == "column") {
 		this.jsonData = this.detect(this.jsonData, "time");
