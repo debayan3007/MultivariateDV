@@ -5,14 +5,14 @@ var mydata = {
 		"subcaption": "Axis 1,2,3",
 		"width": 250,
 		"height": 350,
-		"chartType": "crosstab", //line,column,crosstab
+		"chartType": "line", //line,column,crosstab
 		"forceMapping": false,
 		"colorStart": "#0033FF",
 		"colorEnd": "#00AAFF",
 		"ordering": "default" //default,ascending,descending
 	},
 	"data": [{
-			"time": "21-ab",
+			"time": "21-06",
 			"yAxis1": 0.5,
 			"yAxis2": 54,
 			"yAxis3": 366,

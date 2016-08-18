@@ -171,3 +171,14 @@ function minmax(dataset, tag) {
 	};
 
 };
+
+function interpolate(x1, x2, divs) {
+	var interpolatedX = [];
+	var bufferDivX = (x2 - x1) / divs;
+	var bufferValX = x1;
+	for (var i = 0; i < divs - 1; i++) {
+		bufferValX += bufferDivX;
+		interpolatedX.push((Math.round(bufferValX * 1000)) / 1000);
+	}
+	return interpolatedX;
+}

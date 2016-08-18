@@ -302,28 +302,23 @@ renderGraph.prototype.coordinateCalculation = function () {
 		var temptickobYj = this.tickobY; //[count];
 		var bufferCoordinateOb = [];
 		var count = 0;
-		// var xCoordinate = 40;
+		var xCoordinate = 40;
+		var div = (this.width - 50) / (this.tickobX.length);
 		for (var j in tempObj) {
 			count++;
-			var a = temptickobYj[0];
-			var b = temptickobYj[temptickobYj.length - 1];
+			var a = isNaN(temptickobYj[0]) ? +temptickobYj[0].replace("K", "") * 1000 : +temptickobYj[0];
+			var b = isNaN(temptickobYj[temptickobYj.length - 1]) ? +temptickobYj[temptickobYj.length - 1].replace("K", "") * 1000 : +temptickobYj[temptickobYj.length - 1];
 			var c = 30;
 			var d = this.height - 40;
 			var y = tempObj[j][this.tag];
 			var yCoordinate = d - (((y - a) / (b - a)) * (d - c));
-			// console.log(tempObj[j].value+"-->"+yCoordinate);
-			var bufferX = ((tempObj[j].time + "").substring(0, 2)) % 20;
-			var xCoordinate = Math.floor(45 + (((this.width - 60) / 10) * bufferX)); //+(0.1*wh[0]);
-
-			// xCoordinate += 50;
-			// console.log(tempObj[j].time+"-->"+xCoordinate);
+			xCoordinate += div;
 			bufferCoordinateOb.push({
 				x: xCoordinate,
 				y: yCoordinate
 			});
 
 		}
-		//console.log(bufferCoordinateOb);
 		this.coordinateOb = (bufferCoordinateOb);
 		count++;
 	}

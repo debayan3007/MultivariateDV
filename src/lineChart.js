@@ -18,21 +18,38 @@ lineChart.prototype.drawPath = function () {
 	var bufferPath = "";
 	var group = document.createElementNS("http://www.w3.org/2000/svg", "g");
 	var svgLine = renderingTool.drawPath("", "line-graph");
-	var buffer;
+	var buffer, bufferNew;
 	this.RenderGraph.appendChild(svgLine);
-	for (var i in this.pathString.split(" ")) {
+	var pathArray = this.pathString.split(" ");
+	var len = pathArray.length
+	console.log(pathArray, "patharray")
+	for (var i = 0; i < len; ++i) {
 
 		function a(j) {
-			buffer = (_this.pathString.split(" ")[j]);
+			buffer = pathArray[j];
+			bufferNew = pathArray[j + 1];
 			bufferPath += buffer + " ";
+			buffer = ((buffer.replace("M", "")).replace("L", "")).split(",");
+			bufferNew = ((bufferNew.replace("M", "")).replace("L", "")).split(",");
+			var interX = interpolate(+buffer[0], +bufferNew[0], 100);
+			var interY = interpolate(+buffer[1], +bufferNew[1], 100);
+
+			function b(k, bufferP) {
+				svgLine.setAttribute("d", bufferP + " L" + interX[k] + "," + interY[k]);
+			}
+			for (var k = 0; k < interX.length; k++) {
+				setTimeout(b.bind(this, k, bufferPath), k * 3);
+			}
 			svgLine.setAttribute("d", bufferPath);
 		}
-		setTimeout(a.bind(this, i), 200 * i);
+		setTimeout(a.bind(this, i), 250 * (i + 3));
 
 	}
 
 	this.drawAnchorPoints();
 }
+
+
 
 lineChart.prototype.animatePath = function (pathOld) {
 

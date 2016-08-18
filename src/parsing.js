@@ -17,6 +17,7 @@ var parsingDataset = function (dataset) { //parser()
 		var maxSOP = minmax(this.jsonData[0], "sopSum").max;
 		this.ticks = (tickGenerator(minSOP, maxSOP, true, false));
 		var ticksXBuffer = [this.categories, this.zones];
+		var axisName = ["Category vs SOP", "Category vs SOS", "Zone vs SOP", "Zone vs SOS"];
 
 
 		/*RenderObject.axisName = i;
@@ -34,7 +35,7 @@ var parsingDataset = function (dataset) { //parser()
 			}
 			this.dataRender = new renderGraph(RenderObject);*/
 		var RenderObject = {};
-
+		var count = 0;
 		for (var i in this.jsonData) {
 			RenderObject.dataObject = this.jsonData[i];
 			RenderObject.height = this.height;
@@ -47,6 +48,7 @@ var parsingDataset = function (dataset) { //parser()
 				RenderObject.ticks = (tickGenerator(min, max, true, true));
 				RenderObject.pureTicks = (tickGenerator(min, max, true, false));
 				RenderObject.chart = this.chartType;
+				RenderObject.axisName = axisName[count++];
 				this.dataRender = new renderGraph(RenderObject);
 			}
 
