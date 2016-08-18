@@ -51,7 +51,7 @@ Axis.prototype.drawTicks = function () {
 			this.TicksY.setAttributeNS(null, "font-family", "Verdana");
 			this.TicksY.setAttribute("size", "10px");
 			this.TicksY.textContent = "" + this.tickArray[i];
-			console.log(Math.floor(this.wid / Window.width));
+			// console.log(Math.floor(this.wid / Window.width));
 			this.RenderGraphI.appendChild(this.TicksY);
 		}
 	} else if (this.axisBoolean == 'x') {

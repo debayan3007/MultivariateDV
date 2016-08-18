@@ -337,11 +337,11 @@ renderGraph.prototype.pathStringBuilder = function () {
 
 	var bufferArray = this.coordinateOb;
 	// console.log(bufferArray);
-	var coordinate = 'M ';
+	var coordinate = 'M';
 	for (var j in bufferArray) {
 
 		var bufferObject = bufferArray[j];
-		coordinate = coordinate + (bufferObject.x + "," + bufferObject.y + " L ");
+		coordinate = coordinate + (bufferObject.x + "," + bufferObject.y + " L");
 
 		// console.log(bufferObject);
 	}

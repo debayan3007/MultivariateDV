@@ -7,7 +7,7 @@ var lineChart = function (RenderGraph, coordinateOb, dataob, pathString, width, 
 	this.width = width;
 	this.height = height;
 	this.drawPath();
-	this.drawAnchorPoints();
+
 
 }
 
@@ -15,9 +15,33 @@ lineChart.prototype.drawPath = function () {
 
 	var _this = this;
 	var renderingTool = new renderTool();
-
-	var svgLine = renderingTool.drawPath(this.pathString, "line-graph");
+	var bufferPath = "";
+	var group = document.createElementNS("http://www.w3.org/2000/svg", "g");
+	var svgLine = renderingTool.drawPath("", "line-graph");
+	var buffer;
 	this.RenderGraph.appendChild(svgLine);
+	for (var i in this.pathString.split(" ")) {
+
+		function a(j) {
+			buffer = (_this.pathString.split(" ")[j]);
+			bufferPath += buffer + " ";
+			svgLine.setAttribute("d", bufferPath);
+		}
+		setTimeout(a.bind(this, i), 200 * i);
+
+	}
+
+	this.drawAnchorPoints();
+}
+
+lineChart.prototype.animatePath = function (pathOld) {
+
+	var pathArray = pathOld.split(" ");
+	var pathNew;
+	var bufferPiece;
+	for (var i in pathArray) {
+		bufferPiece = pathArray[i].split(1, pathArray[i].length);
+	}
 
 }
 
