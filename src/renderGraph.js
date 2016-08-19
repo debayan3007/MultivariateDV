@@ -32,7 +32,7 @@ var renderGraph = function (RenderObject) {
 	if (this.chartType.toString() == "line") {
 		this.svgCanvas = this.svgPlot(this.width, this.height);
 		document.getElementById("container").appendChild(this.svgCanvas);
-		var ObjectSend = {
+		var ObjectSendAxis = {
 			"RenderGraphI": this.svgCanvas,
 			"width": this.width,
 			"height": this.height,
@@ -42,13 +42,21 @@ var renderGraph = function (RenderObject) {
 		};
 		this.addAxisLabel();
 		this.mouseDragSelector();
-		this.yaxisDraw = new Axis(ObjectSend);
-		ObjectSend.tickArray = this.tickobX;
-		ObjectSend.tickBoolean = this.tickBoolean;
-		ObjectSend.axisBoolean = 'x';
-		ObjectSend.tickOffset = 10;
-		this.xaxisDraw = new Axis(ObjectSend);
-		this.lineChart = new lineChart(this.svgCanvas, this.coordinateOb, this.dataob, this.pathString, this.width, this.height, this.tag);
+		this.yaxisDraw = new Axis(ObjectSendAxis);
+		ObjectSendAxis.tickArray = this.tickobX;
+		ObjectSendAxis.tickBoolean = this.tickBoolean;
+		ObjectSendAxis.axisBoolean = 'x';
+		ObjectSendAxis.tickOffset = 10;
+		this.xaxisDraw = new Axis(ObjectSendAxis);
+		var ObjectLine = {};
+		ObjectLine.svg = this.svgCanvas;
+		ObjectLine.coordinateOb = this.coordinateOb;
+		ObjectLine.dataob = this.dataob;
+		ObjectLine.pathString = this.pathString;
+		ObjectLine.width = this.width;
+		ObjectLine.height = this.height;
+		ObjectLine.tag = this.tag;
+		this.lineChart = new lineChart(ObjectLine);
 		this.anchorPoints = [];
 		this.anchorPoints = this.lineChart.anchorPoints;
 		this.hairLine = this.lineChart.hairLine;
@@ -56,7 +64,7 @@ var renderGraph = function (RenderObject) {
 	} else if (this.chartType.toString() == "column") {
 		this.svgCanvas = this.svgPlot(this.width, this.height);
 		document.getElementById("container").appendChild(this.svgCanvas);
-		var ObjectSend = {
+		var ObjectSendAxis = {
 			"RenderGraphI": this.svgCanvas,
 			"width": this.width,
 			"height": this.height,
@@ -66,12 +74,21 @@ var renderGraph = function (RenderObject) {
 		};
 		this.addAxisLabel();
 		this.mouseDragSelector();
-		this.yaxisDraw = new Axis(ObjectSend);
-		ObjectSend.tickArray = this.tickobX;
-		ObjectSend.tickBoolean = this.tickBoolean;
-		ObjectSend.axisBoolean = 'x';
-		this.xaxisDraw = new Axis(ObjectSend);
-		this.columnChart = new columnChart(this.svgCanvas, this.coordinateOb, this.dataob, this.width, this.height, this.tag);
+		this.yaxisDraw = new Axis(ObjectSendAxis);
+		ObjectSendAxis.tickArray = this.tickobX;
+		ObjectSendAxis.tickBoolean = this.tickBoolean;
+		ObjectSendAxis.axisBoolean = 'x';
+		this.xaxisDraw = new Axis(ObjectSendAxis);
+
+		var ObjectColumn = {};
+		ObjectColumn.svg = this.svgCanvas;
+		ObjectColumn.coordinateOb = this.coordinateOb;
+		ObjectColumn.dataob = this.dataob;
+		ObjectColumn.width = this.width;
+		ObjectColumn.height = this.height;
+		ObjectColumn.tag = this.tag;
+
+		this.columnChart = new columnChart(ObjectColumn);
 		this.svgColumn = [];
 		this.svgColumn = this.columnChart.svgColumn;
 	} else if (this.chartType.toString() == "crosstab") {

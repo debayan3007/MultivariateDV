@@ -182,3 +182,25 @@ function interpolate(x1, x2, divs) {
 	}
 	return interpolatedX;
 }
+
+function animateColumn(column, direction, duration) {
+
+	var div = Number(column.getAttribute("height")) / 200;
+	var Y = Number(column.getAttribute("y"));
+	duration = duration / 100;
+	column.setAttribute("y", Y + Number(column.getAttribute("y")));
+	column.setAttribute("height", -100);
+
+	for (var i = 0; i < 200; i++) {
+		function a(j) {
+			column.setAttribute("y", (Y + (200 - j) * div));
+			column.setAttribute("height", j * div);
+		}
+		setTimeout(a.bind(this, i), duration * i);
+	}
+
+	return column;
+
+
+
+}

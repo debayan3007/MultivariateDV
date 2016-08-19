@@ -5,7 +5,7 @@ var mydata = {
 		"subcaption": "Axis 1,2,3",
 		"width": 250,
 		"height": 350,
-		"chartType": "line", //line,column,crosstab
+		"chartType": "crosstab", //line,column,crosstab
 		"forceMapping": false,
 		"colorStart": "#0033FF",
 		"colorEnd": "#00AAFF",

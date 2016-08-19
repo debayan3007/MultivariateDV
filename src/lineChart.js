@@ -1,11 +1,12 @@
-var lineChart = function (RenderGraph, coordinateOb, dataob, pathString, width, height) {
+var lineChart = function (ObjectR) {
 
-	this.RenderGraph = RenderGraph;
-	this.coordinateOb = coordinateOb;
-	this.dataob = dataob;
-	this.pathString = pathString;
-	this.width = width;
-	this.height = height;
+	//RenderGraph, coordinateOb, dataob, pathString, width, height
+	this.RenderGraph = ObjectR.svg;
+	this.coordinateOb = ObjectR.coordinateOb;
+	this.dataob = ObjectR.dataob;
+	this.pathString = ObjectR.pathString;
+	this.width = ObjectR.width;
+	this.height = ObjectR.height;
 	this.drawPath();
 
 
@@ -42,13 +43,13 @@ lineChart.prototype.drawPath = function () {
 				svgLine.setAttribute("d", bufferP + " L" + interX[k] + "," + interY[k]);
 			}
 			for (var k = 0; k < interX.length - 1; k++) {
-				setTimeout(b.bind(this, k, bufferPath), k * 3);
+				setTimeout(b.bind(this, k, bufferPath), k * 2);
 			}
 			svgLine.setAttribute("d", bufferPath);
 
 
 		}
-		setTimeout(a.bind(this, i), 250 * (i + 3));
+		setTimeout(a.bind(this, i), 200 * (i + 3));
 
 	}
 
