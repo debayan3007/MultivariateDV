@@ -23,9 +23,13 @@ lineChart.prototype.drawPath = function () {
 	var pathArray = this.pathString.split(" ");
 	var len = pathArray.length
 	console.log(pathArray, "patharray")
-	for (var i = 0; i < len; ++i) {
+	for (var i = 0; i <= len; ++i) {
 
 		function a(j) {
+			if (j == len) {
+				this.drawAnchorPoints();
+
+			}
 			buffer = pathArray[j];
 			bufferNew = pathArray[j + 1];
 			bufferPath += buffer + " ";
@@ -37,16 +41,18 @@ lineChart.prototype.drawPath = function () {
 			function b(k, bufferP) {
 				svgLine.setAttribute("d", bufferP + " L" + interX[k] + "," + interY[k]);
 			}
-			for (var k = 0; k < interX.length; k++) {
+			for (var k = 0; k < interX.length - 1; k++) {
 				setTimeout(b.bind(this, k, bufferPath), k * 3);
 			}
 			svgLine.setAttribute("d", bufferPath);
+
+
 		}
 		setTimeout(a.bind(this, i), 250 * (i + 3));
 
 	}
 
-	this.drawAnchorPoints();
+
 }
 
 
