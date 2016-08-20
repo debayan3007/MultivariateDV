@@ -185,16 +185,28 @@ function interpolate(x1, x2, divs) {
 
 function animateColumn(column, direction, duration) {
 
-	var div = Number(column.getAttribute("height")) / 200;
-	var Y = Number(column.getAttribute("y"));
+	var XY;
+	if(direction.toLowerCase() == "vertical"){
+		direction = "height";
+		XY = 'y';
+	}
+	else if(direction.toLowerCase() == "horizantal"){
+		direction = "width";
+		XY = 'x';
+	}
+
+	var div = Number(column.getAttribute(direction)) / 200;
+	var Y = Number(column.getAttribute(XY));
 	duration = duration / 100;
-	column.setAttribute("y", Y + Number(column.getAttribute("y")));
-	column.setAttribute("height", -100);
+	column.setAttribute(XY, Y + Number(column.getAttribute(XY)));
+	column.setAttribute(direction, -100);
 
 	for (var i = 0; i < 200; i++) {
 		function a(j) {
-			column.setAttribute("y", (Y + (200 - j) * div));
-			column.setAttribute("height", j * div);
+			if(direction.toLowerCase() == "vertical")
+				column.setAttribute(XY, (Y + (200 - j) * div));
+			
+			column.setAttribute(direction, j * div);
 		}
 		setTimeout(a.bind(this, i), duration * i);
 	}

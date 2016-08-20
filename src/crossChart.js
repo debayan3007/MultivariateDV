@@ -28,7 +28,7 @@ crossChart.prototype.drawColumns = function () {
 
 		columns = renderingTool.drawRect(0, this.coordinateOb[i].x, this.coordinateOb[i].y, 15, "svgColumn");
 		columns.setAttribute("style", "fill:" + this.coordinateOb[i].color);
-
+		animateColumn(columns,"horizantal",200);
 		this.RenderGraph.appendChild(columns);
 
 	}
