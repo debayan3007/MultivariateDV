@@ -5,24 +5,41 @@ var columnChart = function (ObjectR) {
 	this.dataob = ObjectR.dataob;
 	this.width = ObjectR.width;
 	this.height = ObjectR.height;
-	this.drawColumns();
+	this.drawColumns("horizontal");
 
 }
 
-columnChart.prototype.drawColumns = function () {
+columnChart.prototype.drawColumns = function (direction) {
 	var _this = this;
 	var lengthTemp = this.coordinateOb.length;
+	var widthC, lengthC, X, Y;
 	// console.log(lengthTemp);
 	this.svgColumn = [];
+
 	for (var i = 0; i < lengthTemp; i++) {
 		this.toolBox = document.createElementNS("http://www.w3.org/2000/svg", "rect");
 		this.toolText = document.createElementNS("http://www.w3.org/2000/svg", "text");
-		this.columnWidth = (this.width - 45) / (2 * 10 - 1);
+		this.columnWidth = (this.width - 45) / (2 * this.dataob.length - 1);
 		this.svgColumn[i] = document.createElementNS("http://www.w3.org/2000/svg", "rect");
-		this.svgColumn[i].setAttribute("x", (this.coordinateOb[i].x) - this.columnWidth / 2);
-		this.svgColumn[i].setAttribute("y", this.coordinateOb[i].y);
-		this.svgColumn[i].setAttribute("width", this.columnWidth + "px");
-		this.svgColumn[i].setAttribute("height", (this.height - 40) - (this.coordinateOb[i].y));
+
+
+		//variable
+		if (direction == "vertical") {
+			this.svgColumn[i].setAttribute("y", this.coordinateOb[i].y);
+			this.svgColumn[i].setAttribute("x", (this.coordinateOb[i].x) - this.columnWidth / 2);
+			this.svgColumn[i].setAttribute("height", (this.height - 40) - (this.coordinateOb[i].y));
+			this.svgColumn[i].setAttribute("width", 15);
+			animateColumn(this.svgColumn[i], "vertical", 200);
+		} else {
+			this.svgColumn[i].setAttribute("y", this.coordinateOb[i].x);
+			this.svgColumn[i].setAttribute("x", 0);
+			this.svgColumn[i].setAttribute("width", (this.coordinateOb[i].y * 2.8));
+			this.svgColumn[i].setAttribute("height", 15);
+			this.svgColumn[i].setAttribute("style", "fill:" + this.coordinateOb[i].color);
+			animateColumn(this.svgColumn[i], "horizontal", 850);
+		}
+
+		//variable
 		this.svgColumn[i].setAttribute("class", "svgColumn");
 
 		this.toolBox.setAttribute("height", 20);
@@ -31,7 +48,7 @@ columnChart.prototype.drawColumns = function () {
 		this.svgColumn[i].addEventListener("mousemove", onMouseMove);
 		this.svgColumn[i].addEventListener("mouseout", onMouseOut);
 
-		animateColumn(this.svgColumn[i], "vertical", 200)
+		// animateColumn(this.svgColumn[i], "vertical", 200);
 		this.RenderGraph.appendChild(this.svgColumn[i]);
 
 		function a(j) {

@@ -34,7 +34,6 @@ function rangeBeautifier(num1, num2) {
 		}
 	}
 	opMAX = beautyN * (Math.ceil(bufferMax / beautyN));
-	console.log("running");
 	return [opMIN, opMAX];
 }
 
@@ -189,7 +188,7 @@ function animateColumn(column, direction, duration) {
 	if (direction.toLowerCase() == "vertical") {
 		direction = "height";
 		XY = 'y';
-	} else if (direction.toLowerCase() == "horizantal") {
+	} else if (direction.toLowerCase() == "horizontal") {
 		direction = "width";
 		XY = 'x';
 	}

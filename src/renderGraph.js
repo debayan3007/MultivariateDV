@@ -10,7 +10,6 @@ var renderGraph = function (RenderObject) {
 	// Window.width = this.width;
 	this.axisName = RenderObject.axisName;
 	this.chartType = (RenderObject.chart).toString();
-	console.log("RENDEROBJECT:: ", RenderObject);
 	// this.chartType = chartType;
 	this.tickobY = RenderObject.ticks || [];
 	this.tickobX = RenderObject.ticksXaxis || ["test", "test", "test", "test", "test", "test", "test", "test"];
@@ -93,7 +92,6 @@ var renderGraph = function (RenderObject) {
 	} else if (this.chartType.toString() == "crosstab") {
 		this.svgCanvas = this.svgPlot(this.width - 150, this.height);
 		document.getElementById("container").appendChild(this.svgCanvas);
-		console.log("dataob", this.dataob);
 		CrossChartObject.svg = this.svgCanvas;
 		CrossChartObject.colorStart = RenderObject.colorStart;
 		CrossChartObject.colorEnd = RenderObject.colorEnd;
@@ -103,8 +101,7 @@ var renderGraph = function (RenderObject) {
 		CrossChartObject.width = this.width - 85;
 		CrossChartObject.height = this.height;
 		CrossChartObject.ticks = RenderObject.pureTicks;
-		console.log("pure ticks:", RenderObject.pureTicks);
-		this.crossChart = new crossChart(CrossChartObject);
+		this.crossChart = new crossChartDemo(CrossChartObject);
 		//(RenderGraph, coordinateOb, dataob, width, height, productSeq, maxP, minP, colorRange, colorRangeLoss)
 
 
@@ -310,8 +307,6 @@ function onMouseOut(event) {
 renderGraph.prototype.coordinateCalculation = function () {
 	var count = 0;
 	// this.coordinateOb=[];
-	console.log("TICKS:::", this.tickobY);
-
 
 	for (var i in this.dataob) {
 		var tempObj = this.dataob;
@@ -340,9 +335,6 @@ renderGraph.prototype.coordinateCalculation = function () {
 	}
 };
 
-renderGraph.prototype.coordinateCalculationCrosstab = function () {
-	console.log("DATAOB CHECK::", this.dataob);
-}
 
 renderGraph.prototype.pathStringBuilder = function () {
 

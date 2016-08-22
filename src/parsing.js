@@ -69,18 +69,13 @@ var parsingDataset = function (dataset) { //parser()
 		this.fillUps();
 		this.evokingRender();
 	}
-
-	console.log(this.jsonData, this.jsonData.length);
-
 };
 
 parsingDataset.prototype.svgPlot = function (dataCarr) {
 
 	var renderingTool = new renderTool();
 	var height = this.height;
-	console.log("dataCarr", Object.keys(dataCarr));
 	dataCarr = Object.keys(dataCarr).length;
-	console.log("dataCarr length", dataCarr);
 	this.svgCanvas = renderingTool.drawSVG(280, dataCarr * 37.5, "svgGraph");
 	document.getElementById("container").appendChild(this.svgCanvas);
 	return this.svgCanvas;
@@ -317,7 +312,6 @@ parsingDataset.prototype.fillUps = function () {
 
 			}
 			if (productArray.length != 0) {
-				console.log(productArray);
 				for (var q in productArray) {
 					this.dataob[i][j].push({
 						"product": productArray[q] + "",
@@ -327,10 +321,6 @@ parsingDataset.prototype.fillUps = function () {
 				}
 			}
 
-			for (var z in tempDataobObj[j]) {
-				console.log("unsorted::", tempDataobObj[j][z]);
-
-			}
 			tempDataobObj[j].sort(function (a, b) {
 				if (a.product === "Total") {
 					return 1;
@@ -340,13 +330,7 @@ parsingDataset.prototype.fillUps = function () {
 				}
 				return a.product > b.product;
 			});
-			console.log("===============================================");
 
-			for (var z in tempDataobObj[j]) {
-				console.log("sorted::", tempDataobObj[j][z]);
-			}
-
-			console.log("-=-=-==-=-=-=-=-==-==-=-==-=-==-=-==-==-=-=-");
 		}
 	}
 }
@@ -546,9 +530,7 @@ parsingDataset.prototype.evokingRender = function () {
 			RenderObject.ticks = this.ticks;
 			RenderObject.chart = this.chartType;
 			RenderObject.pureTicks = this.pureTicks;
-			console.log("PURE TICKS:::", this.pureTicks);
-			// this.productArray[this.productArray.length] = ""
-			console.log("productArray:>" + Object.keys(this.productArray[i]));
+
 			var renderingTool = new renderTool();
 			var svgCanvas = this.svgPlot(this.productArray[i]);
 			RenderObject.height = svgCanvas.getAttribute("height");
@@ -557,7 +539,6 @@ parsingDataset.prototype.evokingRender = function () {
 			for (var j in this.dataob[i]) {
 				RenderObject.dataObject = this.dataob[i][j];
 				this.optimizedTick[count + 1] = {};
-				console.log(length - count, "mark");
 				this.dataRender = new renderGraph(RenderObject);
 			}
 			var br = document.createElement('br');
