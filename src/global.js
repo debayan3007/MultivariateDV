@@ -1,3 +1,4 @@
+//returns beautified num1 and num2 values considering num1 as min and num2 as max
 function rangeBeautifier(num1, num2) {
 
 	bufferMin = num1;
@@ -34,9 +35,12 @@ function rangeBeautifier(num1, num2) {
 		}
 	}
 	opMAX = beautyN * (Math.ceil(bufferMax / beautyN));
+	//returns an array of beautified min and max
 	return [opMIN, opMAX];
 }
 
+//returns ticks for respective min and max, takes boolean values for
+// smart numbers and for shrinking big numbers; and returns an array 
 function tickGenerator(num1, num2, smart, shrink) {
 
 	if (smart === true) {
@@ -94,10 +98,11 @@ function tickGenerator(num1, num2, smart, shrink) {
 			ticks.push(counter)
 		}
 	}
-	// var len=ticks.length;
 	return ticks;
 }
 
+//returns color of a column according the ratio of the current value to its max or min,
+//within a color range
 function colorBars(clr1, clr2, minProfit, maxProfit, valueToEvaluate) {
 
 	var color1,
@@ -132,6 +137,8 @@ function colorBars(clr1, clr2, minProfit, maxProfit, valueToEvaluate) {
 	return "#" + colorOfBar;
 }
 
+//attaches boundary to svgs, takes in the reference of the svg and 
+//boolean value for specifying the position of the boundaries
 function attachBoundary(target, top, down, left, right) {
 	var renderingTool = new renderTool(),
 		X = target.getAttribute("width"),
@@ -151,6 +158,8 @@ function attachBoundary(target, top, down, left, right) {
 	}
 }
 
+//returns min and max from array of objects, takes in
+//the array and the tag for which the min and max has to be scanned
 function minmax(dataset, tag) {
 
 	// var length = Object.keys(dataset).length;
@@ -171,6 +180,8 @@ function minmax(dataset, tag) {
 
 };
 
+//interpolates values between two values,
+//takes in the two boundary values and the number of interpolated values
 function interpolate(x1, x2, divs) {
 	var interpolatedX = [];
 	var bufferDivX = (x2 - x1) / divs;
@@ -182,6 +193,8 @@ function interpolate(x1, x2, divs) {
 	return interpolatedX;
 }
 
+//animates svg bottom-to-top or right-to-left
+//takes in reference of the svg, direction of 
 function animateColumn(column, direction, duration) {
 
 	var XY;
@@ -211,8 +224,6 @@ function animateColumn(column, direction, duration) {
 		setTimeout(a.bind(this, i), duration * i);
 	}
 
+	//returns the reference column with animation
 	return column;
-
-
-
 }

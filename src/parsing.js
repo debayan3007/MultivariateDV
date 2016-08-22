@@ -1,21 +1,22 @@
-var parsingDataset = function (dataset) { //parser()
-	// this.optimizedTick=[];
+var parsingDataset = function (dataset) { //the json dataset recieved
 	this.dataset = dataset;
 	this.jsonData = [];
-	this.jsonData = this.dataset.data;
+	this.jsonData = this.dataset.data; // the data part of the dataset is seperated which contains the data to be plotted
 	this.dataob = {};
 	this.getWindowSize();
 	this.chartParse();
-	if (this.forcefulCrosstab == true) {
+	if (this.forcefulCrosstab == true) { // this segment is used to determine whether the user wants
+		//line/column to be plotted using crosstab data
 		this.dataCruncherCrosstab(this.detect(this.jsonData, "category"));
+		//the json data is sent for relevant crunching required for filtering
 		var numericPlots = ["sosSum", "sopSum"];
-		console.log("mark::", this.zones);
-		this.jsonData = this.detect(this.jsonData, "category");
-		this.jsonData = this.detect(this.jsonData, "zone");
-		this.jsonData = this.dataCruncherForceful(this.jsonData);
-		var minSOP = minmax(this.jsonData[0], "sopSum").min;
-		var maxSOP = minmax(this.jsonData[0], "sopSum").max;
-		this.ticks = (tickGenerator(minSOP, maxSOP, true, false));
+		this.jsonData = this.detect(this.jsonData, "category"); // the dataset being filtered for respective plotting
+		this.jsonData = this.detect(this.jsonData, "zone"); // first done for category, whatever remained is further filtered for zone,
+		//as these are the field that will be used to plot
+		this.jsonData = this.dataCruncherForceful(this.jsonData); //the remaining dataset being crunched
+		var minSOP = minmax(this.jsonData[0], "sopSum").min; //the data being sent to a global function 
+		var maxSOP = minmax(this.jsonData[0], "sopSum").max; //for returning min and max; the function returns a object containing min  and max
+		this.ticks = (tickGenerator(minSOP, maxSOP, true, false)); //the min and max value is used to generate ticks
 		var ticksXBuffer = [this.categories, this.zones];
 		var axisName = ["Category vs SOP", "Category vs SOS", "Zone vs SOP", "Zone vs SOS"];
 
@@ -66,6 +67,7 @@ parsingDataset.prototype.svgPlot = function (dataCarr) {
 	return this.svgCanvas;
 }
 
+//dat
 parsingDataset.prototype.dataCruncherForceful = function (dataset) {
 	var zones = [],
 		categories = [],
