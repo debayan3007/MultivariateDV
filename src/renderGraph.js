@@ -37,17 +37,15 @@ var renderGraph = function (RenderObject) {
 			"width": this.width,
 			"height": this.height,
 			"tickArray": this.tickobY,
-			"tickBoolean": this.tickBoolean,
-			"axisBoolean": 'y'
+			"tickBoolean": this.tickBoolean
 		};
 		this.addAxisLabel();
 		this.mouseDragSelector();
-		this.yaxisDraw = new Axis(ObjectSendAxis);
+		this.yaxisDraw = new yAxis(ObjectSendAxis);
 		ObjectSendAxis.tickArray = this.tickobX;
 		ObjectSendAxis.tickBoolean = this.tickBoolean;
-		ObjectSendAxis.axisBoolean = 'x';
 		ObjectSendAxis.tickOffset = 10;
-		this.xaxisDraw = new Axis(ObjectSendAxis);
+		this.xaxisDraw = new xAxis(ObjectSendAxis);
 		var ObjectLine = {};
 		ObjectLine.svg = this.svgCanvas;
 		ObjectLine.coordinateOb = this.coordinateOb;
@@ -74,11 +72,12 @@ var renderGraph = function (RenderObject) {
 		};
 		this.addAxisLabel();
 		this.mouseDragSelector();
-		this.yaxisDraw = new Axis(ObjectSendAxis);
+		this.yaxisDraw = new yAxis(ObjectSendAxis);
+
 		ObjectSendAxis.tickArray = this.tickobX;
 		ObjectSendAxis.tickBoolean = this.tickBoolean;
 		ObjectSendAxis.axisBoolean = 'x';
-		this.xaxisDraw = new Axis(ObjectSendAxis);
+		this.xaxisDraw = new xAxis(ObjectSendAxis);
 
 		var ObjectColumn = {};
 		ObjectColumn.svg = this.svgCanvas;

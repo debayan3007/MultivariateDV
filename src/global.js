@@ -186,11 +186,10 @@ function interpolate(x1, x2, divs) {
 function animateColumn(column, direction, duration) {
 
 	var XY;
-	if(direction.toLowerCase() == "vertical"){
+	if (direction.toLowerCase() == "vertical") {
 		direction = "height";
 		XY = 'y';
-	}
-	else if(direction.toLowerCase() == "horizantal"){
+	} else if (direction.toLowerCase() == "horizantal") {
 		direction = "width";
 		XY = 'x';
 	}
@@ -203,10 +202,12 @@ function animateColumn(column, direction, duration) {
 
 	for (var i = 0; i < 200; i++) {
 		function a(j) {
-			if(direction.toLowerCase() == "vertical")
+			if (direction.toLowerCase() == "height") {
 				column.setAttribute(XY, (Y + (200 - j) * div));
-			
+
+			}
 			column.setAttribute(direction, j * div);
+
 		}
 		setTimeout(a.bind(this, i), duration * i);
 	}

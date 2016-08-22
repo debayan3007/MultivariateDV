@@ -22,12 +22,8 @@ columnChart.prototype.drawColumns = function () {
 		this.svgColumn[i].setAttribute("x", (this.coordinateOb[i].x) - this.columnWidth / 2);
 		this.svgColumn[i].setAttribute("y", this.coordinateOb[i].y);
 		this.svgColumn[i].setAttribute("width", this.columnWidth + "px");
-		// svgColumn.setAttribute("fill","black");
 		this.svgColumn[i].setAttribute("height", (this.height - 40) - (this.coordinateOb[i].y));
-		// this.svgColumn[i].setAttribute("style","fill:black;stroke:black;stroke-width:1;opacity:1");
 		this.svgColumn[i].setAttribute("class", "svgColumn");
-
-
 
 		this.toolBox.setAttribute("height", 20);
 		this.toolBox.setAttribute("width", 25);

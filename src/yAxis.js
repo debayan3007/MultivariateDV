@@ -1,11 +1,7 @@
-var yAxis = function(RenderGraphI,width,height,tickArray){
+yAxis.prototype = Object.create(Axis.prototype);
+yAxis.prototype.constructor = yAxis;
 
-	this.RenderGraphI = RenderGraphI;
-	this.width = width;
-	this.height = height;
-	this.tickArray = tickArray;
-
-	// Axis.call(this,this.RenderGraphI,width,height,tickArray,true,'y');
-
-	
+function yAxis(ObjectRecieve) {
+	ObjectRecieve.axisBoolean = 'y';
+	Axis.call(this, ObjectRecieve);
 }
