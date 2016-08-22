@@ -33,6 +33,7 @@ var mydata = {
 			"yAxis2": 44,
 			"yAxis3": 354,
 			"yAxis4": 2,
+			"yAxis5": 52,
 			"yAxis6": 85
 		}, {
 			"time": "24-06",

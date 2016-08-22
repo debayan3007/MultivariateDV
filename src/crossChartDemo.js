@@ -1,3 +1,4 @@
+"use strict";
 crossChartDemo.prototype = Object.create(columnChart.prototype);
 crossChartDemo.prototype.constructor = crossChartDemo;
 
@@ -10,12 +11,12 @@ function crossChartDemo(ObjectRecieve) {
 	this.minProfit = ObjectRecieve.minProfit;
 	this.maxProfit = ObjectRecieve.maxProfit;
 	this.ticks = ObjectRecieve.ticks;
-	attachBoundary(ObjectRecieve.svg, true, true, true, true)
+	ObjectRecieve.direction = "horizontal";
+	attachBoundary(ObjectRecieve.svg, true, true, true, true);
 	var ex = this.coordinateCalculationCrossTab();
 	ObjectRecieve.coordinateOb = ex; // || this.coordinateCalculationCrossTab();
 	columnChart.call(this, ObjectRecieve);
 }
-
 crossChartDemo.prototype.coordinateCalculationCrossTab = function () {
 	var count = 0;
 	var coordinateOb = [];
@@ -27,11 +28,6 @@ crossChartDemo.prototype.coordinateCalculationCrossTab = function () {
 		var c = 30;
 		var d = this.height;
 		var y = this.dataob[j].sos;
-		console.log("y", y);
-		console.log("a", a);
-		console.log("b", b);
-		console.log("c", c);
-		console.log("d", d);
 		var yCoordinate = (((y - a) / (b - a)) * (d - c));
 		var xCoordinate;
 		xCoordinate = 15 + Number(j) * 34;
@@ -41,7 +37,6 @@ crossChartDemo.prototype.coordinateCalculationCrossTab = function () {
 			color: colorBars(this.colorStart, this.colorEnd, this.minProfit, this.maxProfit, this.dataob[j].sop)
 		});
 	}
-	console.log(coordinateOb);
 
 
 	return coordinateOb;

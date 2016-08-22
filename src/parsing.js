@@ -19,21 +19,6 @@ var parsingDataset = function (dataset) { //parser()
 		var ticksXBuffer = [this.categories, this.zones];
 		var axisName = ["Category vs SOP", "Category vs SOS", "Zone vs SOP", "Zone vs SOS"];
 
-
-		/*RenderObject.axisName = i;
-			RenderObject.dataObject = this.dataob[i];
-			RenderObject.height = this.height;
-			RenderObject.width = this.width;
-			RenderObject.ticks = this.optimizedTick[count++];
-			RenderObject.ticksXaxis = this.ticksXaxis;
-			RenderObject.chart = this.chartType;
-
-			if (length - count < Math.floor(this.wid / this.width)) {
-				RenderObject.tickboolean = 1;
-			} else {
-				RenderObject.tickboolean = 0;
-			}
-			this.dataRender = new renderGraph(RenderObject);*/
 		var RenderObject = {};
 		var count = 0;
 		for (var i in this.jsonData) {
@@ -534,7 +519,7 @@ parsingDataset.prototype.evokingRender = function () {
 			var renderingTool = new renderTool();
 			var svgCanvas = this.svgPlot(this.productArray[i]);
 			RenderObject.height = svgCanvas.getAttribute("height");
-			attachBoundary(svgCanvas, true, true, true, true);
+			attachBoundary(svgCanvas, true, true, false, true);
 			this.crosschartTable = new crossChartTable(svgCanvas, i, Object.keys(this.productArray[i]), this.maxP, this.minP);
 			for (var j in this.dataob[i]) {
 				RenderObject.dataObject = this.dataob[i][j];

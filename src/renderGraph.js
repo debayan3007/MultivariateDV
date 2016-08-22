@@ -43,7 +43,7 @@ var renderGraph = function (RenderObject) {
 		this.yaxisDraw = new yAxis(ObjectSendAxis);
 		ObjectSendAxis.tickArray = this.tickobX;
 		ObjectSendAxis.tickBoolean = this.tickBoolean;
-		ObjectSendAxis.tickOffset = 10;
+		// ObjectSendAxis.tickOffset = 10;
 		this.xaxisDraw = new xAxis(ObjectSendAxis);
 		var ObjectLine = {};
 		ObjectLine.svg = this.svgCanvas;
@@ -313,8 +313,8 @@ renderGraph.prototype.coordinateCalculation = function () {
 		var temptickobYj = this.tickobY; //[count];
 		var bufferCoordinateOb = [];
 		var count = 0;
-		var xCoordinate = 40;
-		var div = (this.width - 50) / (this.tickobX.length);
+		var xCoordinate = 65;
+		var div = (this.width - 40) / (this.tickobX.length);
 		for (var j in tempObj) {
 			count++;
 			var a = isNaN(temptickobYj[0]) ? +temptickobYj[0].replace("K", "") * 1000 : +temptickobYj[0];
@@ -323,11 +323,12 @@ renderGraph.prototype.coordinateCalculation = function () {
 			var d = this.height - 40;
 			var y = tempObj[j][this.tag];
 			var yCoordinate = d - (((y - a) / (b - a)) * (d - c));
-			xCoordinate += div;
+
 			bufferCoordinateOb.push({
 				x: xCoordinate,
 				y: yCoordinate
 			});
+			xCoordinate += div;
 
 		}
 		this.coordinateOb = (bufferCoordinateOb);

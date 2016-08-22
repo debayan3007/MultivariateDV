@@ -65,7 +65,7 @@ Axis.prototype.drawTicks = function () {
 			//renderingTool.drawText(47+(div*j),this.height-40,((20+j)+"-06"),null);
 			document.createElementNS("http://www.w3.org/2000/svg", "text");
 			TicksX.setAttributeNS(null, "x", 47 + (div * j));
-			TicksX.setAttributeNS(null, "y", this.height - this.tickOffset - 40);
+			TicksX.setAttributeNS(null, "y", this.height - this.tickOffset - 50);
 			TicksX.setAttribute("fill", "black");
 			TicksX.setAttribute("size", "10px");
 			TicksX.textContent = this.tickArray[j];

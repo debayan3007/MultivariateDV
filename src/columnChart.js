@@ -5,7 +5,8 @@ var columnChart = function (ObjectR) {
 	this.dataob = ObjectR.dataob;
 	this.width = ObjectR.width;
 	this.height = ObjectR.height;
-	this.drawColumns("horizontal");
+	this.direction = ObjectR.direction || "vertical";
+	this.drawColumns(this.direction);
 
 }
 
@@ -17,8 +18,8 @@ columnChart.prototype.drawColumns = function (direction) {
 	this.svgColumn = [];
 
 	for (var i = 0; i < lengthTemp; i++) {
-		this.toolBox = document.createElementNS("http://www.w3.org/2000/svg", "rect");
-		this.toolText = document.createElementNS("http://www.w3.org/2000/svg", "text");
+
+
 		this.columnWidth = (this.width - 45) / (2 * this.dataob.length - 1);
 		this.svgColumn[i] = document.createElementNS("http://www.w3.org/2000/svg", "rect");
 
@@ -30,6 +31,8 @@ columnChart.prototype.drawColumns = function (direction) {
 			this.svgColumn[i].setAttribute("height", (this.height - 40) - (this.coordinateOb[i].y));
 			this.svgColumn[i].setAttribute("width", 15);
 			animateColumn(this.svgColumn[i], "vertical", 200);
+			this.svgColumn[i].addEventListener("mousemove", onMouseMove);
+			this.svgColumn[i].addEventListener("mouseout", onMouseOut);
 		} else {
 			this.svgColumn[i].setAttribute("y", this.coordinateOb[i].x);
 			this.svgColumn[i].setAttribute("x", 0);
@@ -42,11 +45,12 @@ columnChart.prototype.drawColumns = function (direction) {
 		//variable
 		this.svgColumn[i].setAttribute("class", "svgColumn");
 
+		this.toolText = document.createElementNS("http://www.w3.org/2000/svg", "text");
+		this.toolBox = document.createElementNS("http://www.w3.org/2000/svg", "rect");
 		this.toolBox.setAttribute("height", 20);
 		this.toolBox.setAttribute("width", 25);
 		this.toolBox.setAttribute("style", "fill:#fed8ca;stroke:brown;stroke-width:1;opacity:0.7");
-		this.svgColumn[i].addEventListener("mousemove", onMouseMove);
-		this.svgColumn[i].addEventListener("mouseout", onMouseOut);
+
 
 		// animateColumn(this.svgColumn[i], "vertical", 200);
 		this.RenderGraph.appendChild(this.svgColumn[i]);
