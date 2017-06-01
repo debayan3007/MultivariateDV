@@ -12,7 +12,7 @@ The color of each bar conveys the intensity of certain property.
 <span id="container">
     <h2 id="caption" align="center" style="font-family:'Helvetica Neue',Arial"></h2>
     <h3 id="subcaption" align="center" style="font-family:'Helvetica Neue',Arial"></h3>
-</span>>
+</span>
 
 <script type="text/javascript" src="jsondatastructure.js"></script>    
 <script type="text/javascript" src="../build/multivariatedv.min.js"></script> 
