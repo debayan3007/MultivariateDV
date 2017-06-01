@@ -1,4 +1,4 @@
-var renderGraph = function (RenderObject) {
+function renderGraph (RenderObject) {
 
 	var CrossChartObject = {};
 	this.tickboolean = RenderObject.tickboolean;

@@ -1,0 +1,33 @@
+{
+  "name": "MultivariateDV",
+  "version": "0.0.1",
+  "description": "Multivariate Data Visualisation. Crosstab",
+  "keywords": [
+    "data",
+    "multivariate",
+    "visualisation",
+    "crosstab",
+    "vanilla"
+  ],
+  "license": "BSD-3-Clause",
+  "main": "build/multivariate-dv.js",
+  "jsnext:main": "index",
+  "homepage": "https://github.com/debayan3007/MultivariateDV",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/debayan3007/MultivariateDV"
+  },
+  "scripts": {
+    "pretest": "rm -rf build && mkdir build && rollup -f umd -n d3 -o build/d3-foo.js -- index.js",
+    "test": "tape 'test/**/*-test.js'",
+    "build": "gulp",
+    "dev": "rollup -c -w",
+    "prepublish": "npm run test && uglifyjs build/d3-foo.js -c -m -o build/d3-foo.min.js",
+    "postpublish": "zip -j build/d3-foo.zip -- LICENSE README.md build/d3-foo.js build/d3-foo.min.js"
+  },
+  "devDependencies": {
+    "gulp": "^3.9.1",
+    "tape": "4",
+    "uglify-js": "2"
+  }
+}
