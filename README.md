@@ -9,3 +9,13 @@ The color of each bar also holds data, just like the placement of the chart or l
 The color of each bar conveys the intensity of certain property.
 
 <a href="#MultivariateDV" name="MultivariateDV">#</a> <b>MultivariateDV</b>
+<span id="container">
+    <h2 id="caption" align="center" style="font-family:'Helvetica Neue',Arial"></h2>
+    <h3 id="subcaption" align="center" style="font-family:'Helvetica Neue',Arial"></h3>
+</span>>
+
+<script type="text/javascript" src="jsondatastructure.js"></script>    
+<script type="text/javascript" src="../build/multivariatedv.min.js"></script> 
+<script type="text/javascript">     
+   setTimeout(function(){var myData = new parsingDataset(mydata)},200);
+</script>
